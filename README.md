@@ -130,6 +130,9 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase G — Nota de crédito parcial (2026-09-30)
+- Desde el Historial de facturación, "Anular factura" ahora permite **devolver solo algunos productos o parte de las cantidades**. EcoPos recalcula base e IVA y no deja devolver dos veces lo mismo (resta las notas de crédito anteriores de esa factura).
+
 ### Fase F — Clientes, pago dividido y resumen tributario (2026-09-30)
 - **Historial del cliente al atenderlo**: cuando la venta tiene cliente, debajo del número de ticket se ve cuántas compras lleva, cuánto ha gastado y cuándo fue la última; lo mismo aparece en "Factura con datos" al escribir su cédula o RUC.
 - **Pago dividido visible**: el cobro muestra "+ Dividir pago" y "− Quitar pago" (antes eran solo "+" y "−").
@@ -182,7 +185,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - 🟡 Reportes tributarios: resumen mensual de ventas por tarifa de IVA ✅ (base del 104); ATS pendiente
 - ⬜ Varias cajas o locales con su propio punto de emisión
 - ⬜ Guía de remisión, nota de débito, liquidación de compra
-- ⬜ Nota de crédito parcial (devolver solo un producto)
+- 🟡 Nota de crédito parcial por productos/cantidades ✅; falta una emisión real de prueba contra el SRI
 - ⬜ Prueba real de punta a punta con el SRI (ambiente de pruebas) desde la pantalla de cobro nueva
 
 **Cobro y caja**
