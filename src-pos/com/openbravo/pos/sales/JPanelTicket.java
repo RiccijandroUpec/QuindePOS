@@ -1632,6 +1632,7 @@ if (pickupSize!=null && (Integer.parseInt(pickupSize) >= tmpPickupId.length())){
                 script.put("taxeslogic", taxeslogic);
                 script.put("ticket", ticket);
                 script.put("place", ticketext);
+                script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
                 script.put("warranty", warrantyPrint);
                 script.put("pickupid",getPickupString(ticket));
 

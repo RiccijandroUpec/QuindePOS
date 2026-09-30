@@ -132,6 +132,13 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase K — Ticket impreso de Quinde POS y logos nítidos (2026-09-30)
+- **Ticket impreso en español** con los datos del negocio: nombre comercial (o razón social), RUC, dirección y "Obligado a llevar contabilidad" si aplica. Se toman de *Sistema → Facturación electrónica*, así se escriben una sola vez.
+- Muestra ticket, fecha, cajero, cliente con cédula/RUC (o "Consumidor final"), productos, subtotal sin impuestos, **IVA desglosado por tarifa**, total y formas de pago en español (Efectivo con recibido y cambio, Tarjeta, Transferencia, DeUna, Cheque, Vale, Cortesía, A crédito). Si la facturación electrónica está encendida, avisa que la factura se envía al SRI y dónde consultarla.
+- La vista previa de *Editar ventas*, la reimpresión y el visor de cliente usan el mismo formato. Logo del ticket de Quinde POS en blanco y negro, pensado para impresoras térmicas (se puede cambiar por el del negocio en *Recursos → Printer.Ticket.Logo*).
+- Las instalaciones existentes se actualizan solas al abrir la app, **solo si el ticket seguía siendo el de fábrica** (un ticket personalizado no se toca).
+- **Logos nítidos en pantallas con escala** (125 %, 150 %…): el inicio de sesión y la barra superior usan versiones 2x y 3x, la ventana tiene íconos en todos los tamaños y la pantalla de carga trae versiones para cada escala. Antes se veían pixeleados.
+
 ### Fase J — Nueva marca: Quinde POS (2026-09-30)
 EcoPos pasa a llamarse **Quinde POS** (quinde = colibrí), con logo propio y la paleta "Selva":
 - Logo del colibrí geométrico en el inicio de sesión, la barra superior, el ícono de la ventana, la pantalla de carga y el instalador.
@@ -246,7 +253,8 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ✅ Estilo moderno, iconos y pantalla de venta nueva
 - 🟡 Copia de seguridad automática: diaria y local ✅; copia en la nube pendiente
 - 🟡 Configuración de facturación en una sola pantalla con verificación ✅; asistente de primera configuración para el resto (negocio, impresora, impuestos) pendiente
-- ⬜ Ticket impreso con la marca y datos del negocio (la vista previa todavía muestra el logo y textos en inglés de la plantilla original)
+- ✅ Ticket impreso con la marca y datos del negocio, en español
+- ⬜ Ticket en formato A4 y reportes JasperReports todavía con textos de la plantilla original
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS y crear un sitio o página del proyecto
 - ⬜ Actualizaciones automáticas
 - ⬜ Versión para tablet / Android

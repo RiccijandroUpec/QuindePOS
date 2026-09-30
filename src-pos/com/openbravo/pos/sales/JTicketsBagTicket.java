@@ -341,6 +341,7 @@ public class JTicketsBagTicket extends JTicketsBag {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
                 script.put("ticket", m_ticket);
                 script.put("taxes", m_ticket.getTaxLines());                
+                script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
                 m_TTP.printTicket(script.eval(m_dlSystem.getResourceAsXML("Printer.TicketPreview")).toString());
             } catch (    ScriptException | TicketPrinterException e) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), e);
@@ -560,6 +561,7 @@ public class JTicketsBagTicket extends JTicketsBag {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
                 script.put("ticket", m_ticket);
                 script.put("taxes", m_ticket.getTaxLines());
+                script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
                 m_TTP2.printTicket(script.eval(m_dlSystem.getResourceAsXML("Printer.TicketPreview")).toString());
             } catch (ScriptException e) {
                 JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.cannotprint"), e));

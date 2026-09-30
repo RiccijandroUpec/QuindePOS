@@ -134,6 +134,15 @@ public class JRootApp extends JPanel implements AppView {
         // Inicializo los componentes visuales
         initComponents ();            
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(30, 30));
+        // Logos nitidos en pantallas con escala (125%, 150%...): el ImageIcon de 1x se ve pixeleado.
+        javax.swing.Icon logoLogin = LogoNitido.cargar("/com/openbravo/images/quinde-login");
+        if (logoLogin != null) {
+            jLabel1.setIcon(logoLogin);
+        }
+        javax.swing.Icon logoCabecera = LogoNitido.cargar("/com/openbravo/images/quinde-cabecera");
+        if (logoCabecera != null) {
+            poweredby.setIcon(logoCabecera);
+        }
     }
     
     /**
@@ -280,7 +289,7 @@ public class JRootApp extends JPanel implements AppView {
         String newLogo = m_props.getProperty("start.logo");
        if (newLogo != null) {
            if ("".equals(newLogo)){
-                 jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo.png")));
+                 jLabel1.setIcon(LogoNitido.cargar("/com/openbravo/images/quinde-login"));
            }else{
        jLabel1.setIcon(new javax.swing.ImageIcon (newLogo));
        }}
