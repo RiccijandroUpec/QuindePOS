@@ -132,6 +132,13 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase L — La factura en el ticket y un PDF con el formato del SRI (2026-09-30)
+- Con la facturación electrónica encendida, **el ticket impreso es la factura**: sale con "FACTURA No. 001-001-…", el número de autorización / clave de acceso, ambiente y emisión, datos del emisor (matriz, sucursal, obligado a llevar contabilidad), cliente con RUC/cédula, dirección y correo, subtotales por tarifa de IVA, forma de pago con el texto del SRI y si ya está autorizada o en proceso. El número y la clave se reservan al cobrar, antes de imprimir, así coinciden siempre con la factura que llega al SRI.
+- La vista previa y la reimpresión de *Editar ventas* muestran la factura de esa venta (solo la consultan, nunca crean una nueva).
+- **El PDF que se envía por correo** (y el de "Ver factura") tiene ahora el formato habitual del SRI: logo del negocio, recuadros de emisor y de autorización con código de barras, tabla de detalle, Información Adicional (dirección, teléfono y email del cliente), forma de pago y cuadro de subtotales 15 %, 0 %, no objeto, exento, ICE, IVA, IRBPNR, propina y total. Las facturas largas pasan a otra página. La nota de crédito usa el mismo formato.
+- **Logo en la factura**: se elige en *Sistema → Facturación electrónica → Logo en la factura (PDF)*.
+- El correo al cliente dice "Factura 001-001-… - Tu negocio", saluda al cliente e incluye fecha, total y número de autorización.
+
 ### Fase K — Ticket impreso de Quinde POS y logos nítidos (2026-09-30)
 - **Ticket impreso en español** con los datos del negocio: nombre comercial (o razón social), RUC, dirección y "Obligado a llevar contabilidad" si aplica. Se toman de *Sistema → Facturación electrónica*, así se escriben una sola vez.
 - Muestra ticket, fecha, cajero, cliente con cédula/RUC (o "Consumidor final"), productos, subtotal sin impuestos, **IVA desglosado por tarifa**, total y formas de pago en español (Efectivo con recibido y cambio, Tarjeta, Transferencia, DeUna, Cheque, Vale, Cortesía, A crédito). Si la facturación electrónica está encendida, avisa que la factura se envía al SRI y dónde consultarla.

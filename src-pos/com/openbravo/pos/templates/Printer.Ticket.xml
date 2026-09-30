@@ -39,21 +39,66 @@
 	#if ($negocio.ruc != "")
 	<line><text align="center" length="42">RUC: ${negocio.ruc}</text></line>
 	#end
-	#if ($negocio.direccion != "")
+	#if ($factura)
+		#if ($negocio.dirMatriz != "")
+	<line><text align="center" length="42">Matriz: ${negocio.dirMatriz}</text></line>
+		#end
+		#if ($negocio.dirSucursal != "")
+	<line><text align="center" length="42">Sucursal: ${negocio.dirSucursal}</text></line>
+		#end
+		#if ($negocio.contribuyenteEspecial != "")
+	<line><text align="center" length="42">Contribuyente especial: ${negocio.contribuyenteEspecial}</text></line>
+		#end
+		#if ($negocio.obligadoContabilidad)
+	<line><text align="center" length="42">Obligado a llevar contabilidad: SI</text></line>
+		#else
+	<line><text align="center" length="42">Obligado a llevar contabilidad: NO</text></line>
+		#end
+	#else
+		#if ($negocio.direccion != "")
 	<line><text align="center" length="42">${negocio.direccion}</text></line>
-	#end
-	#if ($negocio.obligadoContabilidad)
+		#end
+		#if ($negocio.obligadoContabilidad)
 	<line><text align="center" length="42">Obligado a llevar contabilidad</text></line>
+		#end
 	#end
 	<line></line>
+#end
+#if ($factura)
+	<line><text align="left" length="42">==========================================</text></line>
+	<line></line>
+	<line size="1"><text align="center" length="42" bold="true">FACTURA</text></line>
+	<line><text align="center" length="42" bold="true">No. ${factura.numero}</text></line>
+	<line></line>
+	<line><text align="left" length="42">No. de autorizacion / Clave de acceso:</text></line>
+	<line><text align="center" length="42">${factura.claveLinea1}</text></line>
+	<line><text align="center" length="42">${factura.claveLinea2}</text></line>
+	<line><text align="left" length="12">Ambiente:</text><text>${factura.ambiente}</text></line>
+	<line><text align="left" length="12">Emision:</text><text>${factura.emision}</text></line>
+	<line><text align="left" length="42">==========================================</text></line>
 #end
 	#if (${ticket.ticketType} == 1)
 	<line><text align="center" length="42" bold="true">DEVOLUCION</text></line>
 	#end
+#if ($factura)
+	<line><text align="left" length="12">Fecha:</text><text>${factura.fechaEmision}</text></line>
+	<line><text align="left" length="12">Cliente:</text><text>${factura.compradorRazonSocial}</text></line>
+	<line><text align="left" length="12">RUC/C.I.:</text><text>${factura.compradorIdentificacion}</text></line>
+	#if ($factura.compradorDireccion != "")
+	<line><text align="left" length="12">Direccion:</text><text>${factura.compradorDireccion}</text></line>
+	#end
+	#if ($factura.compradorEmail != "")
+	<line><text align="left" length="12">Email:</text><text>${factura.compradorEmail}</text></line>
+	#end
+	<line><text align="left" length="12">Ticket:</text><text>${ticket.printId()}</text></line>
+	<line><text align="left" length="12">Cajero:</text><text>${ticket.printUser()}</text></line>
+#else
 	<line><text align="left" length="12">Ticket:</text><text>${ticket.printId()}</text></line>
 	<line><text align="left" length="12">Fecha:</text><text>${ticket.printDate()}</text></line>
 	<line><text align="left" length="12">Cajero:</text><text>${ticket.printUser()}</text></line>
-#if ($ticket.getCustomer())
+#end
+#if ($factura)
+#elseif ($ticket.getCustomer())
 	<line><text align="left" length="12">Cliente:</text><text>${ticket.getCustomer().printName()}</text></line>
 	#if ($ticket.getCustomer().getTaxid() && $ticket.getCustomer().getTaxid() != "")
 	<line><text align="left" length="12">Ced./RUC:</text><text>${ticket.getCustomer().printTaxid()}</text></line>
@@ -84,11 +129,23 @@
 #end
 	<line><text align="left" length="42">------------------------------------------</text></line>
 	<line><text align="left" length="22">Articulos:</text><text align="right" length="20">${ticket.printArticlesCount()}</text></line>
+#if ($factura)
+#foreach ($taxline in $ticket.getTaxLines())
+	<line><text align="left" length="26">SUBTOTAL ${taxline.getTaxInfo().getName()}:</text><text align="right" length="16">${taxline.printSubTotal()}</text></line>
+#end
+	<line><text align="left" length="26">SUBTOTAL SIN IMPUESTOS:</text><text align="right" length="16">${ticket.printSubTotal()}</text></line>
+#foreach ($taxline in $ticket.getTaxLines())
+	#if ($taxline.getTax() != 0)
+	<line><text align="left" length="26">${taxline.getTaxInfo().getName()}:</text><text align="right" length="16">${taxline.printTax()}</text></line>
+	#end
+#end
+#else
 	<line><text align="left" length="24">Subtotal sin impuestos:</text><text align="right" length="18">${ticket.printSubTotal()}</text></line>
 #foreach ($taxline in $ticket.getTaxLines())
 	<line><text align="left" length="18">  ${taxline.getTaxInfo().getName()}</text><text align="right" length="12">${taxline.printSubTotal()}</text><text align="right" length="12">${taxline.printTax()}</text></line>
 #end
 	<line><text align="left" length="22">Impuestos:</text><text align="right" length="20">${ticket.printTax()}</text></line>
+#end
 	<line></line>
 	<line size="1"><text align="left" length="16" bold="true">TOTAL</text><text align="right" length="26" bold="true">${ticket.printTotal()}</text></line>
 	<line></line>
@@ -125,8 +182,26 @@
 		<line><text align="left" length="22" bold="true">${paymentline.name}</text><text align="right" length="20">${paymentline.printTotal()}</text></line>
 	#end
 #end
+#if ($factura)
 	<line></line>
-#if ($negocio && $negocio.facturacionElectronica)
+	<line><text align="left" length="42">Forma de pago:</text></line>
+#foreach ($fp in $factura.formasPago)
+	<line><text align="left" length="42">${fp}</text></line>
+#end
+#end
+	<line></line>
+#if ($factura)
+	#if ($factura.autorizada)
+	<line><text align="center" length="42" bold="true">Factura AUTORIZADA por el SRI</text></line>
+	#else
+	<line><text align="center" length="42">Autorizacion del SRI en proceso.</text></line>
+	#end
+	<line><text align="center" length="42">Consultela en srienlinea.sri.gob.ec</text></line>
+	#if ($factura.compradorEmail != "")
+	<line><text align="center" length="42">Se envia tambien a su correo.</text></line>
+	#end
+	<line></line>
+#elseif ($negocio && $negocio.facturacionElectronica)
 	<line><text align="center" length="42">Su factura electronica se envia al SRI.</text></line>
 	<line><text align="center" length="42">Consultela en srienlinea.sri.gob.ec</text></line>
 	<line></line>
