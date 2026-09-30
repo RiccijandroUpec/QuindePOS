@@ -35,10 +35,38 @@ public final class ConexionLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConexionLoader.class);
 
+    /**
+     * Modo fusionado (mismo proceso que ECOPos): el puente fija aqui un
+     * DataSource construido con las MISMAS credenciales de ECOPos, y desde
+     * entonces {@link #cargar(Path)} lo devuelve siempre, ignorando
+     * {@code conexion.properties} - una sola fuente de verdad, sin un
+     * segundo archivo de conexion que el usuario tenga que mantener. Null =
+     * modo standalone, comportamiento de siempre.
+     */
+    private static volatile DataSource dataSourceFusionado;
+
     private ConexionLoader() {
     }
 
+    public static void establecerDataSourceFusionado(DataSource dataSource) {
+        dataSourceFusionado = dataSource;
+    }
+
+    /** Construye un DataSource MySQL (con el driver empaquetado en este jar) a partir de una URL JDBC ya armada. */
+    public static DataSource desdeUrl(String urlJdbc, String usuario, String clave) {
+        MysqlDataSource dataSource = new MysqlDataSource();
+        dataSource.setURL(urlJdbc);
+        dataSource.setUser(usuario);
+        dataSource.setPassword(clave == null ? "" : clave);
+        return dataSource;
+    }
+
     public static DataSource cargar(Path archivoConexion) throws IOException {
+        DataSource fusionado = dataSourceFusionado;
+        if (fusionado != null) {
+            return fusionado;
+        }
+
         Properties propiedades = new Properties();
         if (Files.exists(archivoConexion)) {
             try (InputStream entrada = Files.newInputStream(archivoConexion)) {

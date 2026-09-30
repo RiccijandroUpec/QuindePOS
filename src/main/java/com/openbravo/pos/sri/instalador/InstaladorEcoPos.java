@@ -43,7 +43,10 @@ public final class InstaladorEcoPos {
 
     private static final String MARCADOR_MENU_ROOT = "Menu.SriConnectorHistorial";
     private static final String MARCADOR_TICKET_BUTTONS = "button.sriinvoiceon";
-    private static final String MARCADOR_TICKET_CLOSE = "ecopos-sri-connector hook";
+    /** Inicio, contenido distintivo y fin del bloque viejo (modo servicio separado) de Ticket.Close que dejaba un .flag en sri-conector/pendientes/. */
+    private static final String MARCADOR_TICKET_CLOSE_VIEJO = "// --- ecopos-sri-connector hook";
+    private static final String CONTENIDO_TICKET_CLOSE_VIEJO = "sri-conector/pendientes";
+    private static final String FIN_TICKET_CLOSE_VIEJO = "ecopos_sri_comprobantes.";
     private static final String MARCADOR_ROLE_ADMINISTRADOR = "SriConnectorConfig.bs";
     private static final String MARCADOR_ROLE_GERENTE = "SriConnectorHistorial.bs";
     private static final String MARCADOR_ROLE_EMPLEADO = "button.sriinvoiceon";
@@ -63,7 +66,7 @@ public final class InstaladorEcoPos {
 
             asegurarFragmentoAlFinal(con, "Menu.Root", MARCADOR_MENU_ROOT, "menu-root-fragmento.txt");
             asegurarFragmentoAntesDeCierre(con, "Ticket.Buttons", MARCADOR_TICKET_BUTTONS, "ticket-buttons-fragmento.txt", "</configuration>");
-            asegurarFragmentoAlFinal(con, "Ticket.Close", MARCADOR_TICKET_CLOSE, "ticket-close-fragmento.txt");
+            quitarHookViejoTicketClose(con);
 
             asegurarRecursoCompleto(con, "script.SriInvoiceOn", 0, "script-sri-invoice-on.txt");
             asegurarRecursoCompleto(con, "script.SriInvoiceOff", 0, "script-sri-invoice-off.txt");
@@ -76,6 +79,8 @@ public final class InstaladorEcoPos {
 
             System.out.println("\nListo. ecopos-sri-connector esta instalado/actualizado en esta base de datos.");
         }
+
+        ServicioWindowsViejo.retirarSiExiste(Path.of("."));
     }
 
     // --- tabla propia del conector -----------------------------------------
@@ -145,6 +150,47 @@ public final class InstaladorEcoPos {
         String fragmento = leerRecursoTexto(CARPETA_PLANTILLAS + plantilla);
         actualizarContenidoTexto(con, nombreRecurso, actual + "\n" + fragmento);
         System.out.println("[+] " + nombreRecurso + " actualizado con el hook de ecopos-sri-connector.");
+    }
+
+    /**
+     * Desde 2026-07 el conector corre dentro del mismo proceso que ECOPos y
+     * la venta lo llama directamente (JPanelTicket.closeTicket) - el bloque
+     * que las versiones anteriores de este instalador agregaban al final de
+     * Ticket.Close (dejar un .flag para un servicio de Windows aparte) sobra.
+     * Si se queda y el servicio viejo sigue corriendo, el mismo ticket se
+     * procesaria dos veces. Se quita solo ese bloque, sin tocar el resto del
+     * script (que puede tener personalizaciones del negocio).
+     */
+    private static void quitarHookViejoTicketClose(Connection con) throws SQLException {
+        String actual = leerContenidoTexto(con, "Ticket.Close");
+        if (actual == null) {
+            System.out.println("[!] No se encontro el recurso 'Ticket.Close' en RESOURCES - se omite (¿EcoPos sin sembrar todavia?)");
+            return;
+        }
+        String nuevoContenido = sinHookViejoTicketClose(actual);
+        if (nuevoContenido.equals(actual)) {
+            System.out.println("[=] Ticket.Close no tiene el hook viejo (archivo .flag) - nada que quitar.");
+            return;
+        }
+        actualizarContenidoTexto(con, "Ticket.Close", nuevoContenido);
+        System.out.println("[-] Ticket.Close: quitado el hook viejo (archivo .flag) - ahora EcoPos llama al conector directamente.");
+    }
+
+    /** Devuelve el script sin el bloque viejo del .flag, o el mismo texto si no lo tiene. Paquete-privado para las pruebas. */
+    static String sinHookViejoTicketClose(String script) {
+        int inicio = script.indexOf(MARCADOR_TICKET_CLOSE_VIEJO);
+        int finComentario = inicio < 0 ? -1 : script.indexOf(FIN_TICKET_CLOSE_VIEJO, inicio);
+        int llaveCierre = finComentario < 0 ? -1 : script.indexOf('}', finComentario);
+        if (llaveCierre < 0 || !script.substring(inicio, llaveCierre).contains(CONTENIDO_TICKET_CLOSE_VIEJO)) {
+            return script;
+        }
+        int fin = llaveCierre + 1;
+        while (fin < script.length() && (script.charAt(fin) == '\r' || script.charAt(fin) == '\n')) {
+            fin++;
+        }
+        String antes = script.substring(0, inicio).replaceAll("\\s+$", "");
+        String despues = script.substring(fin);
+        return despues.isEmpty() ? antes + "\n" : antes + "\n" + despues;
     }
 
     private static void asegurarFragmentoAntesDeCierre(Connection con, String nombreRecurso, String marcador, String plantilla, String etiquetaCierre) throws SQLException, IOException {

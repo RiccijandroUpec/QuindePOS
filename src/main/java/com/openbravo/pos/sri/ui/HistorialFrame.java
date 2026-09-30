@@ -1,6 +1,7 @@
 package com.openbravo.pos.sri.ui;
 
 import com.openbravo.pos.sri.ConectorPrincipal;
+import com.openbravo.pos.sri.config.ClassLoaderPropio;
 import com.openbravo.pos.sri.config.ConexionLoader;
 import com.openbravo.pos.sri.config.ConfiguracionCorreoLoader;
 import com.openbravo.pos.sri.config.ConfiguracionLoader;
@@ -316,6 +317,7 @@ public class HistorialFrame extends JFrame {
 
             @Override
             protected Void doInBackground() {
+                ClassLoaderPropio.fijarEnHiloActual();
                 try {
                     DatosEmisor emisor = ConfiguracionLoader.cargar(rutaEmisorPorDefecto());
                     DataSource dataSource = ConexionLoader.cargar(archivoConexion);
@@ -360,6 +362,7 @@ public class HistorialFrame extends JFrame {
 
             @Override
             protected Void doInBackground() {
+                ClassLoaderPropio.fijarEnHiloActual();
                 try {
                     DataSource dataSource = ConexionLoader.cargar(archivoConexion);
                     var xml = new ComprobanteRepository(dataSource.getConnection()).obtenerXml(registro.ticketId);

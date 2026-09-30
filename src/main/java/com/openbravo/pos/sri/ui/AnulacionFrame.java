@@ -1,6 +1,7 @@
 package com.openbravo.pos.sri.ui;
 
 import com.openbravo.pos.sri.anulacion.AnulacionService;
+import com.openbravo.pos.sri.config.ClassLoaderPropio;
 import com.openbravo.pos.sri.config.ConexionLoader;
 import com.openbravo.pos.sri.config.ConfiguracionLoader;
 import com.openbravo.pos.sri.config.RutasConector;
@@ -109,6 +110,7 @@ public class AnulacionFrame extends JDialog {
 
             @Override
             protected String doInBackground() {
+                ClassLoaderPropio.fijarEnHiloActual();
                 try {
                     DatosEmisor emisor = ConfiguracionLoader.cargar(archivoEmisor);
                     var dataSource = ConexionLoader.cargar(archivoConexion);

@@ -134,7 +134,14 @@ public final class ConectorPrincipal {
         }
     }
 
-    private void reintentarPendientes() {
+    /**
+     * Una pasada de reintento de los comprobantes en ERROR/ENVIADO. Publico
+     * para el modo fusionado, cuyo puente la agenda en su propio hilo unico
+     * de trabajo (el mismo de los tickets nuevos) en vez de usar el
+     * planificador de esta clase - asi nunca hay dos hilos usando la misma
+     * conexion ni procesando el mismo ticket a la vez.
+     */
+    public void reintentarPendientes() {
         try {
             List<String> ticketIds = comprobanteRepository.listarTicketIdsParaReintentar(MAX_INTENTOS_REINTENTO);
             for (String ticketId : ticketIds) {

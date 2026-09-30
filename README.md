@@ -9,7 +9,6 @@
 ![PDFBox](https://img.shields.io/badge/PDF-Apache%20PDFBox-D22128?logo=apache&logoColor=white)
 ![ZXing](https://img.shields.io/badge/Barcode-ZXing-black)
 ![jakarta.mail](https://img.shields.io/badge/Correo-jakarta.mail-EA4335?logo=gmail&logoColor=white)
-![WinSW](https://img.shields.io/badge/Servicio%20Windows-WinSW-0078D6?logo=windows&logoColor=white)
 ![License](https://img.shields.io/badge/Licencia-por%20definir-lightgrey)
 
 Módulo Java **independiente** (Maven, propio jar) que emite facturación
@@ -30,8 +29,8 @@ Este proyecto es de código abierto y las contribuciones son bienvenidas
 ayudar:
 
 - **Confirmar los pendientes reales** listados en "Siguiente paso
-  inmediato" más abajo (SMTP en una red sin restricciones, WinSW en otra
-  máquina, ambiente Producción con datos reales de un negocio).
+  inmediato" más abajo (SMTP en una red sin restricciones, instalación en
+  otra máquina, ambiente Producción con datos reales de un negocio).
 - **Agregar soporte para otros tipos de comprobante** (Nota de Débito,
   Guía de Remisión, Comprobante de Retención) si tu negocio los necesita
   — la arquitectura ya está pensada para que sea un mapeo nuevo, no un
@@ -46,7 +45,7 @@ ayudar:
 
 | Categoría | Herramienta | Versión | Para qué |
 |---|---|---|---|
-| Lenguaje / build | Java | 11 | Mismo bytecode que ECOPos, aunque corre en JVM separada |
+| Lenguaje / build | Java | 11 | Corre dentro de la misma JVM que ECOPos (ECOPos necesita Java 11+ para cargarlo) |
 | | Apache Maven | 3.9.16 | Build del módulo (independiente del Ant de ECOPos) |
 | Generación de código | JAXB (`javax.xml.bind:jaxb-api` + `org.glassfish.jaxb:jaxb-runtime`) | 2.3.1 / 2.3.9 | Genera las 38 clases del comprobante (`Factura`, `InfoTributaria`, `Detalle`...) a partir de `factura_V2.1.0.xsd` — nunca se escriben a mano |
 | | `org.codehaus.mojo:jaxb2-maven-plugin` (goal `xjc`) | 2.5.0 | Ejecuta la generación JAXB en cada build (`mvn generate-sources`) |
@@ -71,24 +70,38 @@ ayudar:
   que se ejecutan en puntos concretos de la venta — entre ellos,
   `ticket.close`, justo después de que la venta se guardó en la base de
   datos. Ese script (`Ticket.Close`) está **activo por defecto** en ECOPos.
-- El único cambio en ECOPos es haber **extendido ese script** (dato, no
-  código: `src-pos/com/openbravo/pos/templates/Ticket.Close.xml` en el repo
-  de ECOPos, y el registro correspondiente en la tabla `RESOURCES`) para que,
-  al cerrar una venta normal, deje un archivo vacío
-  `sri-conector/pendientes/<ticketId>.flag`. **Ningún `.java` de ECOPos fue
-  modificado.**
-- Este módulo corre como **proceso separado** (su propio JVM). Nunca
-  comparte classpath con ECOPos, así que sus dependencias (CXF, xades4j,
-  JAXB) no pueden chocar con los jars de 2012 que usa ECOPos.
-- `VigilantePendientes` observa esa carpeta (vía `WatchService`, con
-  barrido de respaldo cada 5s por si el evento de filesystem se pierde).
-  Por cada flag nuevo, lee el ticket completo de la base de datos por su
-  cuenta (no depende de clases de ECOPos) y arranca el flujo: generar XML →
-  firmar XAdES-BES → enviar a Recepción → consultar Autorización.
+- **Desde 2026-07 el conector corre dentro del mismo proceso que ECOPos**
+  (antes era un servicio de Windows aparte que vigilaba una carpeta de
+  archivos `.flag`). Así el negocio instala y abre un solo programa. ECOPos
+  carga `sri-conector/ecopos-sri-connector.jar` al arrancar
+  (`EcoPosSriGlue`, del lado de ECOPos) y, al cerrar una venta normal,
+  `JPanelTicket.closeTicket` llama directamente a
+  `EcoPosSriBridge.procesarTicketAsync(ticketId)` (asíncrono: la venta
+  nunca espera al SRI ni se interrumpe si algo falla).
+- **Aislamiento de librerías**: el jar se carga con un classloader
+  *child-first* (`ClassLoaderConector` en ECOPos): primero el JDK, luego las
+  librerías del conector, y solo al final las de ECOPos. ECOPos trae en
+  `lib/` versiones viejas de wsdl4j, saaj, JavaMail, commons-* y el driver
+  MySQL 5.1; con un classloader normal (*parent-first*) ganaban esas y la
+  firma/SOAP fallaban en tiempo de ejecución. Además, el hilo de trabajo del
+  conector y sus tareas en segundo plano fijan ese classloader como
+  *context classloader* (`ClassLoaderPropio`), porque JAXB, CXF y
+  jakarta.mail buscan sus implementaciones por ahí. La única clase
+  compartida es la interfaz `EcoPosSriBridge` (copiada byte a byte en ambos
+  repos, siempre cargada desde ECOPos).
+- **Un solo hilo de trabajo** para todo lo que toca la BD o el SRI (ventas
+  nuevas y reintentos periódicos cada 15 min): nunca hay dos hilos usando
+  la misma conexión ni pidiendo secuencial a la vez. La conexión (con las
+  mismas credenciales de ECOPos, driver MySQL 8 propio del conector) y los
+  datos del emisor se abren perezosamente y se reabren solos si MySQL cerró
+  la conexión o si alguien guardó una configuración nueva del emisor.
+- El modo *standalone* (`ConectorPrincipal.main` + `VigilantePendientes`
+  vigilando `pendientes/`) sigue existiendo para desarrollo, pero ya no es
+  la forma de instalarlo.
 - **Dos mecanismos de persistencia distintos, no confundir uno con otro**:
   (a) `sri-conector/facturacion-global.properties` (clave `activo`) es el
   interruptor GLOBAL de si se factura o no - lo escriben los botones
-  "SRI: SI/NO" de la pantalla de venta, lo lee `Ticket.Close.xml`, aplica a
+  "SRI: SI/NO" de la pantalla de venta, lo lee `JPanelTicket.closeTicket`, aplica a
   todas las ventas por igual; (b) el correo del cliente para una venta en
   particular sí es por-ticket (propiedad `sri.email` en
   `RECEIPTS.ATTRIBUTES`, formato `Properties.storeToXML` de ECOPos), porque
@@ -103,9 +116,9 @@ ayudar:
 | Pieza | Estado |
 |---|---|
 | Estructura Maven + `pom.xml` | ✅ Listo, `mvn clean test` verificado en verde |
-| Hook con ECOPos (script `Ticket.Close` + carpeta de flags) | ✅ Listo y probado (arranque de ECOPos verificado, sintaxis BeanShell validada con intérprete real) |
+| **Modo fusionado** (mismo proceso que ECOPos: `EcoPosSriGlue` + `ClassLoaderConector` en ECOPos, `EcoPosSriBridgeImpl` aquí) | ✅ **Verificado en tiempo de ejecución el 2026-09-30** con un harness que carga el `ecopos.jar` real + `lib/` de ECOPos y el jar sombreado igual que `StartPOS`: el puente carga, la firma XAdES y el cliente SOAP se inicializan, la conexión se reabre sola tras un `KILL` en MySQL, y `HistorialFrame`/`ConfiguracionFrame`/`ConfiguracionCorreoFrame` se renderizan con datos reales. Ver "Hallazgos del modo fusionado" abajo (3 bugs reales que solo aparecían en ejecución). **Falta**: una factura real de punta a punta por este camino (ambiente PRUEBAS) |
 | Tabla `ecopos_sri_comprobantes` | ✅ Creada y en uso real contra el MySQL de la instalación (más la migración `002_agregar_nota_credito.sql` para Nota de Crédito, también ya ejecutada) |
-| `VigilantePendientes` (detección de ventas cerradas) | ✅ Escrito, probado con tickets reales (dispara `ConectorPrincipal.procesarTicket` de verdad al cerrar una venta) |
+| `VigilantePendientes` (detección de ventas cerradas por archivo `.flag`) | Solo modo standalone/desarrollo — en el modo fusionado ECOPos llama al conector directamente |
 | Clases de dominio (`Comprobante`, `DatosEmisor`, `Cliente`, `DetalleFactura`, `ImpuestoDetalle`, `Pago`, enums) | ✅ Escritas, compilan, usadas en los flujos reales de factura y nota de crédito |
 | `ClaveAccesoGenerator` (clave de 49 dígitos, módulo 11) | ✅ Escrito + 5 tests unitarios en verde — el dígito verificador quedó implícitamente validado: el SRI real aceptó (RECIBIDA) varias claves generadas por este código, tanto de facturas como de la nota de crédito |
 | `TicketReader` / `ComprobanteRepository` (lectura ECOPos + CRUD tabla propia) | ✅ Escritos y **probados extensamente contra MySQL real** (no solo compilación) — incluye la lectura de `RECEIPTS.ATTRIBUTES` para el correo del cliente |
@@ -119,8 +132,8 @@ ayudar:
 | Firma XAdES-BES (`XadesBesSigner`) | ✅ **Escrito y probado con una firma real** (certificado autofirmado generado con `keytool` en el test, no un mock) — 3 tests, incluye verificar que usa **RSA-SHA1** (no el SHA-256 por defecto de xades4j) tal como exige la sección 6.8/Anexo 14 de la ficha técnica. Ver notas técnicas abajo sobre el conflicto de runtime JAXB con xades4j |
 | `ConfiguracionLoader` (lee/escribe `datos-emisor.properties` ↔ `DatosEmisor`) | ✅ **Escrito y probado** — 4 tests con round-trip real a disco (`@TempDir`), incluyendo verificar que la clave del certificado nunca queda en texto plano en el archivo (`ClaveCifrador`, AES-GCM) |
 | Pantalla Swing de configuración (`ConfiguracionFrame`) | ✅ Escrita, compila, y **verificada visualmente** (ver "Verificación visual" abajo) — carga/guarda contra `ConfiguracionLoader`, se usó para guardar los datos reales del emisor que llevaron al AUTORIZADO real de abajo. Se abre desde EcoPos vía botón (Administración > Sistema), ver fila siguiente |
-| Clase orquestadora `ConectorPrincipal` (une todo en un proceso que corra continuamente) | ✅ **Escrita y probada de punta a punta contra servicios reales, con resultado AUTORIZADO** (MySQL real + certificado real acreditado + servidor real de pruebas del SRI, no mocks) — ver hallazgo abajo con los 4 bugs reales encontrados y corregidos en el camino. **Corriendo de verdad como proceso persistente** desde `sri-conector/` (no solo invocado por harnesses de prueba) — encontró y corrigió un quinto bug real (carpeta de pendientes mal resuelta, ver hallazgo más abajo). Sigue faltando dejarlo como tarea programada/servicio de Windows que sobreviva un reinicio |
-| Botón en EcoPos para abrir `ConfiguracionFrame` (Administración > Sistema) | ✅ **Escrito y probado** — hook data-only (`SriConnectorConfig.bs` + `Menu.Root`/`Role.Administrator` en el repo de EcoPos), lanza el jar del conector como proceso externo. Confirmado con un lanzamiento real (título de ventana verificado vía la tabla de procesos del SO) |
+| Clase orquestadora `ConectorPrincipal` (une todo en un proceso que corra continuamente) | ✅ **Escrita y probada de punta a punta contra servicios reales, con resultado AUTORIZADO** (MySQL real + certificado real acreditado + servidor real de pruebas del SRI, no mocks) — ver hallazgo abajo con los 4 bugs reales encontrados y corregidos en el camino. **Corriendo de verdad como proceso persistente** desde `sri-conector/` (no solo invocado por harnesses de prueba) — encontró y corrigió un quinto bug real (carpeta de pendientes mal resuelta, ver hallazgo más abajo). Ya no hace falta como proceso aparte: corre dentro de ECOPos (ver fila "Modo fusionado") |
+| Botón en EcoPos para abrir `ConfiguracionFrame` (Administración > Sistema) | ✅ `SriConnectorConfig.bs` + `Menu.Root`/`Role.Administrator` en el repo de EcoPos — abre la ventana dentro del mismo proceso vía el puente (antes lanzaba un `java -cp` aparte) |
 | Botones "Facturar SRI: SI/NO" en la pantalla de venta de EcoPos | ✅ **Rediseñados como interruptor GLOBAL persistente, con íconos, y verificados visualmente** (ver "Verificación visual" abajo — se ven del mismo tamaño que los botones existentes "Imp. Ticket"/"Abrir cajón", íconos nítidos y con color claro por estado) — ya no son botones de solo texto ni marcan un atributo por-ticket (eso reseteaba a "NO" en cada venta nueva). Ahora escriben en un archivo compartido (`sri-conector/facturacion-global.properties`, clave `activo`) que `Ticket.Close.xml` lee directo: una vez en SI, aplica a **todas** las ventas hasta que alguien presione NO (elegido así explícitamente por el usuario, sin excepción por ticket). Íconos propios (`img.sriinvoiceon`/`img.sriinvoiceoff`, check verde / X gris, ver "Hallazgo: límite del framework de botones" abajo) insertados como filas nuevas en `RESOURCES`. El botón SI sigue ofreciendo capturar el correo del cliente para esa venta puntual si su perfil no tiene uno guardado. El ticket siempre se imprime igual, sin importar este ajuste |
 | Historial de facturación (`HistorialFrame`) | ✅ **Escrito y probado** — lista todo `ecopos_sri_comprobantes` (facturas y notas de crédito), colorea por estado, y marca en naranja los comprobantes ENVIADO/ERROR con más de 24h sin resolverse (aviso operativo, no una cita textual de un plazo legal del SRI) |
 | RIDE en PDF (`RideGenerator` / `RideNotaCreditoGenerator`) | ✅ **Escrito y verificado** (render-a-imagen con `PDFRenderer`, no solo extracción de texto) contra un layout de referencia real de otro sistema — cubre fecha/hora de autorización, subtotales por tarifa/tipo de impuesto (con IVA/ICE/IRBPNR etiquetados por su código real), código auxiliar y detalle adicional por línea, subsidio, e Información Adicional |
@@ -129,8 +142,8 @@ ayudar:
 | Envío por correo (`NotificadorCorreo`, `ConfiguracionCorreoFrame`) | ✅ Escrito y compila (jakarta.mail/SMTP) — botón "Enviar por correo" en el Historial, config propia en `correo.properties` (clave cifrada igual que el certificado). **Se intentó contra un servidor SMTP real (cuenta desechable de Ethereal) y el puerto SMTP está bloqueado en la red de desarrollo - ver "Siguiente paso inmediato" abajo** |
 | Envío automático al cliente al quedar AUTORIZADO | ✅ **Escrito** (`ConectorPrincipal.intentarEnvioAutomaticoPorCorreo`) — si el cliente del ticket tiene correo (el de su perfil `CUSTOMERS.EMAIL`, o el que el cajero ingresó al activar "Facturar SRI: SI" si no tenía uno) y existe `config/correo.properties`, se le manda el XML+RIDE apenas el SRI autoriza, sin acción manual. El correo se lee de `RECEIPTS.ATTRIBUTES` (formato `Properties.storeToXML` de ECOPos, sin depender de sus clases). Un fallo de correo nunca afecta el resultado ya resuelto ante el SRI. **Se intentó contra un servidor SMTP real (cuenta desechable de Ethereal) y el puerto SMTP está bloqueado en la red de desarrollo - ver "Siguiente paso inmediato" abajo** (mismo pendiente que el botón manual) |
 | Reintento manual desde el Historial | ✅ Escrito — botón "Reintentar envío" para FACTURA en ERROR/RECHAZADO/ENVIADO, reusa `ConectorPrincipal.procesarTicket` (relee el ticket de ECOPos, así que recoge correcciones hechas desde la última vez) |
-| **Servicio de Windows** (`servicio-windows/`, WinSW) | ✅ **Instalado y probado de verdad** — `ConectorPrincipal` corre como servicio real (arranque automático, se reinicia solo si se cae), no como proceso manual en una terminal. Probado instalar/iniciar/detener/reiniciar, logs con rotación. Pendiente: probar en una máquina limpia distinta a esta |
-| **Instalador auto-contenido** (`InstaladorEcoPos`) | ✅ **Escrito y probado dos veces de punta a punta** (contra una base de prueba limpia simulando una instalación existente, y contra la base real de este negocio) — sincroniza de forma idempotente `Menu.Root`/`Ticket.Buttons`/`Ticket.Close`/los scripts SI-NO/sus íconos/permisos de rol, y crea la tabla propia del conector. No depende de tener el repo de EcoPos a mano (plantillas empaquetadas en este jar, `src/main/resources/plantillas-ecopos/`) |
+| Servicio de Windows (WinSW) | ❌ **Retirado** (2026-09-30) — ya no hace falta. `InstaladorEcoPos` detiene y desinstala el servicio viejo si lo encuentra (requiere consola como Administrador; si no la tiene, imprime los 2 comandos `sc` a correr) |
+| **Instalador auto-contenido** (`InstaladorEcoPos`) | ✅ Sincroniza de forma idempotente `Menu.Root`/`Ticket.Buttons`/los scripts SI-NO/sus íconos/permisos de rol, crea la tabla propia del conector, **quita de `Ticket.Close` el bloque viejo que dejaba archivos `.flag`** (sin tocar el resto del script; con test unitario) y retira el servicio de Windows viejo. Probado el 2026-09-30 contra la base real de desarrollo, y re-corrido para confirmar que es no-op la segunda vez. No depende de tener el repo de EcoPos a mano (plantillas empaquetadas en este jar, `src/main/resources/plantillas-ecopos/`) |
 | **Instalación nueva de EcoPos (desde cero)** | ✅ **Probado de verdad, no solo leído**: se creó una base MySQL vacía y se corrió `MySQL-create.sql` con las clases reales de EcoPos (`Session` + `BatchSentenceResource`, las mismas que usa `JRootApp` al detectar una base sin sembrar) — 0 sentencias con error, y se confirmó que `Menu.Root`/`Ticket.Buttons`/`Ticket.Close`/`Role.Administrador/Gerente/Empleado` quedaron con los hooks de ecopos-sri-connector y que `script.SriInvoiceOn/Off`+`img.sriinvoiceon/off` (los 4 recursos que faltaban) se sembraron bien. `InstaladorEcoPos` corrido después contra esa misma base confirmó no-op (todo ya estaba). Base de prueba borrada al terminar |
 
 ## ⚠️ Hallazgo importante: el WSDL oficial no coincide con el servidor real
@@ -342,13 +355,15 @@ puede resolver solo con más código):**
    propósito, incluida la Nota de Crédito). **Esto no se activa por
    iniciativa propia bajo ningún "hazlo todo" genérico** - requiere que el
    negocio esté listo y lo pida puntualmente.
-3. Crear `config/conexion.properties` (host/puerto/baseDatos/usuario/clave)
-   en la instalación real donde corra el conector — `ConectorPrincipal`
-   usa `localhost`/`3306`/`ecopos`/`root`/`` como valores por defecto si el
-   archivo no existe, pensado para XAMPP local, no para producción.
-4. Probar `servicio-windows/` (WinSW) en una máquina distinta a esta -
-   aquí se probó instalar/iniciar/detener/reiniciar con resultado
-   correcto, pero siempre en la misma máquina de desarrollo.
+3. **Una factura real de punta a punta por el modo fusionado** (ambiente
+   PRUEBAS): cerrar una venta en ECOPos con "SRI: SI" y ver que llegue a
+   AUTORIZADO. Todo el camino hasta la firma/SOAP ya se verificó en
+   ejecución, pero no un envío real al SRI por este camino.
+4. Probar la instalación completa en una máquina distinta a esta.
+
+`config/conexion.properties` ya **no** hace falta dentro de ECOPos (el
+conector usa las mismas credenciales de ECOPos). Solo lo usan el instalador
+y el modo standalone, con `localhost`/`3306`/`ecopos`/`root`/`` por defecto.
 
 **Limitaciones conocidas, no bloqueantes pero buenas de tener presentes:**
 
@@ -379,6 +394,35 @@ puede resolver solo con más código):**
   soporte si el negocio los llega a necesitar - la arquitectura (XSD propio
   por tipo, `EnvioComprobanteService`/`FacturaXmlReader` compartidos) ya
   está pensada para que sea un mapeo nuevo, no un rediseño.
+
+## ⚠️ Hallazgos del modo fusionado (2026-09-30)
+
+La fusión en un solo proceso (2026-07-17) solo se había verificado
+compilando. Al ejecutarla de verdad dentro de ECOPos aparecieron 3 bugs que
+hubieran dejado la facturación SRI **sin funcionar en absoluto**, sin
+ningún error visible para el cajero:
+
+1. **El puente nunca se creaba**: `EcoPosSriGlue` abría la conexión con
+   `DriverManager` al arrancar, pero ECOPos registra su driver MySQL recién
+   al crear su propia sesión (después) y desde un classloader propio →
+   `No suitable driver` → facturación desactivada hasta reiniciar. Ahora el
+   conector abre la conexión con su propio driver, perezosamente, y la
+   reabre si se cae.
+2. **La firma fallaba**: `Implementation of Jakarta XML Binding-API has not
+   been found` — JAXB busca su implementación con el *context classloader*
+   del hilo, que era el de ECOPos. Arreglado con `ClassLoaderPropio`.
+3. **El SOAP fallaba**: `NoSuchMethodError` en `javax.wsdl` — ganaba el
+   `wsdl4j-1.5.1.jar` viejo de ECOPos. Arreglado con el classloader
+   child-first `ClassLoaderConector`.
+
+Además, el build oficial de ECOPos (`ant -f build_working.xml jar`, que
+compila con `-source 1.7`) estaba roto por lambdas en `EcoPosSriGlue`, y
+si la configuración del emisor todavía no existía, el puente no se creaba
+y la ventana de configuración (justo la que hace falta para crearla) no se
+podía abrir. Ambos corregidos.
+
+**Lección**: al cargar un módulo dentro de otro proceso, compilar no
+prueba nada. Hay que ejecutarlo con el classpath real del proceso anfitrión.
 
 ## ✅ Verificación visual: renderizado fuera de pantalla (sin captura de escritorio)
 
@@ -433,7 +477,7 @@ este entorno.
   vendoriza los XSD oficiales del SRI. Verificado campo por campo contra la
   ficha técnica v2.32 que compartió el usuario — coincide exactamente.
 - `cxf-codegen-plugin` 4.0.4 requiere Java 17; este módulo compila con
-  JDK 11 (mismo que ECOPos, aunque corre en proceso separado), así que
+  JDK 11 (mismo que ECOPos, con quien comparte JVM), así que
   se bajó a **CXF 3.6.4** (soporta Java 11+).
 - **Conflicto de namespace JAXB entre generadores**: CXF 3.6.4 genera sus
   stubs usando `javax.xml.bind` (JAXB clásico), pero `jaxb2-maven-plugin`
