@@ -36,6 +36,7 @@
 
 <permissions>
     <class name="com.openbravo.pos.sales.JPanelTicketSales"/>
+    <class name="com.openbravo.pos.promociones.JPanelPromociones"/>
     <class name="com.openbravo.pos.panels.JPanelResumenTributario"/>
     <class name="sales.SinAutorizacion"/>
     <class name="com.openbravo.pos.panels.JPanelDashboard"/>

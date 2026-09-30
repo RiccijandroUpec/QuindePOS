@@ -32,6 +32,7 @@ group = menu.addGroup("Menu.Main");
         group.addPanel("/com/openbravo/images/payments.png", "Menu.Payments", "com.openbravo.pos.panels.JPanelPayments");
         group.addPanel("/com/openbravo/images/calculator.png", "Menu.CloseTPV", "com.openbravo.pos.panels.JPanelCloseMoney");
         group.addPanel("/com/openbravo/images/reports.png", "Menu.ResumenTributario", "com.openbravo.pos.panels.JPanelResumenTributario");
+        group.addPanel("/com/openbravo/images/bookmark.png", "Menu.Promociones", "com.openbravo.pos.promociones.JPanelPromociones");
 
 group = menu.addGroup("Menu.Backoffice");
     submenu = group.addSubmenu("/com/openbravo/images/customer.png", "Menu.Customers", "com.openbravo.pos.forms.MenuCustomers");

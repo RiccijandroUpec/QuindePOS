@@ -142,6 +142,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
      *
      */
     protected AppView m_App;
+    private com.openbravo.pos.promociones.MotorPromociones motorPromociones;
 
     /**
      *
@@ -242,6 +243,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
        
         m_App = app;
         restDB = new  RestaurantDBUtils(m_App);
+        motorPromociones = new com.openbravo.pos.promociones.MotorPromociones(m_App.getSession());
        
         dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
         dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
@@ -623,6 +625,18 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     }
      
     private void printPartialTotals(){
+
+        // Promociones automaticas (2x1, % por producto/categoria, happy hour):
+        // ajustan el precio de las lineas antes de mostrar los totales.
+        if (motorPromociones != null && m_oTicket != null) {
+            int seleccionada = m_ticketlines.getSelectedIndex();
+            for (Integer i : motorPromociones.aplicar(m_oTicket)) {
+                m_ticketlines.setTicketLine(i, m_oTicket.getLine(i));
+            }
+            if (seleccionada >= 0 && seleccionada < m_oTicket.getLinesCount()) {
+                m_ticketlines.setSelectedIndex(seleccionada);
+            }
+        }
                
         if (m_oTicket.getLinesCount() == 0) {
             m_jSubtotalEuros.setText(null);
@@ -690,6 +704,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         return com.openbravo.pos.forms.AutorizacionSupervisor.autorizar(this, m_App, accion, detalle);
     }
 
+    /** Precio de lista de la linea (antes de promociones). */
+    private static double precioLista(TicketLineInfo linea) {
+        String lista = linea.getProperty(com.openbravo.pos.promociones.MotorPromociones.PRECIO_LISTA);
+        return lista == null ? linea.getPrice() : Double.parseDouble(lista);
+    }
+
     private static String escaparHtml(String texto) {
         return texto == null ? "" : texto.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
@@ -714,7 +734,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                 || ultima.isProductCom()
                 || ultima.isProductVerpatrib()
                 || ultima.getMultiply() <= 0
-                || ultima.getPrice() != dPrice
+                || precioLista(ultima) != dPrice
                 || "Yes".equals(ultima.getProperty("sendstatus"))) {
             return false;
         }

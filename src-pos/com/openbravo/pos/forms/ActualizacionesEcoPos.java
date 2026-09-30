@@ -39,6 +39,7 @@ public final class ActualizacionesEcoPos {
             crearTablaAuditoria(con);
             crearTablaArqueos(con);
             agregarResumenTributario(con);
+            agregarPromociones(con);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudieron aplicar las actualizaciones de EcoPos", e);
         }
@@ -85,18 +86,43 @@ public final class ActualizacionesEcoPos {
 
     /** Fase F: "Resumen tributario" despues de "Cerrar caja", para Administrador y Gerente. */
     private static void agregarResumenTributario(Connection con) throws SQLException {
-        String clase = "com.openbravo.pos.panels.JPanelResumenTributario";
-        String ancla = "\"Menu.CloseTPV\", \"com.openbravo.pos.panels.JPanelCloseMoney\");";
+        agregarPanelAdministrativo(con, "com.openbravo.pos.panels.JPanelResumenTributario",
+                "/com/openbravo/images/reports.png", "Menu.ResumenTributario",
+                "\"Menu.CloseTPV\", \"com.openbravo.pos.panels.JPanelCloseMoney\");");
+    }
+
+    /** Fase H: "Promociones" despues de "Resumen tributario", con su tabla de reglas. */
+    private static void agregarPromociones(Connection con) throws SQLException {
+        try (java.sql.Statement st = con.createStatement()) {
+            st.execute("CREATE TABLE IF NOT EXISTS ecopos_promociones ("
+                    + "id VARCHAR(36) NOT NULL, activo INT NOT NULL, nombre VARCHAR(100) NOT NULL, tipo VARCHAR(20) NOT NULL, "
+                    + "producto VARCHAR(255), categoria VARCHAR(255), n INT, m INT, porcentaje DOUBLE, "
+                    + "hora_desde INT, hora_hasta INT, dias VARCHAR(7), PRIMARY KEY (id))");
+        } catch (SQLException e) {
+            LOG.log(Level.WARNING, "No se pudo crear la tabla ecopos_promociones", e);
+        }
+        agregarPanelAdministrativo(con, "com.openbravo.pos.promociones.JPanelPromociones",
+                "/com/openbravo/images/bookmark.png", "Menu.Promociones",
+                "\"Menu.ResumenTributario\", \"com.openbravo.pos.panels.JPanelResumenTributario\");");
+    }
+
+    /**
+     * Agrega una opcion de menu justo despues de la linea que termina en
+     * {@code ancla} (con su misma sangria) y el permiso para Administrador y
+     * Gerente. Idempotente.
+     */
+    private static void agregarPanelAdministrativo(Connection con, String clase, String icono, String clave, String ancla)
+            throws SQLException {
         String menu = leerRecurso(con, "Menu.Root");
         if (menu != null && !menu.contains(clase) && menu.contains(ancla)) {
             int fin = menu.indexOf(ancla) + ancla.length();
             int inicioLinea = menu.lastIndexOf('\n', fin) + 1;
             String sangria = sangriaDeLinea(menu, menu.indexOf("group.", inicioLinea));
             menu = menu.substring(0, fin) + "\n" + sangria
-                    + "group.addPanel(\"/com/openbravo/images/reports.png\", \"Menu.ResumenTributario\", \"" + clase + "\");"
+                    + "group.addPanel(\"" + icono + "\", \"" + clave + "\", \"" + clase + "\");"
                     + menu.substring(fin);
             guardarRecurso(con, "Menu.Root", menu);
-            LOG.info("Menu.Root: agregado el Resumen tributario");
+            LOG.info("Menu.Root: agregado " + clave);
         }
         String permiso = "<class name=\"" + clase + "\"/>";
         for (String rol : new String[]{"Administrador", "Gerente"}) {

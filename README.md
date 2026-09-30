@@ -130,6 +130,10 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase H — Promociones automáticas (2026-09-30)
+- Nuevo menú **Promociones** (Administrador y Gerente) para crear reglas sin programar: **"Lleva N paga M"** (2x1, 3x2...) y **"% de descuento"**, por producto o por categoría, con horario y días opcionales (**happy hour**, por ejemplo 20% de 17 a 19 h de lunes a viernes).
+- La venta las aplica sola al agregar productos o cambiar cantidades, bajando el precio de la línea: el ticket, los totales, los reportes y la factura SRI salen con el precio realmente cobrado. Si varias reglas aplican, el cliente recibe la mejor.
+
 ### Fase G — Nota de crédito parcial (2026-09-30)
 - Desde el Historial de facturación, "Anular factura" ahora permite **devolver solo algunos productos o parte de las cantidades**. EcoPos recalcula base e IVA y no deja devolver dos veces lo mismo (resta las notas de crédito anteriores de esa factura).
 
@@ -203,7 +207,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ⬜ Carga de productos desde Excel y edición masiva de precios
 
 **Ventas y clientes**
-- ⬜ Promociones automáticas (2x1, combos, happy hour)
+- ✅ Promociones automáticas (2x1, 3x2, % por producto o categoría, happy hour); combos de productos distintos pendientes
 - ⬜ Programa de puntos / fidelidad
 - ✅ Historial de compras del cliente al atenderlo
 - ⬜ Tarjetas de regalo con saldo
