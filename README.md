@@ -130,6 +130,12 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase D — Panel del negocio, stock bajo y copias de seguridad (2026-09-30)
+- **Panel del negocio** (primera opción del menú, para Administrador y Gerente): ventas de hoy comparadas con ayer a la misma hora, tickets, ticket promedio, gráfico de ventas por hora, los 5 más vendidos, formas de pago del día y productos por agotarse.
+- **Alertas de stock bajo**: productos con stock actual en o por debajo del mínimo definido por almacén (Inventario → Stock).
+- **Copia de seguridad automática**: una vez al día, al abrir EcoPos y en segundo plano, se guarda un volcado comprimido de la base (MySQL/MariaDB) en `~/EcoPos-respaldos` y se conservan los últimos 14. Opciones en `ecopos.properties`: `backup.enabled`, `backup.dir`, `backup.mysqldump`, `backup.keep`. La fecha de la última copia aparece en el Panel del negocio.
+- **Actualización automática de bases existentes**: al arrancar, EcoPos agrega por su cuenta las opciones de menú y permisos nuevos a instalaciones creadas con versiones anteriores (sin SQL a mano).
+
 ### Fase C — Cobro pensado para Ecuador (2026-09-30)
 - **Comprobante al cobrar**: "Consumidor final" o "Factura con datos". Con datos, la cédula o el RUC se valida al instante (módulo 10 y 11 del Registro Civil y el SRI); si el cliente ya existe se autocompletan su nombre y correo, y si no, se crea al cobrar. La venta queda a su nombre, que es a quien el SRI le emite la factura. Con una identificación inválida no deja cobrar.
 - **Efectivo en dólares**: billetes de $50, $20, $10, $5 y $1, y monedas de 50, 25, 10, 5 y 1 centavos (antes eran libras esterlinas), más un botón **Exacto**. El cambio se muestra en grande.
@@ -178,7 +184,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 
 **Inventario y compras**
 - ⬜ Proveedores y órdenes de compra
-- ⬜ Alertas de stock bajo
+- ✅ Alertas de stock bajo (en el Panel del negocio)
 - ⬜ Kardex con costo promedio
 - ⬜ Lotes y fechas de caducidad
 - ⬜ Carga de productos desde Excel y edición masiva de precios
@@ -195,14 +201,14 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ⬜ Pedidos para llevar y delivery
 
 **Dueño y gestión**
-- ⬜ Panel del dueño (ventas de hoy, ticket promedio, más vendidos)
+- ✅ Panel del negocio (ventas de hoy, ticket promedio, más vendidos, ventas por hora)
 - ⬜ Ver ventas desde el celular
 - ⬜ Varias sucursales centralizadas
 - ⬜ Exportar a contabilidad
 
 **Operación**
 - ✅ Estilo moderno, iconos y pantalla de venta nueva
-- ⬜ Copia de seguridad automática
+- 🟡 Copia de seguridad automática: diaria y local ✅; copia en la nube pendiente
 - ⬜ Asistente de primera configuración
 - ⬜ Actualizaciones automáticas
 - ⬜ Versión para tablet / Android

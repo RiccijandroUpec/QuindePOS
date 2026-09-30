@@ -202,6 +202,11 @@ public class JRootApp extends JPanel implements AppView {
             }
         }
         
+        // Mejoras de EcoPos para bases ya existentes (menu, permisos) - idempotente.
+        ActualizacionesEcoPos.aplicar(session);
+        // Copia de seguridad diaria en segundo plano (solo MySQL/MariaDB).
+        RespaldoAutomatico.programar(m_props);
+
         // Cargamos las propiedades de base de datos
         m_propsdb = m_dlSystem.getResourceAsProperties(m_props.getHost() + "/properties");
         

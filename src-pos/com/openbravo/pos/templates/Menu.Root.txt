@@ -25,6 +25,7 @@
 // *** Then enable in Administration>Resources>Roles>Administrator/Manager ***
 
 group = menu.addGroup("Menu.Main");
+        group.addPanel("/com/openbravo/images/chart.png", "Menu.Dashboard", "com.openbravo.pos.panels.JPanelDashboard");
         group.addPanel("/com/openbravo/images/sale.png", "Menu.Ticket", "com.openbravo.pos.sales.JPanelTicketSales");
         group.addPanel("/com/openbravo/images/saleedit.png", "Menu.TicketEdit", "com.openbravo.pos.sales.JPanelTicketEdits");
         group.addPanel("/com/openbravo/images/customerpay.png", "Menu.CustomersPayment", "com.openbravo.pos.customers.CustomersPayment");
