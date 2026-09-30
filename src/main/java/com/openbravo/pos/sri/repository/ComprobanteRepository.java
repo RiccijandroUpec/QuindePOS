@@ -125,6 +125,26 @@ public class ComprobanteRepository {
         }
     }
 
+    /**
+     * XML de las notas de credito ya emitidas contra una factura (todas menos
+     * las RECHAZADAS: una en ERROR/ENVIADO todavia puede quedar autorizada en
+     * un reintento, asi que cuenta como devuelta).
+     */
+    public List<String> xmlNotasCreditoVigentesDe(String facturaOriginalId) throws SQLException {
+        String sql = "SELECT xml_generado FROM ecopos_sri_comprobantes " +
+            "WHERE tipo_comprobante = '04' AND comprobante_original_id = ? AND estado <> 'RECHAZADO'";
+        List<String> xmls = new java.util.ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, facturaOriginalId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    xmls.add(rs.getString(1));
+                }
+            }
+        }
+        return xmls;
+    }
+
     public boolean existePorTicketId(String ticketId) throws SQLException {
         String sql = "SELECT 1 FROM ecopos_sri_comprobantes WHERE ticket_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

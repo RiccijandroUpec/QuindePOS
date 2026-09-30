@@ -380,9 +380,7 @@ y el modo standalone, con `localhost`/`3306`/`ecopos`/`root`/`` por defecto.
   estab/ptoEmi. Si el negocio abre una segunda sucursal o caja con su
   propio punto de emisión, esto hay que revisarlo antes (el SRI exige un
   consecutivo independiente por cada combinación estab-ptoEmi-codDoc).
-- **Nota de Crédito solo cubre anulación TOTAL**: copia el detalle y el
-  valor completo de la factura original tal como el SRI la autorizó, no
-  permite acreditar solo algunas líneas o un monto parcial.
+- **Nota de Crédito parcial por cantidades**: se puede devolver solo algunos productos o cantidades (ver Mejoras recientes); todavía no permite un descuento/monto libre sin productos.
 - **`TipoIdentificacionResolver`/`FormaPagoResolver`** (heurísticas para
   adivinar tipo de identificación por longitud y forma de pago por texto
   libre de ECOPos) siguen sin validarse contra datos reales de clientes/
@@ -397,6 +395,7 @@ y el modo standalone, con `localhost`/`3306`/`ecopos`/`root`/`` por defecto.
 
 ## 🆕 Mejoras recientes
 
+- **2026-09-30 — Nota de Crédito parcial**: la ventana "Anular factura" muestra los productos de la factura y permite devolver solo algunos o parte de las cantidades (`AnulacionService.anularParcial`). Recalcula base, IVA por línea y totales por tarifa (`CalculoNotaCreditoParcial`, con tests) y no deja devolver más de lo que queda: resta las notas de crédito anteriores de la misma factura (salvo las RECHAZADAS). Devolver todo de una factura intacta sigue usando los valores exactos de la factura original. **Pendiente**: emitir una parcial real contra el SRI en ambiente de pruebas.
 - **2026-09-30 — Formas de pago correctas ante el SRI**: Transferencia (`bank` en EcoPos), DeUna y cheque se informan con el código **20** ("otros con utilización del sistema financiero"); antes salían como **01** (sin sistema financiero, es decir, efectivo). Tests en `FormaPagoResolverTest`.
 - **2026-09-30 — Modo fusionado funcional y verificado en ejecución** (ver hallazgos abajo) y servicio de Windows retirado.
 - EcoPos ahora valida la cédula/RUC del comprador al cobrar ("Factura con datos"), así que el conector recibe identificaciones ya verificadas; ver el README de EcoPos.

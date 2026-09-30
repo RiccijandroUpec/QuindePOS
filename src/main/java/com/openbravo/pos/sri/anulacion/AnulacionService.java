@@ -75,6 +75,92 @@ public final class AnulacionService {
      *         {@code ecopos_sri_comprobantes} - con eso el Historial puede
      *         mostrarla, ver su XML y generar su RIDE igual que una factura.
      */
+    /** Una linea de la factura con lo que todavia se puede devolver (para la pantalla de Nota de Credito). */
+    public static final class LineaAnulable {
+        public final String descripcion;
+        public final BigDecimal vendido;
+        public final BigDecimal disponible;
+        public final BigDecimal precioUnitario;
+
+        LineaAnulable(String descripcion, BigDecimal vendido, BigDecimal disponible, BigDecimal precioUnitario) {
+            this.descripcion = descripcion;
+            this.vendido = vendido;
+            this.disponible = disponible;
+            this.precioUnitario = precioUnitario;
+        }
+    }
+
+    /**
+     * Lineas de la factura del ticket con lo que queda por devolver (restando
+     * las notas de credito anteriores). No firma ni contacta al SRI.
+     */
+    public static List<LineaAnulable> lineasAnulables(java.sql.Connection connection, String ticketIdFactura) throws Exception {
+        ComprobanteRepository repositorio = new ComprobanteRepository(connection);
+        ComprobanteRepository.FacturaParaAnular original = repositorio.buscarFacturaAutorizadaParaAnular(ticketIdFactura)
+                .orElseThrow(() -> new NoSuchElementException("El ticket " + ticketIdFactura + " no tiene una factura AUTORIZADA"));
+        List<DetalleFactura> detalles = mapDetalles(FacturaXmlReader.leer(original.xmlAutorizado));
+        List<BigDecimal> disponibles = CalculoNotaCreditoParcial.disponiblePorLinea(detalles,
+                CalculoNotaCreditoParcial.yaAcreditadoPorCodigo(repositorio.xmlNotasCreditoVigentesDe(original.id)));
+        List<LineaAnulable> lineas = new ArrayList<>();
+        for (int i = 0; i < detalles.size(); i++) {
+            DetalleFactura d = detalles.get(i);
+            lineas.add(new LineaAnulable(d.getDescripcion(), d.getCantidad(), disponibles.get(i), d.getPrecioUnitario()));
+        }
+        return lineas;
+    }
+
+    /**
+     * Nota de Credito PARCIAL: devuelve solo las cantidades indicadas (una por
+     * linea de la factura, en su orden; 0 = esa linea no se devuelve). No
+     * permite devolver mas de lo que queda despues de notas anteriores.
+     */
+    public String anularParcial(String ticketIdFactura, String motivo, List<BigDecimal> cantidades) throws Exception {
+        validarMotivo(motivo);
+        ComprobanteRepository.FacturaParaAnular facturaOriginal = comprobanteRepository
+                .buscarFacturaAutorizadaParaAnular(ticketIdFactura)
+                .orElseThrow(() -> new NoSuchElementException(
+                        "El ticket " + ticketIdFactura + " no tiene una factura AUTORIZADA"));
+        Factura factura = FacturaXmlReader.leer(facturaOriginal.xmlAutorizado);
+        rechazarConsumidorFinal(factura);
+
+        List<DetalleFactura> originales = mapDetalles(factura);
+        List<BigDecimal> disponibles = CalculoNotaCreditoParcial.disponiblePorLinea(originales,
+                CalculoNotaCreditoParcial.yaAcreditadoPorCodigo(comprobanteRepository.xmlNotasCreditoVigentesDe(facturaOriginal.id)));
+        for (int i = 0; i < originales.size(); i++) {
+            BigDecimal pedido = i < cantidades.size() && cantidades.get(i) != null ? cantidades.get(i) : BigDecimal.ZERO;
+            if (pedido.compareTo(disponibles.get(i)) > 0) {
+                throw new IllegalArgumentException("De \"" + originales.get(i).getDescripcion() + "\" solo quedan "
+                        + disponibles.get(i).stripTrailingZeros().toPlainString() + " por devolver");
+            }
+        }
+        CalculoNotaCreditoParcial.Resultado calculo = CalculoNotaCreditoParcial.calcular(originales, cantidades);
+
+        Comprobante comprobante = construirComprobanteNotaCredito(factura, facturaOriginal.id, motivo,
+                calculo.detalles, calculo.totalesPorImpuesto, calculo.totalSinImpuestos, calculo.importeTotal);
+        comprobanteRepository.insertar(comprobante);
+        comprobante.incrementarIntentos();
+        String xmlSinFirmar = NotaCreditoXmlWriter.toXml(NotaCreditoXmlMapper.map(comprobante));
+        envioComprobanteService.firmarEnviarYConsultar(comprobante, xmlSinFirmar);
+        return comprobante.getTicketId();
+    }
+
+    private static void validarMotivo(String motivo) {
+        if (motivo == null || motivo.isBlank()) {
+            throw new IllegalArgumentException("El motivo de la nota de credito es obligatorio");
+        }
+        if (motivo.length() > MOTIVO_LONGITUD_MAXIMA) {
+            throw new IllegalArgumentException("El motivo no puede superar " + MOTIVO_LONGITUD_MAXIMA + " caracteres");
+        }
+    }
+
+    private static void rechazarConsumidorFinal(Factura factura) {
+        if (Cliente.IDENTIFICACION_CONSUMIDOR_FINAL.equals(factura.getInfoFactura().getIdentificacionComprador())) {
+            throw new IllegalStateException(
+                    "El SRI no permite una Nota de Credito contra una factura emitida a CONSUMIDOR FINAL. "
+                    + "Solo se puede con facturas emitidas a un comprador identificado (cedula/RUC).");
+        }
+    }
+
     public String anular(String ticketIdFactura, String motivo) throws Exception {
         if (motivo == null || motivo.isBlank()) {
             throw new IllegalArgumentException("El motivo de la nota de credito es obligatorio");
@@ -115,6 +201,14 @@ public final class AnulacionService {
     }
 
     private Comprobante construirComprobanteNotaCredito(Factura factura, String facturaOriginalId, String motivo) throws SQLException {
+        return construirComprobanteNotaCredito(factura, facturaOriginalId, motivo, mapDetalles(factura),
+                mapTotalesPorImpuesto(factura), factura.getInfoFactura().getTotalSinImpuestos(),
+                factura.getInfoFactura().getImporteTotal());
+    }
+
+    private Comprobante construirComprobanteNotaCredito(Factura factura, String facturaOriginalId, String motivo,
+                                                        List<DetalleFactura> detalles, List<ImpuestoDetalle> totalesPorImpuesto,
+                                                        BigDecimal totalSinImpuestos, BigDecimal importeTotal) throws SQLException {
         var infoTributaria = factura.getInfoTributaria();
         var infoFactura = factura.getInfoFactura();
 
@@ -123,9 +217,6 @@ public final class AnulacionService {
                 infoFactura.getIdentificacionComprador(),
                 infoFactura.getRazonSocialComprador(),
                 infoFactura.getDireccionComprador(), null, null);
-
-        List<DetalleFactura> detalles = mapDetalles(factura);
-        List<ImpuestoDetalle> totalesPorImpuesto = mapTotalesPorImpuesto(factura);
 
         String secuencial = comprobanteRepository.siguienteSecuencial(TipoComprobante.NOTA_CREDITO);
         LocalDateTime fechaEmision = LocalDateTime.now();
@@ -144,7 +235,7 @@ public final class AnulacionService {
         Comprobante comprobante = new Comprobante(
                 ticketIdSintetico, TipoComprobante.NOTA_CREDITO, emisor.getAmbiente(),
                 fechaEmision, emisor, cliente, detalles, totalesPorImpuesto, List.of(),
-                infoFactura.getTotalSinImpuestos(), BigDecimal.ZERO, infoFactura.getImporteTotal(), secuencial);
+                totalSinImpuestos, BigDecimal.ZERO, importeTotal, secuencial);
 
         comprobante.setClaveAcceso(claveAcceso);
         comprobante.setComprobanteOriginalId(facturaOriginalId);
