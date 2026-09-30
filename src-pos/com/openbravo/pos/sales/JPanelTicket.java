@@ -211,7 +211,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         m_jTotalEuros.setForeground(java.awt.Color.WHITE);
         m_jTotalEuros.setFont(m_jTotalEuros.getFont().deriveFont(java.awt.Font.BOLD, 26f));
         m_jTotalEuros.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 8, 2, 8));
-        m_jLblTotalEuros1.setForeground(verde);
+        m_jLblTotalEuros1.setForeground(com.formdev.flatlaf.FlatLaf.isLafDark() ? new java.awt.Color(0x81C784) : verde);
         m_jLblTotalEuros1.setFont(m_jLblTotalEuros1.getFont().deriveFont(java.awt.Font.BOLD, 16f));
         javax.swing.border.Border borde = javax.swing.BorderFactory.createCompoundBorder(
                 javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getColor("Component.borderColor"), 1, true),
@@ -220,6 +220,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         m_jTaxesEuros.setBorder(borde);
         m_jPanTotals.setPreferredSize(new java.awt.Dimension(420, 80));
         m_jTicketId.setFont(m_jTicketId.getFont().deriveFont(14f));
+        // Atajo de teclado: F12 = Cobrar (lo mismo que la tecla "=").
+        getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F12, 0), "ecopos.cobrar");
+        getActionMap().put("ecopos.cobrar", new javax.swing.AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (m_oTicket != null && m_oTicket.getLinesCount() > 0) {
+                    stateTransition('=');
+                }
+            }
+        });
     }
    
     /**
@@ -648,6 +658,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             }
                 addTicketLine(new TicketLineInfo(oProduct, dMul, dPrice, tax, (java.util.Properties) (oProduct.getProperties().clone())));
         } else {        
+                if (agruparConUltimaLinea(oProduct, dMul, dPrice)) {
+                    return;
+                }
                 TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), m_oTicket.getCustomer());
                 addTicketLine(new TicketLineInfo(oProduct, dMul, dPrice, tax, (java.util.Properties) (oProduct.getProperties().clone())));                
             }
@@ -657,6 +670,32 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
      *
      * @param oLine
      */
+    /**
+     * Si el ultimo producto de la venta es el mismo (mismo precio, sin
+     * balanza, sin atributos, sin enviar a cocina), suma la cantidad a esa
+     * linea en vez de agregar otra: "Pan de yuca x2" en lugar de dos lineas
+     * iguales, como en los POS actuales.
+     */
+    private boolean agruparConUltimaLinea(ProductInfoExt oProduct, double dMul, double dPrice) {
+        int cantidadLineas = m_oTicket.getLinesCount();
+        if (cantidadLineas == 0 || dMul <= 0 || oProduct.isScale() || oProduct.isVprice()) {
+            return false;
+        }
+        int indice = cantidadLineas - 1;
+        TicketLineInfo ultima = m_oTicket.getLine(indice);
+        if (!oProduct.getID().equals(ultima.getProductID())
+                || ultima.isProductCom()
+                || ultima.isProductVerpatrib()
+                || ultima.getMultiply() <= 0
+                || ultima.getPrice() != dPrice
+                || "Yes".equals(ultima.getProperty("sendstatus"))) {
+            return false;
+        }
+        ultima.setMultiply(ultima.getMultiply() + dMul);
+        paintTicketLine(indice, ultima);
+        return true;
+    }
+
     protected void addTicketLine(TicketLineInfo oLine) {  
         if (executeEventAndRefresh("ticket.addline", new ScriptArg("line", oLine)) == null) {        
             if (oLine.isProductCom()) {

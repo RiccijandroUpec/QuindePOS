@@ -67,6 +67,15 @@ public class JPanelTicketSales extends JPanelTicket {
      */
     @Override
     protected Component getSouthComponent() {
+        if (com.openbravo.pos.forms.EcoPosTema.esTemaModerno(javax.swing.UIManager.getLookAndFeel().getClass().getName())) {
+            // Tema moderno: buscador + categorias en chips + tarjetas de producto.
+            m_cat = new com.openbravo.pos.catalog.JCatalogModerno(dlSales,
+                    "true".equals(m_jbtnconfig.getProperty("taxesincluded")));
+            m_cat.addActionListener(new CatalogListener());
+            m_cat.getComponent().setPreferredSize(new Dimension(0,
+                    Integer.parseInt(m_jbtnconfig.getProperty("cat-height-moderno", "300"))));
+            return m_cat.getComponent();
+        }
         m_cat = new JCatalog(dlSales,
                 "true".equals(m_jbtnconfig.getProperty("pricevisible")),
                 "true".equals(m_jbtnconfig.getProperty("taxesincluded")),
