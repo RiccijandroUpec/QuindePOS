@@ -25,5 +25,6 @@ CP=$CP:$DIRNAME/lib/substance.jar
 CP=$CP:$DIRNAME/lib/flatlaf-3.5.4.jar
 CP=$CP:$DIRNAME/lib/flatlaf-extras-3.5.4.jar
 CP=$CP:$DIRNAME/lib/jsvg-1.4.0.jar
+CP=$CP:$DIRNAME/lib/flatlaf-swingx-3.5.4.jar
 CP=$CP:$DIRNAME/dist/unicentapos.jar
 java -cp $CP -Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel com.openbravo.pos.config.JFrmConfig

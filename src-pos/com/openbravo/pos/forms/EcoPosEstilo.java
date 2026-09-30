@@ -40,6 +40,7 @@ public final class EcoPosEstilo {
     static {
         for (int i = 0; i <= 9; i++) {
             TECLAS.put("btn" + i + ".png", String.valueOf(i));
+            TECLAS.put("btn" + i + "a.png", String.valueOf(i));
         }
         TECLAS.put("btn00.png", "00");
         TECLAS.put("btndot.png", ".");
@@ -76,6 +77,39 @@ public final class EcoPosEstilo {
         icono("ok.png", "check", VERDE, null);
         icono("inbox.png", "arrow-back-up", NEUTRO, null);
         icono("display.png", "layout-sidebar-left-expand", NEUTRO, null);
+        // Resto de la aplicacion (menu lateral, mantenimiento, informes, dialogos):
+        // mismo icono moderno, sin texto extra.
+        String[][] generales = {
+            {"reports.png", "report-analytics"}, {"date.png", "calendar"}, {"reload.png", "refresh"},
+            {"chart.png", "chart-bar"}, {"1rightarrow.png", "chevron-right"}, {"1leftarrow.png", "chevron-left"},
+            {"2rightarrow.png", "chevrons-right"}, {"2leftarrow.png", "chevrons-left"}, {"2uparrow.png", "chevrons-up"},
+            {"fileopen.png", "folder-open"}, {"tables.png", "armchair"}, {"products.png", "package"},
+            {"products24.png", "package"}, {"package.png", "package"}, {"printer.png", "printer"},
+            {"yast_printer.png", "printer"}, {"printer24_off.png", "printer-off"}, {"filesave.png", "device-floppy"},
+            {"database.png", "database"}, {"customer.png", "user"}, {"user.png", "user"}, {"user_sml.png", "user"},
+            {"users.png", "users"}, {"customerpay.png", "user-dollar"}, {"cash.png", "cash"},
+            {"calculator.png", "calculator"}, {"bookmark.png", "bookmark"}, {"voucher.png", "ticket"},
+            {"viewmag-.png", "zoom-out"}, {"restaurant_floor_sml.png", "layout-grid"}, {"pay.png", "cash-banknote"},
+            {"payments.png", "cash-banknote"}, {"location.png", "map-pin"}, {"floors.png", "building"},
+            {"encrypted.png", "lock"}, {"editnew.png", "file-plus"}, {"edit_group.png", "pencil-plus"},
+            {"edit_group_sm.png", "pencil"}, {"edit.png", "pencil"}, {"configuration.png", "settings"},
+            {"cheque.png", "file-dollar"}, {"ccard.png", "credit-card"}, {"category.png", "category"},
+            {"subcategory.png", "folder"}, {"wallet.png", "wallet"}, {"utilities.png", "tool"},
+            {"maintain.png", "tool"}, {"timer.png", "clock"}, {"sysadmin.png", "shield-lock"},
+            {"roles.png", "user-shield"}, {"resources.png", "files"}, {"stockmaint.png", "building-warehouse"},
+            {"stockdiary.png", "notebook"}, {"sort_incr.png", "sort-ascending"}, {"sales.png", "shopping-cart"},
+            {"sale.png", "shopping-cart"}, {"saleedit.png", "receipt"}, {"refundit.png", "receipt-refund"},
+            {"receive.png", "truck-delivery"}, {"run_script.png", "player-play"}, {"movetable.png", "arrows-move"},
+            {"mime.png", "photo"}, {"mime2.png", "photo"}, {"mime3.png", "photo"}, {"camera.png", "camera"},
+            {"leaves.png", "leaf"}, {"import.png", "file-import"}, {"coffee.png", "coffee"},
+            {"bank.png", "building-bank"}, {"auxiliary.png", "puzzle"}, {"customer_add.png", "user-plus"},
+            {"openbravo.png", "puzzle"}, {"ark2.png", "folder"}, {"atlantikdesigner.png", "adjustments-horizontal"},
+        };
+        for (String[] g : generales) {
+            if (!POR_ICONO.containsKey(g[0])) {
+                icono(g[0], g[1], NEUTRO, null);
+            }
+        }
         // Botones de Ticket.Buttons (se identifican por su "key")
         nombre("button.totaldiscount", "percentage", NEUTRO, "Descuento");
         nombre("button.print", "printer", NEUTRO, "Imprimir");
@@ -152,7 +186,11 @@ public final class EcoPosEstilo {
 
         String texto = boton.getText();
         boolean sinTexto = texto == null || texto.trim().isEmpty();
-        if (mapeo.texto != null && sinTexto) {
+        // El texto extra solo en la pantalla de venta (y en los botones de
+        // Ticket.Buttons): en las barras de mantenimiento todos son solo icono.
+        boolean enVenta = boton.getName() != null && POR_NOMBRE.containsKey(boton.getName())
+                || javax.swing.SwingUtilities.getAncestorOfClass(com.openbravo.pos.sales.JPanelTicket.class, boton) != null;
+        if (mapeo.texto != null && sinTexto && enVenta) {
             boton.setText(mapeo.texto);
             texto = mapeo.texto;
         }
