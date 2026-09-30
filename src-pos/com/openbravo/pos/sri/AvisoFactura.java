@@ -100,7 +100,7 @@ public final class AvisoFactura {
         boolean agotado = System.currentTimeMillis() - inicio > ESPERA_MAXIMA_MS;
         if (estado != null && "AUTORIZADO".equals(estado[0])) {
             consulta.stop();
-            mostrar("\u2714  Factura " + estado[1] + " autorizada", new Color(0x2E7D32));
+            mostrar("\u2714  Factura " + estado[1] + " autorizada", new Color(0x1B5E3F));
             cerrarEn(5000);
         } else if (estado != null && "RECHAZADO".equals(estado[0])) {
             consulta.stop();
@@ -113,7 +113,7 @@ public final class AvisoFactura {
             String numero = estado == null ? "" : " " + estado[1];
             mostrar("<html><div style='width:320px'>\u25CB  La factura" + numero + " sigue en proceso."
                     + (estado != null && estado[2] != null ? "<br><span style='font-weight:normal'>" + estado[2] + "</span>" : "")
-                    + "<br><span style='font-weight:normal'>EcoPos la reintenta sola.</span></div></html>", new Color(0xB26A00));
+                    + "<br><span style='font-weight:normal'>Quinde POS la reintenta sola.</span></div></html>", new Color(0xB26A00));
             cerrarEn(8000);
         }
     }

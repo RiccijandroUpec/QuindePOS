@@ -115,7 +115,7 @@ public class JPanelResumenTributario extends JPanel implements JPanelView {
         totales.setFont(totales.getFont().deriveFont(Font.BOLD, 15f));
         sri.setForeground(UIManager.getColor("Label.disabledForeground"));
         JLabel nota = new JLabel("<html>Base para la secci\u00F3n de ventas del formulario 104. Los valores salen de las ventas "
-                + "registradas en EcoPos; rev\u00EDsalos con tu contador antes de declarar.</html>");
+                + "registradas en Quinde POS; rev\u00EDsalos con tu contador antes de declarar.</html>");
         nota.setForeground(UIManager.getColor("Label.disabledForeground"));
         JPanel pie = new JPanel(new BorderLayout(0, 6));
         pie.setOpaque(false);

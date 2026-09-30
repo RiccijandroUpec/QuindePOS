@@ -173,7 +173,7 @@ public final class ArqueoCaja {
                 double d = r.diferencia();
                 if (Math.abs(d) < 0.005) {
                     diferencia.setText("\u2714  Cuadra exacto");
-                    diferencia.setForeground(new Color(0x2E7D32));
+                    diferencia.setForeground(new Color(0x1B5E3F));
                 } else {
                     diferencia.setText((d > 0 ? "Sobrante: " : "Faltante: ") + Formats.CURRENCY.formatValue(Math.abs(d)));
                     diferencia.setForeground(d > 0 ? new Color(0xB26A00) : new Color(0xC62828));

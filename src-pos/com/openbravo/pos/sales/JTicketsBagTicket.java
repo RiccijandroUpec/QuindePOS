@@ -302,7 +302,7 @@ public class JTicketsBagTicket extends JTicketsBag {
             estadoFactura.setForeground(javax.swing.UIManager.getColor("Label.disabledForeground"));
         } else if (autorizada) {
             estadoFactura.setText("\u25CF Factura " + estado[1] + " autorizada");
-            estadoFactura.setForeground(new java.awt.Color(0x2E7D32));
+            estadoFactura.setForeground(new java.awt.Color(0x1B5E3F));
         } else if ("RECHAZADO".equals(estado[0]) || "ERROR".equals(estado[0])) {
             estadoFactura.setText("\u25CF Factura " + estado[1] + ": revisar");
             estadoFactura.setToolTipText(estado[2]);

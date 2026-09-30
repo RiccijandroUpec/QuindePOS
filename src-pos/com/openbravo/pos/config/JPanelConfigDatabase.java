@@ -231,7 +231,7 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
         jLabel5.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         jButton1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jButton1.setText("EcoPos");
+        jButton1.setText("Quinde POS");
         jButton1.setMaximumSize(new java.awt.Dimension(150, 45));
         jButton1.setMinimumSize(new java.awt.Dimension(150, 45));
         jButton1.setPreferredSize(new java.awt.Dimension(150, 45));

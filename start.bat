@@ -88,4 +88,4 @@ set CP=%CP%;"%DIRNAME%locales/Mexican/locales/";"%DIRNAME%locales/Mexican/report
 set CP=%CP%;"%DIRNAME%locales/Portuguese/locales/"
 set CP=%CP%;"%DIRNAME%locales/Spanish/locales/";"%DIRNAME%locales/Spanish/reports/"
 
-start javaw -cp %CP% -Djava.library.path="%DIRNAME%lib/Windows/i368-mingw32" -Ddirname.path="%DIRNAME%./" -splash:unicenta_splash_dark.png com.openbravo.pos.forms.StartPOS %1
+start javaw -cp %CP% -Djava.library.path="%DIRNAME%lib/Windows/i368-mingw32" -Ddirname.path="%DIRNAME%./" -splash:quinde_splash.png com.openbravo.pos.forms.StartPOS %1

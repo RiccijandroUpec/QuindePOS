@@ -40,7 +40,7 @@ public class PanelComprobante extends JPanel {
     /** Que eligio el cajero al confirmar. */
     public enum Eleccion { CONSUMIDOR_FINAL, CON_DATOS }
 
-    private static final Color VERDE = new Color(0x2E7D32);
+    private static final Color VERDE = new Color(0x1B5E3F);
     private static final Color ROJO = new Color(0xC62828);
     private static final Color AMBAR = new Color(0xB26A00);
 

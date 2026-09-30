@@ -13,7 +13,7 @@ import javax.swing.Icon;
 public final class AvatarIniciales implements Icon {
 
     private static final Color[] PALETA = {
-        new Color(0x2E7D32), new Color(0x1565C0), new Color(0x6A1B9A), new Color(0xAD1457),
+        new Color(0x1B5E3F), new Color(0x1565C0), new Color(0x6A1B9A), new Color(0xAD1457),
         new Color(0xEF6C00), new Color(0x00838F), new Color(0x4E342E), new Color(0x37474F)
     };
 
