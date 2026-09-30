@@ -763,8 +763,28 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
 
     private void m_jCloseCashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jCloseCashActionPerformed
 
-        int res = JOptionPane.showConfirmDialog(this, AppLocal.getIntString("message.wannaclosecash"), AppLocal.getIntString("message.title"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        // Arqueo por denominacion con cierre ciego (se apaga con caja.arqueo=false en ecopos.properties).
+        ArqueoCaja.Resultado arqueo = null;
+        String cajaQueSeCierra = m_App.getActiveCashIndex();
+        if (!"false".equalsIgnoreCase(m_App.getProperties().getProperty("caja.arqueo"))) {
+            double esperadoEfectivo = 0;
+            for (PaymentsModel.PaymentsLine linea : m_PaymentsToClose.getPaymentLines()) {
+                if (ArqueoCaja.esMovimientoDeEfectivo(linea.getType()) && linea.getValue() != null) {
+                    esperadoEfectivo += linea.getValue();
+                }
+            }
+            arqueo = ArqueoCaja.mostrar(this, esperadoEfectivo);
+            if (arqueo == null) {
+                return; // el cajero cancelo el arqueo: no se cierra la caja
+            }
+        }
+
+        int res = arqueo != null ? JOptionPane.YES_OPTION
+                : JOptionPane.showConfirmDialog(this, AppLocal.getIntString("message.wannaclosecash"), AppLocal.getIntString("message.title"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (res == JOptionPane.YES_OPTION) {
+            if (arqueo != null) {
+                ArqueoCaja.guardar(m_App, cajaQueSeCierra, arqueo);
+            }
 
             Date dNow = new Date();
 

@@ -284,7 +284,8 @@ public class JTicketsBagShared extends JTicketsBag {
     private void m_jDelTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jDelTicketActionPerformed
         
         int res = JOptionPane.showConfirmDialog(this, AppLocal.getIntString("message.wannadelete"), AppLocal.getIntString("title.editor"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (res == JOptionPane.YES_OPTION) {
+        if (res == JOptionPane.YES_OPTION
+                && com.openbravo.pos.forms.AutorizacionSupervisor.autorizar(this, m_App, "Eliminar la venta completa", null)) {
             deleteTicket();
 
         }

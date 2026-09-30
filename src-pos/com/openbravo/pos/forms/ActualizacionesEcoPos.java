@@ -35,6 +35,9 @@ public final class ActualizacionesEcoPos {
         try {
             Connection con = session.getConnection();
             agregarPanelNegocio(con);
+            agregarPermisoSinAutorizacion(con);
+            crearTablaAuditoria(con);
+            crearTablaArqueos(con);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudieron aplicar las actualizaciones de EcoPos", e);
         }
@@ -59,6 +62,40 @@ public final class ActualizacionesEcoPos {
                 guardarPermisos(con, rol, permisos);
                 LOG.info("Rol " + rol + ": permiso para el Panel del negocio");
             }
+        }
+    }
+
+    /** Fase E: Administrador y Gerente no necesitan autorizacion de supervisor. */
+    private static void agregarPermisoSinAutorizacion(Connection con) throws SQLException {
+        String permiso = "<class name=\"" + AutorizacionSupervisor.PERMISO + "\"/>";
+        for (String rol : new String[]{"Administrador", "Gerente"}) {
+            String permisos = leerPermisos(con, rol);
+            if (permisos != null && !permisos.contains(permiso) && permisos.contains(ANCLA_PERMISO_VENTAS)) {
+                guardarPermisos(con, rol, permisos.replace(ANCLA_PERMISO_VENTAS, ANCLA_PERMISO_VENTAS + "\n    " + permiso));
+                LOG.info("Rol " + rol + ": no necesita autorizacion de supervisor");
+            }
+        }
+    }
+
+    /** Fase E: registro de autorizaciones de supervisor. */
+    private static void crearTablaAuditoria(Connection con) {
+        try (java.sql.Statement st = con.createStatement()) {
+            st.execute("CREATE TABLE IF NOT EXISTS ecopos_auditoria ("
+                    + "id VARCHAR(36) NOT NULL, fecha TIMESTAMP NOT NULL, usuario VARCHAR(255), "
+                    + "supervisor VARCHAR(255), accion VARCHAR(100), detalle VARCHAR(500), PRIMARY KEY (id))");
+        } catch (SQLException e) {
+            LOG.log(Level.WARNING, "No se pudo crear la tabla ecopos_auditoria", e);
+        }
+    }
+
+    /** Fase E: arqueos de caja por denominacion. */
+    private static void crearTablaArqueos(Connection con) {
+        try (java.sql.Statement st = con.createStatement()) {
+            st.execute("CREATE TABLE IF NOT EXISTS ecopos_arqueos ("
+                    + "id VARCHAR(36) NOT NULL, caja VARCHAR(255), fecha TIMESTAMP NOT NULL, usuario VARCHAR(255), "
+                    + "fondo DOUBLE, contado DOUBLE, esperado DOUBLE, diferencia DOUBLE, detalle VARCHAR(1000), PRIMARY KEY (id))");
+        } catch (SQLException e) {
+            LOG.log(Level.WARNING, "No se pudo crear la tabla ecopos_arqueos", e);
         }
     }
 

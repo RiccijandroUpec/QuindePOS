@@ -60,6 +60,16 @@ public class JPanelButtons extends javax.swing.JPanel {
     private ThumbNailBuilder tnbmacro;
     
     private JPanelTicket panelticket;
+
+    /** Botones de Ticket.Buttons que piden autorizacion de supervisor (clave -> nombre de la accion). */
+    private static final Map<String, String> ACCIONES_CON_AUTORIZACION = new java.util.HashMap<String, String>();
+
+    static {
+        ACCIONES_CON_AUTORIZACION.put("button.totaldiscount", "Aplicar un descuento");
+        ACCIONES_CON_AUTORIZACION.put("button.linediscount", "Aplicar un descuento");
+        ACCIONES_CON_AUTORIZACION.put("button.opendrawer", "Abrir el caj\u00F3n");
+        ACCIONES_CON_AUTORIZACION.put("button.refundit", "Hacer una devoluci\u00F3n");
+    }
     
     /** Creates new form JPanelButtons
      * @param sConfigKey
@@ -162,11 +172,16 @@ public class JPanelButtons extends javax.swing.JPanel {
                             title);
                     // The template resource or the code resource
                     final String template = attributes.getValue("template");
+                    final String clave = attributes.getValue("key");
+                    final String accionProtegida = ACCIONES_CON_AUTORIZACION.get(clave);
                     if (template == null) {
                         final String code = attributes.getValue("code");
                         btn.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent evt) {
+                                if (accionProtegida != null && !panelticket.autorizarAccion(accionProtegida, null)) {
+                                    return;
+                                }
                                 panelticket.evalScriptAndRefresh(code);
                             }
                         });
@@ -174,6 +189,9 @@ public class JPanelButtons extends javax.swing.JPanel {
                         btn.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent evt) {
+                                if (accionProtegida != null && !panelticket.autorizarAccion(accionProtegida, null)) {
+                                    return;
+                                }
                                 panelticket.printTicket(template);
                             }
                         });     

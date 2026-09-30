@@ -130,6 +130,10 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase E — Caja y seguridad (2026-09-30)
+- **Autorización de supervisor**: si un usuario sin el permiso `sales.SinAutorizacion` (Administrador y Gerente lo tienen) quiere eliminar una línea, eliminar una venta, aplicar un descuento, hacer una devolución o abrir el cajón, se pide la clave de un supervisor. Cada autorización queda registrada en la tabla `ecopos_auditoria` (quién, quién autorizó, qué y cuándo). Solo se activa cuando al menos un supervisor tiene clave, para no bloquear instalaciones donde nadie la tiene.
+- **Arqueo de caja con cierre ciego**: al cerrar caja, el cajero cuenta billetes y monedas de dólar sin ver cuánto debería haber; después se muestra lo esperado en efectivo (ventas + entradas − salidas) y el sobrante o faltante. Se guarda en `ecopos_arqueos` con el detalle por denominación. Se apaga con `caja.arqueo=false`.
+
 ### Fase D — Panel del negocio, stock bajo y copias de seguridad (2026-09-30)
 - **Panel del negocio** (primera opción del menú, para Administrador y Gerente): ventas de hoy comparadas con ayer a la misma hora, tickets, ticket promedio, gráfico de ventas por hora, los 5 más vendidos, formas de pago del día y productos por agotarse.
 - **Alertas de stock bajo**: productos con stock actual en o por debajo del mínimo definido por almacén (Inventario → Stock).
@@ -178,8 +182,8 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 **Cobro y caja**
 - ✅ Pantalla de pago moderna (efectivo rápido en dólares, Exacto, cambio en grande)
 - 🟡 Pago dividido: ya existe (botón "+" del cobro), falta hacerlo más visible
-- ⬜ Arqueo por denominación y cierre ciego
-- ⬜ Autorización de supervisor con PIN para anular, descontar o abrir el cajón
+- ✅ Arqueo por denominación y cierre ciego
+- ✅ Autorización de supervisor con clave para eliminar, descontar, devolver o abrir el cajón (con registro de auditoría)
 - ⬜ Propina / 10% de servicio
 
 **Inventario y compras**

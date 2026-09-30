@@ -676,6 +676,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
      * linea en vez de agregar otra: "Pan de yuca x2" en lugar de dos lineas
      * iguales, como en los POS actuales.
      */
+    /** Pide autorizacion de supervisor si el usuario no tiene el permiso (ver AutorizacionSupervisor). */
+    public boolean autorizarAccion(String accion, String detalle) {
+        return com.openbravo.pos.forms.AutorizacionSupervisor.autorizar(this, m_App, accion, detalle);
+    }
+
     private static boolean tienePagoACuenta(java.util.List<com.openbravo.pos.payment.PaymentInfo> pagos) {
         for (com.openbravo.pos.payment.PaymentInfo p : pagos) {
             if ("debt".equals(p.getName())) {
@@ -2486,7 +2491,8 @@ if (pickupSize!=null && (Integer.parseInt(pickupSize) >= tmpPickupId.length())){
         int i = m_ticketlines.getSelectedIndex();
         if (i < 0){
             Toolkit.getDefaultToolkit().beep(); // No hay ninguna seleccionada
-        } else {               
+        } else if (autorizarAccion("Eliminar una l\u00EDnea", m_oTicket.getLine(i).getProductName()
+                + " x" + com.openbravo.format.Formats.DOUBLE.formatValue(m_oTicket.getLine(i).getMultiply()) + " (ticket " + m_oTicket.getName() + ")")) {
             removeTicketLine(i); // elimino la linea           
         }     
          
