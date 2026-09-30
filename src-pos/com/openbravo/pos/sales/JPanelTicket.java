@@ -1516,6 +1516,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                                     if (facturarSri) {
                                         EcoPosSriBridge sriBridge = EcoPosSriGlue.getInstance(m_App.getProperties());
                                         if (sriBridge != null) {
+                                            // Si se va a imprimir, primero se reserva el numero y la clave de
+                                            // acceso, para que el ticket salga ya con los datos de la factura.
+                                            if (paymentdialog.isPrintSelected() || warrantyPrint) {
+                                                try {
+                                                    facturaParaImprimir = com.openbravo.pos.ticket.FacturaTicket.de(
+                                                            sriBridge.facturaParaTicket(ticket.getId(), true));
+                                                } catch (Throwable eFactura) {
+                                                    facturaParaImprimir = null;
+                                                }
+                                            }
                                             sriBridge.procesarTicketAsync(ticket.getId());
                                             com.openbravo.pos.sri.AvisoFactura.seguir(this, m_App, sriBridge, ticket.getId());
                                         }
@@ -1531,6 +1541,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                                     ? "Printer.Ticket"
 //                                    ? ticketPrintType
                                     : "Printer.Ticket2", ticket, ticketext);  
+                            facturaParaImprimir = null;
                             
 //                            if (m_oTicket.getLoyaltyCardNumber() != null){
 // add points to the card
@@ -1605,6 +1616,9 @@ if (pickupSize!=null && (Integer.parseInt(pickupSize) >= tmpPickupId.length())){
     }
     
     
+    /** Factura electronica de la venta que se esta cobrando, para el ticket impreso (null si no hay). */
+    private com.openbravo.pos.ticket.FacturaTicket facturaParaImprimir;
+
     private void printTicket(String sresourcename, TicketInfo ticket, Object ticketext) {
 
         String sresource = dlSystem.getResourceAsXML(sresourcename);
@@ -1633,6 +1647,7 @@ if (pickupSize!=null && (Integer.parseInt(pickupSize) >= tmpPickupId.length())){
                 script.put("ticket", ticket);
                 script.put("place", ticketext);
                 script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
+                script.put("factura", facturaParaImprimir);
                 script.put("warranty", warrantyPrint);
                 script.put("pickupid",getPickupString(ticket));
 

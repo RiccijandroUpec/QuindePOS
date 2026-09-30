@@ -254,6 +254,19 @@ public class JTicketsBagTicket extends JTicketsBag {
         return jar.exists() ? com.openbravo.pos.sri.EcoPosSriGlue.getInstance(m_App.getProperties()) : null;
     }
 
+    /** Factura ya emitida de la venta mostrada, para la vista previa y la reimpresion (solo consulta). */
+    private com.openbravo.pos.ticket.FacturaTicket facturaDelTicket() {
+        com.openbravo.pos.sri.EcoPosSriBridge puente = puenteSri();
+        if (puente == null || m_ticket == null) {
+            return null;
+        }
+        try {
+            return com.openbravo.pos.ticket.FacturaTicket.de(puente.facturaParaTicket(m_ticket.getId(), false));
+        } catch (Throwable e) {
+            return null;
+        }
+    }
+
     private void agregarFacturaElectronica() {
         if (puenteSri() == null) {
             return;
@@ -342,6 +355,7 @@ public class JTicketsBagTicket extends JTicketsBag {
                 script.put("ticket", m_ticket);
                 script.put("taxes", m_ticket.getTaxLines());                
                 script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
+                script.put("factura", facturaDelTicket());
                 m_TTP.printTicket(script.eval(m_dlSystem.getResourceAsXML("Printer.TicketPreview")).toString());
             } catch (    ScriptException | TicketPrinterException e) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), e);
@@ -562,6 +576,7 @@ public class JTicketsBagTicket extends JTicketsBag {
                 script.put("ticket", m_ticket);
                 script.put("taxes", m_ticket.getTaxLines());
                 script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
+                script.put("factura", facturaDelTicket());
                 m_TTP2.printTicket(script.eval(m_dlSystem.getResourceAsXML("Printer.TicketPreview")).toString());
             } catch (ScriptException e) {
                 JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.cannotprint"), e));

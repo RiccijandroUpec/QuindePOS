@@ -82,6 +82,21 @@ public final class DatosNegocio {
         return xml(d.isEmpty() ? valor("dirMatriz") : d);
     }
 
+    /** Direccion matriz (en la factura se imprimen matriz y sucursal por separado). */
+    public String getDirMatriz() {
+        return xml(valor("dirMatriz"));
+    }
+
+    /** Direccion del local si es distinta de la matriz; vacio si es la misma. */
+    public String getDirSucursal() {
+        String d = valor("dirEstablecimiento");
+        return d.equalsIgnoreCase(valor("dirMatriz")) ? "" : xml(d);
+    }
+
+    public String getContribuyenteEspecial() {
+        return xml(valor("contribuyenteEspecial"));
+    }
+
     public boolean isObligadoContabilidad() {
         return "SI".equalsIgnoreCase(valor("obligadoContabilidad"));
     }

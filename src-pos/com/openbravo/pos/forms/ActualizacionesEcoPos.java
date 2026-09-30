@@ -177,7 +177,10 @@ public final class ActualizacionesEcoPos {
         };
         for (String[] p : plantillas) {
             String actual = leerRecurso(con, p[0]);
-            if (actual != null && actual.contains(p[1])) {
+            // Tambien la primera version del ticket de Quinde POS (sin los datos de la factura electronica).
+            boolean primeraVersion = actual != null && actual.contains("Quinde POS - punto de venta libre")
+                    && !actual.contains("$factura") && !p[0].equals("Printer.Ticket2");
+            if (actual != null && (actual.contains(p[1]) || primeraVersion)) {
                 byte[] nueva = leerClasspath("/com/openbravo/pos/templates/" + p[0] + ".xml");
                 if (nueva != null) {
                     guardarRecursoBytes(con, p[0], nueva);
