@@ -79,10 +79,16 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             // Show the application
             add(m_rootapp, BorderLayout.CENTER);            
  
-            try {
-                this.setIconImage(ImageIO.read(JRootFrame.class.getResourceAsStream("/com/openbravo/images/favicon.png")));
-            } catch (IOException e) {
-            }   
+            // Todos los tamanos, para que Windows no estire un icono chico en pantallas con escala.
+            java.util.List<java.awt.Image> iconos = LogoNitido.iconosVentana();
+            if (!iconos.isEmpty()) {
+                setIconImages(iconos);
+            } else {
+                try {
+                    this.setIconImage(ImageIO.read(JRootFrame.class.getResourceAsStream("/com/openbravo/images/favicon.png")));
+                } catch (IOException e) {
+                }
+            }
 
             setTitle(AppLocal.APP_NAME + " - " + AppLocal.APP_VERSION);       
             pack();

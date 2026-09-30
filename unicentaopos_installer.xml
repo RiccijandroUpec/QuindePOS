@@ -73,6 +73,18 @@
                             <origin>quinde_splash.png</origin>
                         </distributionFile>
                         <distributionFile>
+                            <origin>quinde_splash@125pct.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>quinde_splash@150pct.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>quinde_splash@175pct.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>quinde_splash@2x.png</origin>
+                        </distributionFile>
+                        <distributionFile>
                             <origin>quinde.png</origin>
                         </distributionFile>
                         <distributionFile>

@@ -42,6 +42,7 @@ public final class ActualizacionesEcoPos {
             agregarPromociones(con);
             integrarFacturacionElectronica(con);
             renombrarAQuinde(con);
+            ticketQuinde(con);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudieron aplicar las actualizaciones de EcoPos", e);
         }
@@ -163,6 +164,62 @@ public final class ActualizacionesEcoPos {
         }
     }
 
+    /**
+     * Ticket impreso en espanol con los datos del negocio y el logo de Quinde POS. Solo reemplaza
+     * las plantillas que siguen siendo las de fabrica (si el negocio edito la suya, no se toca).
+     */
+    private static void ticketQuinde(Connection con) throws SQLException {
+        String[][] plantillas = {
+            {"Printer.Ticket", "Touch Friendly Point Of Sale"},
+            {"Printer.TicketPreview", "Touch Friendly Point Of Sale"},
+            {"Printer.ReprintTicket", "Touch Friendly Point Of Sale"},
+            {"Printer.Ticket2", "Thank You for your custom"},
+        };
+        for (String[] p : plantillas) {
+            String actual = leerRecurso(con, p[0]);
+            if (actual != null && actual.contains(p[1])) {
+                byte[] nueva = leerClasspath("/com/openbravo/pos/templates/" + p[0] + ".xml");
+                if (nueva != null) {
+                    guardarRecursoBytes(con, p[0], nueva);
+                    LOG.info(p[0] + ": plantilla de Quinde POS");
+                }
+            }
+        }
+        // El logo viejo media 168x48; si sigue ese, se cambia por el de Quinde (en blanco y negro).
+        byte[] logo = leerRecursoBytes(con, "Printer.Ticket.Logo");
+        if (logo != null) {
+            try {
+                java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(logo));
+                if (img != null && img.getWidth() == 168 && img.getHeight() == 48) {
+                    byte[] nuevo = leerClasspath("/com/openbravo/pos/templates/printer.ticket.logo.png");
+                    if (nuevo != null) {
+                        guardarRecursoBytes(con, "Printer.Ticket.Logo", nuevo);
+                        LOG.info("Printer.Ticket.Logo: logo de Quinde POS");
+                    }
+                }
+            } catch (java.io.IOException e) {
+                LOG.log(Level.WARNING, "No se pudo revisar el logo del ticket", e);
+            }
+        }
+    }
+
+    private static byte[] leerClasspath(String ruta) {
+        try (java.io.InputStream in = ActualizacionesEcoPos.class.getResourceAsStream(ruta)) {
+            if (in == null) {
+                return null;
+            }
+            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+            byte[] buffer = new byte[8192];
+            int n;
+            while ((n = in.read(buffer)) > 0) {
+                out.write(buffer, 0, n);
+            }
+            return out.toByteArray();
+        } catch (java.io.IOException e) {
+            return null;
+        }
+    }
+
     /** Reemplaza (o quita, si nuevaLinea es null) cada linea que contiene el marcador, conservando su sangria. */
     static String reemplazarLinea(String texto, String marcador, String nuevaLinea) {
         StringBuilder sb = new StringBuilder();
@@ -267,6 +324,23 @@ public final class ActualizacionesEcoPos {
                 }
                 return new String(rs.getBytes(1), StandardCharsets.UTF_8);
             }
+        }
+    }
+
+    private static byte[] leerRecursoBytes(Connection con, String nombre) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement("SELECT CONTENT FROM RESOURCES WHERE NAME = ?")) {
+            ps.setString(1, nombre);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getBytes(1) : null;
+            }
+        }
+    }
+
+    private static void guardarRecursoBytes(Connection con, String nombre, byte[] contenido) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement("UPDATE RESOURCES SET CONTENT = ? WHERE NAME = ?")) {
+            ps.setBytes(1, contenido);
+            ps.setString(2, nombre);
+            ps.executeUpdate();
         }
     }
 

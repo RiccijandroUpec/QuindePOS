@@ -39,11 +39,26 @@ public class GenerarMarca {
         regular = Font.createFont(Font.TRUETYPE_FONT, new File(base, "Outfit-Regular.ttf"));
 
         guardar(iconoApp(64), new File(salida, "favicon.png"));
+        // Iconos de ventana en cada tamano que pide Windows segun la escala de pantalla (100% a 200%).
+        for (int t : new int[]{16, 20, 24, 32, 40, 48, 128, 256}) {
+            guardar(iconoApp(t), new File(salida, "favicon-" + t + ".png"));
+        }
         guardar(iconoApp(512), new File(salida, "quinde-icono-512.png"));
         guardar(iconoApp(48), new File(salida, "quinde-48.png"));
+        // Logos en 1x, 2x y 3x: la app dibuja el que corresponde a la escala de la pantalla (125%, 150%...).
         guardar(logoLogin(410, 289), new File(salida, "logo.png"));
-        guardar(logoCabecera(), new File(salida, "logo-cabecera.png"));
-        guardar(splash(500, 352), new File(salida, "quinde_splash.png"));
+        guardar(logoLogin(820, 578), new File(salida, "logo@2x.png"));
+        guardar(logoLogin(1230, 867), new File(salida, "logo@3x.png"));
+        guardar(logoCabecera(1), new File(salida, "logo-cabecera.png"));
+        guardar(logoCabecera(2), new File(salida, "logo-cabecera@2x.png"));
+        guardar(logoCabecera(3), new File(salida, "logo-cabecera@3x.png"));
+        // Pantalla de carga: Java elige sola quinde_splash@125pct.png, @150pct, @2x... segun la escala.
+        guardar(splash(1), new File(salida, "quinde_splash.png"));
+        guardar(splash(1.25), new File(salida, "quinde_splash@125pct.png"));
+        guardar(splash(1.5), new File(salida, "quinde_splash@150pct.png"));
+        guardar(splash(1.75), new File(salida, "quinde_splash@175pct.png"));
+        guardar(splash(2), new File(salida, "quinde_splash@2x.png"));
+        guardar(logoTicket(), new File(salida, "printer.ticket.logo.png"));
         guardar(logoLogin(820, 578), new File(salida, "quinde-logo-820.png"));
         escribirIco(new int[]{16, 24, 32, 48, 64, 128, 256}, new File(salida, "quinde.ico"));
         System.out.println("ok");
@@ -138,15 +153,16 @@ public class GenerarMarca {
     }
 
     /** Logo pequeno de la barra superior (pastilla blanca con el quinde y el nombre). */
-    static BufferedImage logoCabecera() {
+    static BufferedImage logoCabecera(double k) {
         int h = 34;
         BufferedImage tmp = new BufferedImage(400, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D gt = preparar(tmp);
         int anchoTexto = nombre(gt, 0, 24, 19f, TINTA, SELVA, Color.WHITE);
         gt.dispose();
         int w = 8 + 28 + 4 + anchoTexto + 12;
-        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage img = new BufferedImage((int) Math.round(w * k), (int) Math.round(h * k), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = preparar(img);
+        g.scale(k, k);
         g.setColor(Color.WHITE);
         g.fill(new RoundRectangle2D.Double(0, 0, w, h, h, h));
         g.setColor(BORDE);
@@ -159,9 +175,12 @@ public class GenerarMarca {
     }
 
     /** Pantalla de carga (se muestra antes de que Java termine de abrir EcoPos). */
-    static BufferedImage splash(int w, int h) {
-        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+    static BufferedImage splash(double k) {
+        int w = 500;
+        int h = 352;
+        BufferedImage img = new BufferedImage((int) Math.round(w * k), (int) Math.round(h * k), BufferedImage.TYPE_INT_RGB);
         Graphics2D g = preparar(img);
+        g.scale(k, k);
         g.setColor(TINTA);
         g.fillRect(0, 0, w, h);
         int tile = 132;
@@ -182,6 +201,44 @@ public class GenerarMarca {
         g.setColor(new Color(0x8FB9A3));
         String cargando = "Cargando…";
         g.drawString(cargando, (w - g.getFontMetrics().stringWidth(cargando)) / 2, 326);
+        g.dispose();
+        return img;
+    }
+
+    /**
+     * Logo del ticket impreso: todo en negro sobre blanco, porque las impresoras termicas
+     * solo imprimen puntos negros (los verdes claros desaparecerian).
+     */
+    static BufferedImage logoTicket() {
+        int w = 300;
+        int h = 72;
+        BufferedImage tmp = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D gt = preparar(tmp);
+        int anchoTexto = nombre(gt, 0, 50, 40f, Color.BLACK, Color.BLACK, Color.WHITE);
+        gt.dispose();
+        int anchoTotal = 64 + 6 + anchoTexto;
+        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = preparar(img);
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, w, h);
+        int x = (w - anchoTotal) / 2;
+        // El quinde pasado a blanco y negro por brillo.
+        BufferedImage ave = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D ga = preparar(ave);
+        ave(ga, 0, 0, 64);
+        ga.dispose();
+        for (int yy = 0; yy < 64; yy++) {
+            for (int xx = 0; xx < 64; xx++) {
+                int argb = ave.getRGB(xx, yy);
+                int alfa = argb >>> 24;
+                int luz = (int) (0.3 * ((argb >> 16) & 0xFF) + 0.59 * ((argb >> 8) & 0xFF) + 0.11 * (argb & 0xFF));
+                // Verdes oscuros y medios en negro; brote, coral y ojo quedan en blanco (se ven las facetas).
+                if (alfa > 70 && luz < 135) {
+                    img.setRGB(x + xx, 4 + yy, 0x000000);
+                }
+            }
+        }
+        nombre(g, x + 70, 50, 40f, Color.BLACK, Color.BLACK, Color.WHITE);
         g.dispose();
         return img;
     }
