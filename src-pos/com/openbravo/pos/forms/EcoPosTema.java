@@ -17,7 +17,7 @@ public final class EcoPosTema {
     public static final String CLARO = "com.formdev.flatlaf.FlatLightLaf";
     public static final String OSCURO = "com.formdev.flatlaf.FlatDarkLaf";
 
-    private static final String ACENTO_ECOPOS = "#2E7D32";
+    private static final String ACENTO_ECOPOS = "#1B5E3F";
     private static boolean registrado;
 
     private EcoPosTema() {
@@ -34,8 +34,8 @@ public final class EcoPosTema {
         } catch (ClassNotFoundException e) {
             return;
         }
-        UIManager.installLookAndFeel("EcoPos Claro", CLARO);
-        UIManager.installLookAndFeel("EcoPos Oscuro", OSCURO);
+        UIManager.installLookAndFeel("Quinde Claro", CLARO);
+        UIManager.installLookAndFeel("Quinde Oscuro", OSCURO);
 
         Map<String, String> estilo = new HashMap<String, String>();
         estilo.put("@accentColor", ACENTO_ECOPOS);

@@ -324,7 +324,7 @@ public class JPanelDashboard extends JPanel implements JPanelView {
     }
 
     private static Color verde() {
-        return oscuro() ? new Color(0x81C784) : new Color(0x2E7D32);
+        return oscuro() ? new Color(0xA8E6C1) : new Color(0x1B5E3F);
     }
 
     private static Color rojo() {
@@ -475,7 +475,7 @@ public class JPanelDashboard extends JPanel implements JPanelView {
 
             double ancho = anchoHora();
             double barra = Math.max(4, Math.min(28, ancho * 0.6));
-            Color color = oscuro() ? new Color(0x66BB6A) : new Color(0x2E7D32);
+            Color color = oscuro() ? new Color(0xA8E6C1) : new Color(0x2E9E6B);
             for (int h = desde; h <= hasta; h++) {
                 double x = izquierda() + (h - desde) * ancho + (ancho - barra) / 2;
                 double valor = datos[h];

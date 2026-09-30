@@ -30,7 +30,7 @@ public final class IndicadorSri extends JLabel {
     private static final int INTERVALO_MS = 30000;
 
     private static final Color[] GRIS = {new Color(0xECEFF1), new Color(0x546E7A)};
-    private static final Color[] VERDE = {new Color(0xE8F5E9), new Color(0x2E7D32)};
+    private static final Color[] VERDE = {new Color(0xE8F5E9), new Color(0x1B5E3F)};
     private static final Color[] AMBAR = {new Color(0xFFF8E1), new Color(0xB26A00)};
     private static final Color[] ROJO = {new Color(0xFFEBEE), new Color(0xC62828)};
 

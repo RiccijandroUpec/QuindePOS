@@ -15,7 +15,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with EcoPos.  If not, see <http://www.gnu.org/licenses/>
+//    along with Quinde POS.  If not, see <http://www.gnu.org/licenses/>
 
 package com.openbravo.pos.forms;
 
@@ -290,15 +290,15 @@ public class JRootApp extends JPanel implements AppView {
         String newText = m_props.getProperty("start.text");
         if (newText != null) {
             if (newText.equals("")){
-            jLabel1.setText("<html><center>EcoPos - Punto de Venta Amigable al Tacto (fork de uniCenta oPOS)<br>" +
-            "Copyright \u00A9 2009-2014 uniCenta, 2026 EcoPos <br>" +
+            jLabel1.setText("<html><center>Quinde POS - Punto de venta libre para Ecuador<br>" +
+            "Copyright \u00A9 2009-2014 uniCenta, 2026 Quinde POS <br>" +
             "https://github.com/RiccijandroUpec/EcoPos<br>" +
             "<br>" +
-            "EcoPos es software libre: puedes redistribuirlo y/o modificarlo bajo los t\u00E9rminos de la Licencia P\u00FAblica General GNU publicada por la Free Software Foundation, ya sea la versi\u00F3n 3 de la Licencia, o (a tu elecci\u00F3n) cualquier versi\u00F3n posterior.<br>" +
+            "Quinde POS es software libre: puedes redistribuirlo y/o modificarlo bajo los t\u00E9rminos de la Licencia P\u00FAblica General GNU publicada por la Free Software Foundation, ya sea la versi\u00F3n 3 de la Licencia, o (a tu elecci\u00F3n) cualquier versi\u00F3n posterior.<br>" +
             "<br>" +
-            "EcoPos se distribuye con la esperanza de que sea \u00FAtil, pero SIN NINGUNA GARANT\u00CDA; ni siquiera la garant\u00EDa impl\u00EDcita de COMERCIALIZACI\u00D3N o IDONEIDAD PARA UN PROP\u00D3SITO PARTICULAR. Consulta la Licencia P\u00FAblica General GNU para m\u00E1s detalles.<br>" +
+            "Quinde POS se distribuye con la esperanza de que sea \u00FAtil, pero SIN NINGUNA GARANT\u00CDA; ni siquiera la garant\u00EDa impl\u00EDcita de COMERCIALIZACI\u00D3N o IDONEIDAD PARA UN PROP\u00D3SITO PARTICULAR. Consulta la Licencia P\u00FAblica General GNU para m\u00E1s detalles.<br>" +
             "<br>" +
-            "Deber\u00EDas haber recibido una copia de la Licencia P\u00FAblica General GNU junto con EcoPos. Si no es as\u00ED, consulta http://www.gnu.org/licenses/<br>" +
+            "Deber\u00EDas haber recibido una copia de la Licencia P\u00FAblica General GNU junto con Quinde POS. Si no es as\u00ED, consulta http://www.gnu.org/licenses/<br>" +
             "</center>");}
             else{
             try {    
@@ -322,7 +322,7 @@ public class JRootApp extends JPanel implements AppView {
     /**
      * Solo con los temas modernos (EcoPosTema): pantalla de inicio limpia
      * (saludo corto; el aviso legal GPL completo sigue disponible en
-     * "Acerca de EcoPos") e indicador de estado del SRI en la barra superior.
+     * "Acerca de Quinde POS") e indicador de estado del SRI en la barra superior.
      */
     private void aplicarEstiloModerno() {
         if (!EcoPosTema.esTemaModerno(javax.swing.UIManager.getLookAndFeel().getClass().getName())) {
@@ -336,7 +336,7 @@ public class JRootApp extends JPanel implements AppView {
                     .replace("<html>", "<html><div style='width:460px'>");
             jLabel1.setText("<html><center><span style='font-size:20pt'><b>\u00A1Hola!</b></span><br>"
                     + "<span style='font-size:12pt; color:#607D8B'>Elige tu usuario para empezar a vender</span></center>");
-            javax.swing.JButton acercaDe = new javax.swing.JButton("Acerca de EcoPos y licencia");
+            javax.swing.JButton acercaDe = new javax.swing.JButton("Acerca de Quinde POS y licencia");
             acercaDe.putClientProperty("JButton.buttonType", "borderless");
             acercaDe.setForeground(new java.awt.Color(0x607D8B));
             acercaDe.setFocusable(false);
@@ -345,7 +345,7 @@ public class JRootApp extends JPanel implements AppView {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     javax.swing.JOptionPane.showMessageDialog(JRootApp.this, new javax.swing.JLabel(avisoLegal),
-                            "Acerca de EcoPos", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                            "Acerca de Quinde POS", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 }
             });
             jPanel4.add(acercaDe);
@@ -889,15 +889,15 @@ public class JRootApp extends JPanel implements AppView {
         jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/unicenta.png"))); // NOI18N
-        jLabel1.setText("<html><center>EcoPos - Touch Friendly Point of Sale (fork of uniCenta oPOS)<br>" +
-            "Copyright \u00A9 2009-2014 uniCenta, 2026 EcoPos <br>" +
+        jLabel1.setText("<html><center>Quinde POS - Open source point of sale for Ecuador<br>" +
+            "Copyright \u00A9 2009-2014 uniCenta, 2026 Quinde POS <br>" +
             "https://github.com/RiccijandroUpec/EcoPos<br>" +
             "<br>" +
-            "EcoPos is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
+            "Quinde POS is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
             "<br>" +
-            "EcoPos is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
+            "Quinde POS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
             "<br>" +
-            "You should have received a copy of the GNU General Public License along with EcoPos.  If not, see http://www.gnu.org/licenses/<br>" +
+            "You should have received a copy of the GNU General Public License along with Quinde POS.  If not, see http://www.gnu.org/licenses/<br>" +
             "</center>");
         jLabel1.setAlignmentX(0.5F);
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

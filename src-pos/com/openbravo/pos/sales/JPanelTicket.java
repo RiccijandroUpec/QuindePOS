@@ -207,12 +207,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         if (!com.openbravo.pos.forms.EcoPosTema.esTemaModerno(javax.swing.UIManager.getLookAndFeel().getClass().getName())) {
             return;
         }
-        java.awt.Color verde = new java.awt.Color(0x2E, 0x7D, 0x32);
+        java.awt.Color verde = new java.awt.Color(0x1B, 0x5E, 0x3F);
         m_jTotalEuros.setBackground(verde);
         m_jTotalEuros.setForeground(java.awt.Color.WHITE);
         m_jTotalEuros.setFont(m_jTotalEuros.getFont().deriveFont(java.awt.Font.BOLD, 26f));
         m_jTotalEuros.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 8, 2, 8));
-        m_jLblTotalEuros1.setForeground(com.formdev.flatlaf.FlatLaf.isLafDark() ? new java.awt.Color(0x81C784) : verde);
+        m_jLblTotalEuros1.setForeground(com.formdev.flatlaf.FlatLaf.isLafDark() ? new java.awt.Color(0xA8E6C1) : verde);
         m_jLblTotalEuros1.setFont(m_jLblTotalEuros1.getFont().deriveFont(java.awt.Font.BOLD, 16f));
         javax.swing.border.Border borde = javax.swing.BorderFactory.createCompoundBorder(
                 javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getColor("Component.borderColor"), 1, true),

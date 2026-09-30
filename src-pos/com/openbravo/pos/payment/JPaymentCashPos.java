@@ -247,7 +247,7 @@ public class JPaymentCashPos extends javax.swing.JPanel implements JPaymentInter
             }
         });
         exacto.setToolTipText("El cliente paga exactamente el total");
-        exacto.setForeground(new java.awt.Color(0x2E7D32));
+        exacto.setForeground(new java.awt.Color(0x1B5E3F));
         jPanel6.add(exacto, 0);
 
         jPanel4.setPreferredSize(new java.awt.Dimension(0, 92));
@@ -255,7 +255,7 @@ public class JPaymentCashPos extends javax.swing.JPanel implements JPaymentInter
         m_jMoneyEuros.setFont(m_jMoneyEuros.getFont().deriveFont(java.awt.Font.BOLD, 22f));
         m_jChangeEuros.setBounds(130, 46, 220, 42);
         m_jChangeEuros.setFont(m_jChangeEuros.getFont().deriveFont(java.awt.Font.BOLD, 28f));
-        m_jChangeEuros.setForeground(new java.awt.Color(0x2E7D32));
+        m_jChangeEuros.setForeground(new java.awt.Color(0x1B5E3F));
         jLabel8.setBounds(jLabel8.getX(), 4, 120, 36);
         jLabel6.setBounds(jLabel6.getX(), 46, 120, 42);
     }

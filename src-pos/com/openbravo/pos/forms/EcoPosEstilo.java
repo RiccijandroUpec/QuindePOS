@@ -30,7 +30,7 @@ public final class EcoPosEstilo {
     private static final String CARPETA_SVG = "com/openbravo/images/svg/";
 
     private static final Color[] NEUTRO = {new Color(0x37474F), new Color(0xCFD8DC)};
-    private static final Color[] VERDE = {new Color(0x2E7D32), new Color(0x66BB6A)};
+    private static final Color[] VERDE = {new Color(0x1B5E3F), new Color(0xA8E6C1)};
     private static final Color[] ROJO = {new Color(0xC62828), new Color(0xEF5350)};
 
     private static final Map<String, Mapeo> POR_ICONO = new HashMap<String, Mapeo>();

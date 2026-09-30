@@ -382,7 +382,7 @@ public class JCatalogModerno extends JPanel implements CatalogSelector {
     private JButton crearTarjeta(String nombre, String detalle, BufferedImage foto, boolean esCarpeta) {
         String nombreHtml = escapar(nombre == null ? "" : nombre);
         JButton b = new JButton("<html><center><b>" + nombreHtml + "</b><br><span style='color:"
-                + (esCarpeta ? "#78909C" : (com.formdev.flatlaf.FlatLaf.isLafDark() ? "#81C784" : "#2E7D32")) + "'>" + escapar(detalle) + "</span></center></html>");
+                + (esCarpeta ? "#78909C" : (com.formdev.flatlaf.FlatLaf.isLafDark() ? "#A8E6C1" : "#1B5E3F")) + "'>" + escapar(detalle) + "</span></center></html>");
         b.setIcon(foto != null ? new ImageIcon(escalar(foto)) : new AvatarIniciales(nombre, TAM_FOTO - 8));
         b.setHorizontalTextPosition(SwingConstants.CENTER);
         b.setVerticalTextPosition(SwingConstants.BOTTOM);

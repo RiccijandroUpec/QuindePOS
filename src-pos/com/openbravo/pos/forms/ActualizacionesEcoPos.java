@@ -41,6 +41,7 @@ public final class ActualizacionesEcoPos {
             agregarResumenTributario(con);
             agregarPromociones(con);
             integrarFacturacionElectronica(con);
+            renombrarAQuinde(con);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudieron aplicar las actualizaciones de EcoPos", e);
         }
@@ -150,6 +151,15 @@ public final class ActualizacionesEcoPos {
                 guardarRecurso(con, "Ticket.Buttons", sinSri);
                 LOG.info("Ticket.Buttons: quitados los botones SRI SI/NO");
             }
+        }
+    }
+
+    /** La marca pasa de EcoPos a Quinde POS: titulo de la ventana (solo si sigue siendo el de fabrica). */
+    private static void renombrarAQuinde(Connection con) throws SQLException {
+        String titulo = leerRecurso(con, "Window.Title");
+        if (titulo != null && titulo.trim().startsWith("EcoPos")) {
+            guardarRecurso(con, "Window.Title", "Quinde POS");
+            LOG.info("Window.Title: Quinde POS");
         }
     }
 

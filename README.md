@@ -1,4 +1,6 @@
-# 🌱 EcoPos
+<p align="center"><img src="branding/quinde-logo-820.png" alt="Quinde POS" width="410"></p>
+
+# 🐦 Quinde POS
 
 ![Java](https://img.shields.io/badge/Java-11-ED8B00?logo=openjdk&logoColor=white)
 ![Swing](https://img.shields.io/badge/UI-Java%20Swing-red)
@@ -7,7 +9,7 @@
 ![Ant](https://img.shields.io/badge/Build-Apache%20Ant-A81C7D?logo=apacheant&logoColor=white)
 ![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
-EcoPos es un sistema de Punto de Venta (POS) de escritorio para negocios de retail y hostelería, construido en Java Swing.
+Quinde POS (antes EcoPos) es un sistema de Punto de Venta (POS) de escritorio libre para negocios de retail y hostelería, construido en Java Swing.
 
 **Hecho en Ecuador, para negocios ecuatorianos** — con soporte de
 facturación electrónica SRI vía el módulo complementario
@@ -18,7 +20,7 @@ Licenciado bajo [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html).
 ## ✨ Características
 
 - 🖱️ Pantalla de venta táctil y moderna: buscador de productos (F2), categorías en pestañas, tarjetas de producto con foto o iniciales, total destacado y cobro con F12
-- 🎨 Tema moderno "EcoPos Claro/Oscuro" (FlatLaf) con iconos vectoriales en toda la aplicación
+- 🎨 Tema moderno "Quinde Claro/Oscuro" (FlatLaf) con iconos vectoriales en toda la aplicación
 - 🧾 Facturación electrónica SRI integrada (factura y nota de crédito) con indicador de estado en la barra superior
 - 🇪🇨 Cobro pensado para Ecuador: "Consumidor final / Factura con datos" con validación de cédula y RUC, billetes y monedas en dólares, Transferencia y DeUna
 - 👥 Roles multiusuario (Administrador, Gerente, Empleado, Invitado) con permisos
@@ -130,6 +132,14 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase J — Nueva marca: Quinde POS (2026-09-30)
+EcoPos pasa a llamarse **Quinde POS** (quinde = colibrí), con logo propio y la paleta "Selva":
+- Logo del colibrí geométrico en el inicio de sesión, la barra superior, el ícono de la ventana, la pantalla de carga y el instalador.
+- Colores de la marca en toda la app: Quinde `#2E9E6B`, Selva `#1B5E3F`, Brote `#A8E6C1`, Coral `#F2705E` y Tinta `#10231A`.
+- Textos visibles, temas ("Quinde Claro / Oscuro"), aviso legal y traducciones dicen Quinde POS. Las instalaciones existentes actualizan solas el título de la ventana.
+- Los identificadores técnicos **no cambian** (archivo `ecopos.properties`, base de datos `ecopos`, paquetes, nombre del jar y del repositorio), así nada se rompe al actualizar.
+- Los archivos de la marca (SVG, PNG, ICO y el generador) están en [branding/](branding/). Tipografía [Outfit](https://fonts.google.com/specimen/Outfit) (licencia SIL OFL, incluida).
+
 ### Fase I — Facturación electrónica integrada (2026-09-30)
 Antes la facturación se abría en ventanas aparte ("EcoPos SRI Connector - …") y se sentía como otro programa. Ahora es parte de EcoPos, como en otros POS:
 - **Sistema → Facturación electrónica**: una sola pantalla con el interruptor "Emitir factura electrónica en cada venta", datos del negocio, punto de emisión, ambiente (con aviso claro de Pruebas/Producción), **firma electrónica con su titular y fecha de vencimiento** (avisa si vence en menos de 30 días), correo de envío y una lista de verificación con **"Probar conexión con el SRI"**.
@@ -137,7 +147,7 @@ Antes la facturación se abría en ventanas aparte ("EcoPos SRI Connector - …"
 - **Aviso después de cobrar**: abajo a la derecha, "Enviando la factura al SRI…" y luego "✓ Factura 001-001-000000123 autorizada" (o el motivo si hay que revisarla). Al tocarlo abre Comprobantes electrónicos.
 - **Editar ventas** muestra la factura de la venta abierta con "Ver factura" y "Nota de crédito" (esta última pide autorización de supervisor a quien no la tenga). Además, sus botones ya no dicen todos "Imprimir": ahora son Buscar, Editar, Devolver y Reimprimir.
 - El indicador de la barra superior dice "Facturación al día / enviando / N por revisar / apagada" y al tocarlo abre Comprobantes electrónicos. El Panel del negocio suma la tarjeta "Facturas electrónicas hoy".
-- Se quitaron los botones "SRI: SI / SRI: NO" de la pantalla de venta. Las bases existentes se actualizan solas al abrir EcoPos.
+- Se quitaron los botones "SRI: SI / SRI: NO" de la pantalla de venta. Las bases existentes se actualizan solas al abrir la app.
 
 ### Fase H — Promociones automáticas (2026-09-30)
 - Nuevo menú **Promociones** (Administrador y Gerente) para crear reglas sin programar: **"Lleva N paga M"** (2x1, 3x2...) y **"% de descuento"**, por producto o por categoría, con horario y días opcionales (**happy hour**, por ejemplo 20% de 17 a 19 h de lunes a viernes).
@@ -237,6 +247,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - 🟡 Copia de seguridad automática: diaria y local ✅; copia en la nube pendiente
 - 🟡 Configuración de facturación en una sola pantalla con verificación ✅; asistente de primera configuración para el resto (negocio, impresora, impuestos) pendiente
 - ⬜ Ticket impreso con la marca y datos del negocio (la vista previa todavía muestra el logo y textos en inglés de la plantilla original)
+- ⬜ Renombrar el repositorio de GitHub a Quinde POS y crear un sitio o página del proyecto
 - ⬜ Actualizaciones automáticas
 - ⬜ Versión para tablet / Android
 - ⬜ Tienda en línea integrada
@@ -252,6 +263,8 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 ## 📜 Licencia
 
 GNU GPL v3 — ver las cabeceras de licencia en los archivos fuente individuales.
+
+El logo y los archivos de [branding/](branding/) son parte del proyecto; la tipografía Outfit se distribuye bajo SIL Open Font License 1.1 ([branding/fuentes/OFL.txt](branding/fuentes/OFL.txt)).
 
 ## ☕ Apoya este proyecto / Contacto
 

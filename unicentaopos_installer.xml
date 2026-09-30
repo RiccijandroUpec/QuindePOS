@@ -1,13 +1,13 @@
 <project>
     <shortName>ecopos</shortName>
-    <fullName>EcoPos</fullName>
+    <fullName>Quinde POS</fullName>
     <version>3.81</version>
     <readmeFile>README</readmeFile>
     <licenseFile>licensing/EcoPos Notice.txt</licenseFile>
-    <leftImage>v_logo_dark.png</leftImage>
-    <logoImage>ecopos.png</logoImage>
-    <splashImage>EcoPos_splash_dark.png</splashImage>
-    <wmImage>ecopos.png</wmImage>
+    <leftImage>quinde.png</leftImage>
+    <logoImage>quinde.png</logoImage>
+    <splashImage>quinde_splash.png</splashImage>
+    <wmImage>quinde.png</wmImage>
     <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
         <component>
@@ -18,17 +18,17 @@
             <show>1</show>
             <desktopShortcutList>
                 <shortcut>
-                    <comment>EcoPos - Touch Friendly Point Of Sale</comment>
+                    <comment>Quinde POS - Punto de venta libre para Ecuador</comment>
                     <exec>sh ${installdir}/start.sh</exec>
-                    <icon>${installdir}/ecopos.png</icon>
-                    <name>EcoPos</name>
+                    <icon>${installdir}/quinde.png</icon>
+                    <name>Quinde POS</name>
                     <path>${installdir}</path>
                     <platforms>windows</platforms>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/start.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/ecopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/quinde.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </shortcut>
             </desktopShortcutList>
@@ -70,16 +70,16 @@
                             <origin>dist/ecopos.jar</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>EcoPos_splash_dark.png</origin>
+                            <origin>quinde_splash.png</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>ecopos.png</origin>
+                            <origin>quinde.png</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>ecopos.ico</origin>
+                            <origin>quinde.ico</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>ecopos.png</origin>
+                            <origin>quinde.png</origin>
                         </distributionFile>
                         <distributionFile>
                             <origin>window.logo.png</origin>
@@ -102,12 +102,12 @@
             <startMenuShortcutList>
                 <startMenuShortcut>
                     <comment>Touch Friendly Point Of Sale</comment>
-                    <name>EcoPos</name>
+                    <name>Quinde POS</name>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/start.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/ecopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/quinde.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
                 <startMenuShortcut>
@@ -117,7 +117,7 @@
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/configure.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/ecopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/quinde.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
                 <startMenuShortcut>
@@ -200,13 +200,13 @@ Then continue with EcoPos installation.</text>
     <splashScreenDelay>4</splashScreenDelay>
     <summary>POS</summary>
     <vendor>EcoPos</vendor>
-    <windowsExecutableIcon>ecopos.ico</windowsExecutableIcon>
+    <windowsExecutableIcon>quinde.ico</windowsExecutableIcon>
     <windowsResourceComments>EcoPos is free software licensed under GNU GPL 3</windowsResourceComments>
     <windowsResourceFileDescription>EcoPos executable</windowsResourceFileDescription>
     <windowsResourceFileVersion>3.81</windowsResourceFileVersion>
     <windowsResourceInternalName>EcoPos</windowsResourceInternalName>
     <windowsResourceLegalTrademarks>EcoPos and EcoPos are trademarks of EcoPos Limited</windowsResourceLegalTrademarks>
-    <windowsUninstallerExecutableIcon>ecopos.ico</windowsUninstallerExecutableIcon>
+    <windowsUninstallerExecutableIcon>quinde.ico</windowsUninstallerExecutableIcon>
     <parameterList>
         <directoryParameter>
             <name>installdir</name>
