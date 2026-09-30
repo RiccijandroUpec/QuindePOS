@@ -216,6 +216,34 @@ public final class EcoPosEstilo {
         }
     }
 
+    private static final Map<String, String> FORMAS_PAGO = new HashMap<String, String>();
+
+    static {
+        FORMAS_PAGO.put("payment.cash", "cash-banknote");
+        FORMAS_PAGO.put("refund.cash", "cash-banknote");
+        FORMAS_PAGO.put("payment.cheque", "file-dollar");
+        FORMAS_PAGO.put("refund.cheque", "file-dollar");
+        FORMAS_PAGO.put("payment.paper", "ticket");
+        FORMAS_PAGO.put("refund.paper", "ticket");
+        FORMAS_PAGO.put("payment.magcard", "credit-card");
+        FORMAS_PAGO.put("refund.magcard", "credit-card");
+        FORMAS_PAGO.put("payment.free", "gift");
+        FORMAS_PAGO.put("payment.debt", "user-dollar");
+        FORMAS_PAGO.put("payment.bank", "arrows-exchange");
+        FORMAS_PAGO.put("payment.deuna", "qrcode");
+    }
+
+    /** Icono de una pestana de forma de pago: SVG moderno con el tema nuevo, o el PNG de siempre. */
+    public static Icon iconoFormaPago(String clave, java.net.URL pngViejo) {
+        String svg = FORMAS_PAGO.get(clave);
+        if (svg != null && EcoPosTema.esTemaModerno(UIManager.getLookAndFeel().getClass().getName())) {
+            FlatSVGIcon icono = new FlatSVGIcon(CARPETA_SVG + svg + ".svg", 26, 26);
+            icono.setColorFilter(new FlatSVGIcon.ColorFilter().add(Color.BLACK, NEUTRO[0], NEUTRO[1]));
+            return icono;
+        }
+        return new ImageIcon(pngViejo);
+    }
+
     /** Teclado numerico: la imagen de cada tecla se cambia por texto nitido que sigue al tema. */
     private static void estilizarTecla(AbstractButton boton, String tecla) {
         boton.setIcon(null);

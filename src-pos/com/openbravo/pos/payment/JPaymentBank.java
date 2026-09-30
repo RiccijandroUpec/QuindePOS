@@ -39,7 +39,15 @@ public class JPaymentBank extends javax.swing.JPanel implements JPaymentInterfac
     
     /** Creates new form JPaymentCash
      * @param notifier */
+    /** Tipo guardado en PAYMENTS.PAYMENT: "bank" (transferencia) o "deuna". */
+    private final String tipoPago;
+
     public JPaymentBank(JPaymentNotifier notifier) {
+        this(notifier, "bank");
+    }
+
+    public JPaymentBank(JPaymentNotifier notifier, String tipoPago) {
+        this.tipoPago = tipoPago;
         
         m_notifier = notifier;
         
@@ -77,7 +85,7 @@ public class JPaymentBank extends javax.swing.JPanel implements JPaymentInterfac
      */
     @Override
     public PaymentInfo executePayment() {
-        return new PaymentInfoTicket(m_dPaid, "bank");      
+        return new PaymentInfoTicket(m_dPaid, tipoPago);      
     }
 
     /**

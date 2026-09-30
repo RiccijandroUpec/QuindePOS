@@ -85,6 +85,9 @@ public class JPaymentCashPos extends javax.swing.JPanel implements JPaymentInter
                 msg.show(this);
             }
         }
+        if (temaModerno()) {
+            aplicarEstiloModerno();
+        }
         
     }
     
@@ -186,6 +189,10 @@ public class JPaymentCashPos extends javax.swing.JPanel implements JPaymentInter
          * @param amount
          */
         public void addButton(String image, double amount) {
+            if (temaModerno()) {
+                jPanel6.add(botonMonto(Formats.CURRENCY.formatValue(amount), amount >= 1.0, new AddAmount(amount)));
+                return;
+            }
             JButton btn = new JButton();
 //added 19.04.13 JDL removal of text on payment buttons if required.   
             try {
@@ -211,6 +218,48 @@ public class JPaymentCashPos extends javax.swing.JPanel implements JPaymentInter
     
     
     
+    private static boolean temaModerno() {
+        return com.openbravo.pos.forms.EcoPosTema.esTemaModerno(javax.swing.UIManager.getLookAndFeel().getClass().getName());
+    }
+
+    /** Boton de efectivo rapido con texto ("$20,00") en vez de la foto de un billete. */
+    private JButton botonMonto(String texto, boolean esBillete, ActionListener accion) {
+        JButton btn = new JButton(texto);
+        btn.setFont(btn.getFont().deriveFont(esBillete ? java.awt.Font.BOLD : java.awt.Font.PLAIN, esBillete ? 17f : 14f));
+        btn.setPreferredSize(new java.awt.Dimension(96, 48));
+        btn.setFocusPainted(false);
+        btn.setFocusable(false);
+        btn.setRequestFocusEnabled(false);
+        btn.addActionListener(accion);
+        return btn;
+    }
+
+    /**
+     * Tema moderno: boton "Exacto" (el cliente paga justo el total) y el cambio
+     * en grande y en verde, que es lo que el cajero necesita leer de un vistazo.
+     */
+    private void aplicarEstiloModerno() {
+        JButton exacto = botonMonto("Exacto", true, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                m_jTendered.setDoubleValue(m_dTotal);
+                printState();
+            }
+        });
+        exacto.setToolTipText("El cliente paga exactamente el total");
+        exacto.setForeground(new java.awt.Color(0x2E7D32));
+        jPanel6.add(exacto, 0);
+
+        jPanel4.setPreferredSize(new java.awt.Dimension(0, 92));
+        m_jMoneyEuros.setBounds(130, 4, 220, 36);
+        m_jMoneyEuros.setFont(m_jMoneyEuros.getFont().deriveFont(java.awt.Font.BOLD, 22f));
+        m_jChangeEuros.setBounds(130, 46, 220, 42);
+        m_jChangeEuros.setFont(m_jChangeEuros.getFont().deriveFont(java.awt.Font.BOLD, 28f));
+        m_jChangeEuros.setForeground(new java.awt.Color(0x2E7D32));
+        jLabel8.setBounds(jLabel8.getX(), 4, 120, 36);
+        jLabel6.setBounds(jLabel6.getX(), 46, 120, 42);
+    }
+
     private class AddAmount implements ActionListener {        
         private final double amount;
         public AddAmount(double amount) {

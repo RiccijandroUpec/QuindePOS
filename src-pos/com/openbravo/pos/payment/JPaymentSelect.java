@@ -50,6 +50,11 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
 // JG 16 May 12 use diamond inference
     private final Map<String, JPaymentInterface> payments = new HashMap<>();
     private String m_sTransactionID;
+
+    /** Seccion "Comprobante" (Consumidor final / Factura con datos); null si no aplica. */
+    private PanelComprobante comprobante;
+    private CustomerInfoExt clienteFactura;
+    private boolean consumidorFinalElegido;
     
     
     /** Creates new form JPaymentSelect
@@ -124,6 +129,8 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         m_dTotal = total;
         
         this.customerext = customerext;        
+        clienteFactura = null;
+        consumidorFinalElegido = false;
         
         setPrintSelected(!Boolean.parseBoolean(app.getProperties().getProperty("till.receiptprintoff")));
         m_jButtonPrint.setSelected(printselected);
@@ -131,6 +138,9 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         m_jTotalEuros.setText(Formats.CURRENCY.formatValue(m_dTotal));
         
         addTabs();
+        if (comprobante != null) {
+            comprobante.preparar(customerext);
+        }
 
         if (m_jTabPayment.getTabCount() == 0) {
             // No payment panels available            
@@ -155,6 +165,77 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
      *
      */
     protected abstract void addTabs();
+
+    /**
+     * Agrega la seccion "Comprobante" (Consumidor final / Factura con datos con
+     * cedula o RUC validada) - solo si la facturacion SRI esta instalada
+     * (sri-conector/ecopos-sri-connector.jar). Idempotente.
+     */
+    protected void activarComprobante() {
+        if (comprobante != null || app == null) {
+            return;
+        }
+        java.io.File jar = new java.io.File(new java.io.File(System.getProperty("dirname.path", "./")),
+                "sri-conector/ecopos-sri-connector.jar");
+        if (!jar.exists()) {
+            return;
+        }
+        comprobante = new PanelComprobante(app.getSession());
+        comprobante.setAlTerminarDatos(new Runnable() {
+            @Override
+            public void run() {
+                if (m_jTabPayment.getSelectedComponent() != null) {
+                    ((JPaymentInterface) m_jTabPayment.getSelectedComponent()).activate(customerext,
+                            m_dTotal - m_aPaymentInfo.getTotal(), m_sTransactionID);
+                }
+            }
+        });
+        getContentPane().remove(jPanel4);
+        javax.swing.JPanel norte = new javax.swing.JPanel(new java.awt.BorderLayout());
+        norte.add(jPanel4, java.awt.BorderLayout.NORTH);
+        norte.add(comprobante, java.awt.BorderLayout.SOUTH);
+        getContentPane().add(norte, java.awt.BorderLayout.NORTH);
+        setSize(getWidth() + 60, getHeight() + 120);
+        setLocationRelativeTo(getOwner());
+    }
+
+    /** Cliente a quien sale la factura ("Factura con datos"), o null. */
+    public CustomerInfoExt getClienteFactura() {
+        return clienteFactura;
+    }
+
+    /** true si el cajero eligio explicitamente "Consumidor final". */
+    public boolean isConsumidorFinalElegido() {
+        return consumidorFinalElegido;
+    }
+
+    /** Valida y guarda la seccion Comprobante antes de cerrar el cobro; false si hay que corregir algo. */
+    private boolean confirmarComprobante() {
+        if (comprobante == null) {
+            return true;
+        }
+        String problema = comprobante.validarParaCobrar();
+        if (problema != null) {
+            javax.swing.JOptionPane.showMessageDialog(this, problema, "Datos de la factura",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if (comprobante.getEleccion() == PanelComprobante.Eleccion.CONSUMIDOR_FINAL) {
+            consumidorFinalElegido = true;
+            return true;
+        }
+        try {
+            String idCliente = comprobante.guardarCliente();
+            com.openbravo.pos.forms.DataLogicSales dlSales =
+                    (com.openbravo.pos.forms.DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+            clienteFactura = dlSales.loadCustomerExt(idCliente);
+            return true;
+        } catch (Exception e) {
+            new com.openbravo.data.gui.MessageInf(com.openbravo.data.gui.MessageInf.SGN_WARNING,
+                    "No se pudo guardar el cliente de la factura", e).show(this);
+            return false;
+        }
+    }
 
     /**
      *
@@ -191,7 +272,9 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
      * @param jpay
      */
     protected void addTabPayment(JPaymentCreator jpay) {
-        if (app.getAppUserView().getUser().hasPermission(jpay.getKey())) {
+        // DeUna usa el mismo permiso que la transferencia (no existe "payment.deuna" en los roles).
+        String permiso = "payment.deuna".equals(jpay.getKey()) ? "payment.bank" : jpay.getKey();
+        if (app.getAppUserView().getUser().hasPermission(permiso)) {
             
             JPaymentInterface jpayinterface = payments.get(jpay.getKey());
             if (jpayinterface == null) {
@@ -202,7 +285,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
             jpayinterface.getComponent().applyComponentOrientation(getComponentOrientation());
             m_jTabPayment.addTab(
                     AppLocal.getIntString(jpay.getLabelKey()),
-                    new javax.swing.ImageIcon(getClass().getResource(jpay.getIconKey())),
+                    com.openbravo.pos.forms.EcoPosEstilo.iconoFormaPago(jpay.getKey(), getClass().getResource(jpay.getIconKey())),
                     jpayinterface.getComponent());
         }
     }
@@ -602,6 +685,20 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     /**
      *
      */
+    /** DeUna (Banco Pichincha): mismo registro que una transferencia, con su propio tipo "deuna". */
+    public class JPaymentDeUnaCreator implements JPaymentCreator {
+        @Override
+        public JPaymentInterface createJPayment() {
+            return new JPaymentBank(JPaymentSelect.this, "deuna");
+        }
+        @Override
+        public String getKey() { return "payment.deuna"; }
+        @Override
+        public String getLabelKey() { return "tab.deuna"; }
+        @Override
+        public String getIconKey() { return "/com/openbravo/images/bank.png"; }
+    }
+
             public class JPaymentBankCreator implements JPaymentCreator {
 
         /**
@@ -862,6 +959,9 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
 
     private void m_jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonOKActionPerformed
         
+        if (!confirmarComprobante()) {
+            return;
+        }
         PaymentInfo returnPayment = ((JPaymentInterface) m_jTabPayment.getSelectedComponent()).executePayment();
 
         if (returnPayment != null) {

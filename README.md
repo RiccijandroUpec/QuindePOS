@@ -17,7 +17,10 @@ Licenciado bajo [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html).
 
 ## ✨ Características
 
-- 🖱️ Pantalla de ventas táctil con categorías, productos y botones personalizables
+- 🖱️ Pantalla de venta táctil y moderna: buscador de productos (F2), categorías en pestañas, tarjetas de producto con foto o iniciales, total destacado y cobro con F12
+- 🎨 Tema moderno "EcoPos Claro/Oscuro" (FlatLaf) con iconos vectoriales en toda la aplicación
+- 🧾 Facturación electrónica SRI integrada (factura y nota de crédito) con indicador de estado en la barra superior
+- 🇪🇨 Cobro pensado para Ecuador: "Consumidor final / Factura con datos" con validación de cédula y RUC, billetes y monedas en dólares, Transferencia y DeUna
 - 👥 Roles multiusuario (Administrador, Gerente, Empleado, Invitado) con permisos
 - 🧾 Impresión de tickets/recibos con plantillas personalizables (JasperReports)
 - 📦 Gestión de inventario, clientes, proveedores e impuestos
@@ -88,7 +91,7 @@ jar cfm build/jar/ecopos.jar manifest.txt -C build/classes .
 Ejecuta el jar con las librerías necesarias en el classpath (ver `start.bat` / `start.sh` para la lista completa — JasperReports, POI, iText, Substance L&F, el driver JDBC de tu base de datos, etc.):
 
 ```sh
-java -cp "build/jar/ecopos.jar;lib/jasperreports-4.5.1.jar;lib/jcommon-1.0.15.jar;lib/jfreechart-1.0.12.jar;lib/swing-layout-1.0.4.jar;lib/AbsoluteLayout.jar;lib/trident.jar;lib/substance.jar;lib/substance-swingx.jar;lib/substance-extras.jar;lib/swingx-all-1.6.4.jar;lib/mysql-connector-java-5.1.49.jar;locales/;reports/" \
+java -cp "build/jar/ecopos.jar;lib/jasperreports-4.5.1.jar;lib/jcommon-1.0.15.jar;lib/jfreechart-1.0.12.jar;lib/swing-layout-1.0.4.jar;lib/AbsoluteLayout.jar;lib/trident.jar;lib/substance.jar;lib/substance-swingx.jar;lib/substance-extras.jar;lib/swingx-all-1.6.4.jar;lib/flatlaf-3.5.4.jar;lib/flatlaf-extras-3.5.4.jar;lib/flatlaf-swingx-3.5.4.jar;lib/jsvg-1.4.0.jar;lib/mysql-connector-java-5.1.49.jar;locales/;reports/" \
   -Ddirname.path="./" com.openbravo.pos.forms.StartPOS
 ```
 
@@ -105,7 +108,7 @@ Al primer arranque, EcoPos escribe su configuración en `~/ecopos.properties`. P
 
 ## ✅ Tests
 
-Hay un puñado de tests JUnit para las clases de lógica pura (sin GUI ni base de datos): `AltEncrypter` (cifrado ida y vuelta), `LuhnAlgorithm` (validación de tarjetas) y `StringUtils`.
+Tests JUnit para las clases de lógica pura (sin GUI ni base de datos): `AltEncrypter` (cifrado ida y vuelta), `LuhnAlgorithm` (validación de tarjetas), `StringUtils` y `ValidadorIdentificacion` (cédula, RUC de persona natural, sociedad y entidad pública, consumidor final y pasaporte).
 
 ```sh
 ant -f build_working.xml test
@@ -116,10 +119,94 @@ ant -f build_working.xml test
 Una base de datos nueva viene con:
 
 - 👤 Cuatro roles: Administrador, Gerente, Empleado, Invitado
-- 🏷️ Una categoría por defecto (`CATEGORY STANDARD`) y un producto (`xxx999`)
-- 💵 Dos tasas de impuesto: Exenta y Estándar
+- 🏷️ Una categoría por defecto (`General`) y un producto interno (`***`, usado para líneas sin producto)
+- 💵 Dos tarifas de IVA de Ecuador: `IVA 0%` e `IVA 15%`
 
 Renómbralos según tu negocio — **no los elimines**, otros registros pueden depender de sus IDs.
+
+> ⚠️ Si tu base se creó con una versión anterior de EcoPos, puede tener un impuesto "Tax Standard" al **10%**. Esa tarifa no existe en Ecuador y el SRI rechaza las facturas que la usan: cámbiala a 15% en **Administración → Impuestos**.
+
+## 🆕 Mejoras recientes
+
+Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
+
+### Fase C — Cobro pensado para Ecuador (2026-09-30)
+- **Comprobante al cobrar**: "Consumidor final" o "Factura con datos". Con datos, la cédula o el RUC se valida al instante (módulo 10 y 11 del Registro Civil y el SRI); si el cliente ya existe se autocompletan su nombre y correo, y si no, se crea al cobrar. La venta queda a su nombre, que es a quien el SRI le emite la factura. Con una identificación inválida no deja cobrar.
+- **Efectivo en dólares**: billetes de $50, $20, $10, $5 y $1, y monedas de 50, 25, 10, 5 y 1 centavos (antes eran libras esterlinas), más un botón **Exacto**. El cambio se muestra en grande.
+- **Nuevas formas de pago**: "Banco" pasa a llamarse **Transferencia** y se agrega **DeUna**. Las dos, y el cheque, se informan al SRI con el código 20 ("con utilización del sistema financiero"); antes se informaban como efectivo.
+- Ventana de cambio en español ("Pago en efectivo · Cambio").
+
+### Fase B — Pantalla de venta moderna (2026-09-30)
+- Buscador de productos por nombre, código de barras o referencia (**F2**; Enter con un código exacto agrega el producto; Esc limpia).
+- Categorías como pestañas y productos como tarjetas grandes con foto (o iniciales de color), nombre y precio con IVA.
+- Tocar el mismo producto seguido suma cantidad a la línea ("x2") en vez de repetirla.
+- **F12** cobra la venta.
+
+### Fase A — Estilo moderno (2026-09-30)
+- Tema **EcoPos Claro / Oscuro** (FlatLaf) por defecto; los temas anteriores siguen disponibles en Configuración → General.
+- Iconos vectoriales (Tabler Icons, licencia MIT) en toda la aplicación, menú lateral plano, botones de la venta con texto y teclado numérico con tecla verde **Cobrar**.
+- Inicio de sesión con tarjetas de usuario (iniciales en color) y el aviso de licencia en "Acerca de EcoPos".
+- Indicador del estado de la facturación SRI en la barra superior (apagado / al día / enviando / a revisar).
+- Textos que faltaban traducidos al español y datos iniciales con IVA 0% / 15%.
+
+### Facturación SRI integrada (2026-07 / 2026-09)
+- El conector SRI corre dentro de EcoPos (ya no hace falta un servicio de Windows aparte).
+- Corregidos tres fallos que impedían que funcionara dentro de EcoPos: conexión a la base de datos al arrancar, librería de firma (JAXB) y cliente SOAP (conflicto de librerías viejas).
+
+## 📋 Pendientes / Hoja de ruta
+
+Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Square, Loyverse, Odoo, Shopify, Contífico, Alegra).
+
+**Ecuador**
+- ✅ Validación de cédula y RUC al facturar
+- ✅ "Consumidor final / Factura con datos" al cobrar
+- 🟡 Pagos locales: Transferencia y DeUna ya se registran; falta integración directa con DeUna, Payphone y datáfonos Datafast/Medianet (requiere cuentas de comercio)
+- ⬜ Enviar factura o ticket por WhatsApp
+- ⬜ Registro de retenciones recibidas
+- ⬜ Reportes tributarios (resumen para el formulario 104, ATS)
+- ⬜ Varias cajas o locales con su propio punto de emisión
+- ⬜ Guía de remisión, nota de débito, liquidación de compra
+- ⬜ Nota de crédito parcial (devolver solo un producto)
+- ⬜ Prueba real de punta a punta con el SRI (ambiente de pruebas) desde la pantalla de cobro nueva
+
+**Cobro y caja**
+- ✅ Pantalla de pago moderna (efectivo rápido en dólares, Exacto, cambio en grande)
+- 🟡 Pago dividido: ya existe (botón "+" del cobro), falta hacerlo más visible
+- ⬜ Arqueo por denominación y cierre ciego
+- ⬜ Autorización de supervisor con PIN para anular, descontar o abrir el cajón
+- ⬜ Propina / 10% de servicio
+
+**Inventario y compras**
+- ⬜ Proveedores y órdenes de compra
+- ⬜ Alertas de stock bajo
+- ⬜ Kardex con costo promedio
+- ⬜ Lotes y fechas de caducidad
+- ⬜ Carga de productos desde Excel y edición masiva de precios
+
+**Ventas y clientes**
+- ⬜ Promociones automáticas (2x1, combos, happy hour)
+- ⬜ Programa de puntos / fidelidad
+- ⬜ Historial de compras del cliente al atenderlo
+- ⬜ Tarjetas de regalo con saldo
+
+**Restaurante**
+- ⬜ Pantalla de cocina (KDS)
+- ⬜ Comandas desde celular o tablet
+- ⬜ Pedidos para llevar y delivery
+
+**Dueño y gestión**
+- ⬜ Panel del dueño (ventas de hoy, ticket promedio, más vendidos)
+- ⬜ Ver ventas desde el celular
+- ⬜ Varias sucursales centralizadas
+- ⬜ Exportar a contabilidad
+
+**Operación**
+- ✅ Estilo moderno, iconos y pantalla de venta nueva
+- ⬜ Copia de seguridad automática
+- ⬜ Asistente de primera configuración
+- ⬜ Actualizaciones automáticas
+- ⬜ Versión para tablet / Android
+- ⬜ Tienda en línea integrada
 
 ## 🔗 Enlaces importantes
 

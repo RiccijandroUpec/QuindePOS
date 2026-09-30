@@ -64,6 +64,7 @@ public class JPaymentSelectReceipt extends JPaymentSelect {
     @Override
     protected void addTabs() {
         
+        activarComprobante();
         addTabPayment(new JPaymentSelect.JPaymentCashCreator());
         addTabPayment(new JPaymentSelect.JPaymentChequeCreator());
         addTabPayment(new JPaymentSelect.JPaymentPaperCreator());            
@@ -71,7 +72,8 @@ public class JPaymentSelectReceipt extends JPaymentSelect {
         addTabPayment(new JPaymentSelect.JPaymentFreeCreator());                
         addTabPayment(new JPaymentSelect.JPaymentDebtCreator());
 // JG Added 1 Dec 13 
-        addTabPayment(new JPaymentSelect.JPaymentBankCreator());        
+        addTabPayment(new JPaymentSelect.JPaymentBankCreator());
+        addTabPayment(new JPaymentSelect.JPaymentDeUnaCreator());        
         setHeaderVisible(true);
     }
     

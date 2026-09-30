@@ -18,15 +18,17 @@
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 // *************************************************************************
 
+// Denominaciones de Ecuador (dolar estadounidense): billetes de $50, $20,
+// $10, $5 y $1 (tambien moneda), y monedas de 50, 25, 10, 5 y 1 centavos.
+// Con el tema moderno se muestran como botones de texto; con los temas
+// viejos se reutilizan las imagenes existentes.
 payment.addButton("note.50", 50.0);
 payment.addButton("note.20", 20.0);
 payment.addButton("note.10", 10.0);
 payment.addButton("note.5", 5.0);
-payment.addButton("coin.2", 2.0);
 payment.addButton("coin.1", 1.0);
 payment.addButton("coin.50", 0.50);
-payment.addButton("coin.20", 0.20);
+payment.addButton("coin.20", 0.25);
 payment.addButton("coin.10", 0.10);
 payment.addButton("coin.05", 0.05);
-payment.addButton("coin.02", 0.02);
 payment.addButton("coin.01", 0.01);

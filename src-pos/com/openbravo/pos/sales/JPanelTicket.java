@@ -676,6 +676,15 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
      * linea en vez de agregar otra: "Pan de yuca x2" en lugar de dos lineas
      * iguales, como en los POS actuales.
      */
+    private static boolean tienePagoACuenta(java.util.List<com.openbravo.pos.payment.PaymentInfo> pagos) {
+        for (com.openbravo.pos.payment.PaymentInfo p : pagos) {
+            if ("debt".equals(p.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean agruparConUltimaLinea(ProductInfoExt oProduct, double dMul, double dPrice) {
         int cantidadLineas = m_oTicket.getLinesCount();
         if (cantidadLineas == 0 || dMul <= 0 || oProduct.isScale() || oProduct.isVprice()) {
@@ -1422,6 +1431,14 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
 
                         // assign the payments selected and calculate taxes.         
                         ticket.setPayments(paymentdialog.getSelectedPayments());
+                        // Comprobante elegido al cobrar: factura a nombre del cliente
+                        // escrito (cedula/RUC) o consumidor final. "A cuenta" (debt)
+                        // necesita cliente, asi que en ese caso no se quita.
+                        if (paymentdialog.getClienteFactura() != null) {
+                            ticket.setCustomer(paymentdialog.getClienteFactura());
+                        } else if (paymentdialog.isConsumidorFinalElegido() && !tienePagoACuenta(paymentdialog.getSelectedPayments())) {
+                            ticket.setCustomer(null);
+                        }
 
                         // Asigno los valores definitivos del ticket...
                         ticket.setUser(m_App.getAppUserView().getUser().getUserInfo()); // El usuario que lo cobra
