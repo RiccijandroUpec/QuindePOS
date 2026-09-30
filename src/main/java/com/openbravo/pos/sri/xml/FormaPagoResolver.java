@@ -30,6 +30,12 @@ final class FormaPagoResolver {
         if (normalizado.contains("card") || normalizado.contains("magcard")) {
             return FormaPago.TARJETA_CREDITO;
         }
+        // Transferencia ("bank" en EcoPos), DeUna y cheque pasan por el sistema
+        // financiero: codigo 20, no 01 (que es solo para efectivo/sin banco).
+        if (normalizado.contains("bank") || normalizado.contains("transfer")
+                || normalizado.contains("deuna") || normalizado.contains("cheque")) {
+            return FormaPago.OTROS_SISTEMA_FINANCIERO;
+        }
         return FormaPago.SIN_SISTEMA_FINANCIERO;
     }
 }

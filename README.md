@@ -395,6 +395,12 @@ y el modo standalone, con `localhost`/`3306`/`ecopos`/`root`/`` por defecto.
   por tipo, `EnvioComprobanteService`/`FacturaXmlReader` compartidos) ya
   está pensada para que sea un mapeo nuevo, no un rediseño.
 
+## 🆕 Mejoras recientes
+
+- **2026-09-30 — Formas de pago correctas ante el SRI**: Transferencia (`bank` en EcoPos), DeUna y cheque se informan con el código **20** ("otros con utilización del sistema financiero"); antes salían como **01** (sin sistema financiero, es decir, efectivo). Tests en `FormaPagoResolverTest`.
+- **2026-09-30 — Modo fusionado funcional y verificado en ejecución** (ver hallazgos abajo) y servicio de Windows retirado.
+- EcoPos ahora valida la cédula/RUC del comprador al cobrar ("Factura con datos"), así que el conector recibe identificaciones ya verificadas; ver el README de EcoPos.
+
 ## ⚠️ Hallazgos del modo fusionado (2026-09-30)
 
 La fusión en un solo proceso (2026-07-17) solo se había verificado
