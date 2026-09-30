@@ -5,9 +5,13 @@ import com.openbravo.pos.sri.config.ConexionLoader;
 import com.openbravo.pos.sri.config.ConfiguracionLoader;
 import com.openbravo.pos.sri.config.RutasConector;
 import com.openbravo.pos.sri.dominio.DatosEmisor;
-import com.openbravo.pos.sri.ui.ConfiguracionCorreoFrame;
 import com.openbravo.pos.sri.ui.ConfiguracionFrame;
+import com.openbravo.pos.sri.ui.AccionesComprobante;
+import com.openbravo.pos.sri.ui.FilaComprobante;
 import com.openbravo.pos.sri.ui.HistorialFrame;
+import com.openbravo.pos.sri.ui.MensajesSri;
+import com.openbravo.pos.sri.ui.PanelComprobantes;
+import com.openbravo.pos.sri.ui.PanelFacturacion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,6 +129,56 @@ public final class EcoPosSriBridgeImpl implements EcoPosSriBridge {
     }
 
     @Override
+    public javax.swing.JComponent crearPanelFacturacion() {
+        ClassLoaderPropio.fijarEnHiloActual();
+        return new PanelFacturacion();
+    }
+
+    @Override
+    public javax.swing.JComponent crearPanelComprobantes() {
+        ClassLoaderPropio.fijarEnHiloActual();
+        return new PanelComprobantes();
+    }
+
+    @Override
+    public String[] estadoFacturaDeTicket(String ticketId) {
+        FilaComprobante fila = filaDeTicket(ticketId);
+        if (fila == null) {
+            return null;
+        }
+        return new String[]{fila.estado.name(), fila.numero,
+                fila.estado == com.openbravo.pos.sri.dominio.EstadoComprobante.AUTORIZADO ? null : MensajesSri.explicar(fila.mensajeError)};
+    }
+
+    @Override
+    public void verRideDeTicket(java.awt.Component padre, String ticketId) {
+        ClassLoaderPropio.fijarEnHiloActual();
+        FilaComprobante fila = filaDeTicket(ticketId);
+        if (fila != null) {
+            AccionesComprobante.verRide(padre, fila);
+        }
+    }
+
+    @Override
+    public void notaCreditoDeTicket(java.awt.Component padre, String ticketId) {
+        ClassLoaderPropio.fijarEnHiloActual();
+        FilaComprobante fila = filaDeTicket(ticketId);
+        if (fila != null) {
+            AccionesComprobante.notaCredito(padre, fila, null);
+        }
+    }
+
+    /** Lectura rapida con su propia conexion (no la del hilo de trabajo, que puede estar esperando al SRI). */
+    private FilaComprobante filaDeTicket(String ticketId) {
+        try (java.sql.Connection con = dataSource.getConnection()) {
+            return FilaComprobante.deTicket(con, ticketId);
+        } catch (Exception e) {
+            LOG.warn("No se pudo leer la factura del ticket {}", ticketId, e);
+            return null;
+        }
+    }
+
+    @Override
     public void abrirConfiguracionEmisor() {
         SwingUtilities.invokeLater(() -> {
             ClassLoaderPropio.fijarEnHiloActual();
@@ -136,7 +190,7 @@ public final class EcoPosSriBridgeImpl implements EcoPosSriBridge {
     public void abrirConfiguracionCorreo() {
         SwingUtilities.invokeLater(() -> {
             ClassLoaderPropio.fijarEnHiloActual();
-            new ConfiguracionCorreoFrame().setVisible(true);
+            new ConfiguracionFrame().setVisible(true);
         });
     }
 

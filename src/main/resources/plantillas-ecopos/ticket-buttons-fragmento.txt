@@ -1,2 +1,0 @@
-	<button key="button.sriinvoiceon" titlekey="button.sriinvoiceon" image="img.sriinvoiceon" code="script.SriInvoiceOn"/>
-	<button key="button.sriinvoiceoff" titlekey="button.sriinvoiceoff" image="img.sriinvoiceoff" code="script.SriInvoiceOff"/>

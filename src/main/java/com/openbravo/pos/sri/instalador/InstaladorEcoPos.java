@@ -16,11 +16,10 @@ import java.sql.Statement;
 
 /**
  * Instala/actualiza ecopos-sri-connector en una base de datos de EcoPos ya
- * existente: crea la tabla propia del conector si falta, y sincroniza los
- * "hooks" data-only (Menu.Root, Ticket.Buttons, Ticket.Close, los scripts
- * de facturacion, sus iconos, y los permisos de rol) - todo idempotente,
- * se puede correr las veces que sea sin duplicar nada ni pisar
- * personalizaciones ajenas.
+ * existente: crea la tabla propia del conector si falta y limpia lo que
+ * dejaron versiones anteriores (bloque .flag de Ticket.Close, servicio de
+ * Windows). Las pantallas, menus y permisos de facturacion los agrega EcoPos
+ * solo al abrirse. Idempotente: se puede correr las veces que sea.
  *
  * Pensado para dos escenarios:
  * <ul>
@@ -41,15 +40,10 @@ public final class InstaladorEcoPos {
 
     private static final String CARPETA_PLANTILLAS = "/plantillas-ecopos/";
 
-    private static final String MARCADOR_MENU_ROOT = "Menu.SriConnectorHistorial";
-    private static final String MARCADOR_TICKET_BUTTONS = "button.sriinvoiceon";
     /** Inicio, contenido distintivo y fin del bloque viejo (modo servicio separado) de Ticket.Close que dejaba un .flag en sri-conector/pendientes/. */
     private static final String MARCADOR_TICKET_CLOSE_VIEJO = "// --- ecopos-sri-connector hook";
     private static final String CONTENIDO_TICKET_CLOSE_VIEJO = "sri-conector/pendientes";
     private static final String FIN_TICKET_CLOSE_VIEJO = "ecopos_sri_comprobantes.";
-    private static final String MARCADOR_ROLE_ADMINISTRADOR = "SriConnectorConfig.bs";
-    private static final String MARCADOR_ROLE_GERENTE = "SriConnectorHistorial.bs";
-    private static final String MARCADOR_ROLE_EMPLEADO = "button.sriinvoiceon";
 
     private InstaladorEcoPos() {
     }
@@ -64,18 +58,13 @@ public final class InstaladorEcoPos {
             crearTablaPropiaSiFalta(con);
             agregarColumnasNotaCreditoSiFaltan(con);
 
-            asegurarFragmentoAlFinal(con, "Menu.Root", MARCADOR_MENU_ROOT, "menu-root-fragmento.txt");
-            asegurarFragmentoAntesDeCierre(con, "Ticket.Buttons", MARCADOR_TICKET_BUTTONS, "ticket-buttons-fragmento.txt", "</configuration>");
             quitarHookViejoTicketClose(con);
 
-            asegurarRecursoCompleto(con, "script.SriInvoiceOn", 0, "script-sri-invoice-on.txt");
-            asegurarRecursoCompleto(con, "script.SriInvoiceOff", 0, "script-sri-invoice-off.txt");
-            asegurarImagen(con, "img.sriinvoiceon", "img-sriinvoiceon.png");
-            asegurarImagen(con, "img.sriinvoiceoff", "img-sriinvoiceoff.png");
-
-            asegurarPermisoRol(con, "Administrador", MARCADOR_ROLE_ADMINISTRADOR, "role-administrador-fragmento.txt");
-            asegurarPermisoRol(con, "Gerente", MARCADOR_ROLE_GERENTE, "role-gerente-fragmento.txt");
-            asegurarPermisoRol(con, "Empleado", MARCADOR_ROLE_EMPLEADO, "role-empleado-fragmento.txt");
+            // Desde 2026-09 las pantallas "Facturacion electronica" y "Comprobantes
+            // electronicos", sus permisos y el retiro de los botones SRI SI/NO los
+            // aplica EcoPos solo al abrirse (ActualizacionesEcoPos): aqui ya no se
+            // tocan Menu.Root, Ticket.Buttons ni ROLES.
+            System.out.println("[=] Menus y permisos: EcoPos los agrega solo la proxima vez que se abra.");
 
             System.out.println("\nListo. ecopos-sri-connector esta instalado/actualizado en esta base de datos.");
         }
@@ -135,22 +124,7 @@ public final class InstaladorEcoPos {
         }
     }
 
-    // --- RESOURCES: agregar un fragmento si el marcador todavia no esta presente ---
-
-    private static void asegurarFragmentoAlFinal(Connection con, String nombreRecurso, String marcador, String plantilla) throws SQLException, IOException {
-        String actual = leerContenidoTexto(con, nombreRecurso);
-        if (actual == null) {
-            System.out.println("[!] No se encontro el recurso '" + nombreRecurso + "' en RESOURCES - se omite (¿EcoPos sin sembrar todavia?)");
-            return;
-        }
-        if (actual.contains(marcador)) {
-            System.out.println("[=] " + nombreRecurso + " ya tiene el hook de ecopos-sri-connector.");
-            return;
-        }
-        String fragmento = leerRecursoTexto(CARPETA_PLANTILLAS + plantilla);
-        actualizarContenidoTexto(con, nombreRecurso, actual + "\n" + fragmento);
-        System.out.println("[+] " + nombreRecurso + " actualizado con el hook de ecopos-sri-connector.");
-    }
+
 
     /**
      * Desde 2026-07 el conector corre dentro del mismo proceso que ECOPos y
@@ -192,96 +166,16 @@ public final class InstaladorEcoPos {
         String despues = script.substring(fin);
         return despues.isEmpty() ? antes + "\n" : antes + "\n" + despues;
     }
+
+
+
 
-    private static void asegurarFragmentoAntesDeCierre(Connection con, String nombreRecurso, String marcador, String plantilla, String etiquetaCierre) throws SQLException, IOException {
-        String actual = leerContenidoTexto(con, nombreRecurso);
-        if (actual == null) {
-            System.out.println("[!] No se encontro el recurso '" + nombreRecurso + "' en RESOURCES - se omite (¿EcoPos sin sembrar todavia?)");
-            return;
-        }
-        if (actual.contains(marcador)) {
-            System.out.println("[=] " + nombreRecurso + " ya tiene el hook de ecopos-sri-connector.");
-            return;
-        }
-        String fragmento = leerRecursoTexto(CARPETA_PLANTILLAS + plantilla);
-        int posicion = actual.lastIndexOf(etiquetaCierre);
-        String nuevoContenido = posicion < 0
-                ? actual + "\n" + fragmento
-                : actual.substring(0, posicion) + fragmento + actual.substring(posicion);
-        actualizarContenidoTexto(con, nombreRecurso, nuevoContenido);
-        System.out.println("[+] " + nombreRecurso + " actualizado con el hook de ecopos-sri-connector.");
-    }
-
-    /** Para recursos que son ENTERAMENTE nuestros (los scripts propios) - se crean si faltan, se reemplazan si ya existen (siempre a la version empaquetada en este jar). */
-    private static void asegurarRecursoCompleto(Connection con, String nombreRecurso, int tipo, String plantilla) throws SQLException, IOException {
-        byte[] contenido = leerRecursoBytes(CARPETA_PLANTILLAS + plantilla);
-        boolean existia = existeRecurso(con, nombreRecurso);
-        guardarRecurso(con, nombreRecurso, tipo, contenido, existia);
-        System.out.println((existia ? "[=] " : "[+] ") + nombreRecurso + (existia ? " ya existia (contenido actualizado a la ultima version)." : " creado."));
-    }
-
-    private static void asegurarImagen(Connection con, String nombreRecurso, String archivoPng) throws SQLException, IOException {
-        if (existeRecurso(con, nombreRecurso)) {
-            System.out.println("[=] " + nombreRecurso + " ya existe.");
-            return;
-        }
-        byte[] contenido = leerRecursoBytes(CARPETA_PLANTILLAS + archivoPng);
-        guardarRecurso(con, nombreRecurso, 1, contenido, false);
-        System.out.println("[+] " + nombreRecurso + " creado.");
-    }
-
-    // --- ROLES.PERMISSIONS ---
-
-    private static void asegurarPermisoRol(Connection con, String nombreRol, String marcador, String plantilla) throws SQLException, IOException {
-        String actual = leerPermisosRol(con, nombreRol);
-        if (actual == null) {
-            System.out.println("[!] No se encontro el rol '" + nombreRol + "' en ROLES - se omite.");
-            return;
-        }
-        if (actual.contains(marcador)) {
-            System.out.println("[=] Rol " + nombreRol + " ya tiene los permisos de ecopos-sri-connector.");
-            return;
-        }
-        String fragmento = leerRecursoTexto(CARPETA_PLANTILLAS + plantilla);
-        int posicionCierre = actual.lastIndexOf("</permissions>");
-        String nuevoContenido = posicionCierre < 0
-                ? actual + "\n" + fragmento
-                : actual.substring(0, posicionCierre) + fragmento + actual.substring(posicionCierre);
-        actualizarPermisosRol(con, nombreRol, nuevoContenido);
-        System.out.println("[+] Rol " + nombreRol + " actualizado con los permisos de ecopos-sri-connector.");
-    }
-
-    private static String leerPermisosRol(Connection con, String nombreRol) throws SQLException {
-        try (PreparedStatement ps = con.prepareStatement("SELECT PERMISSIONS FROM ROLES WHERE NAME = ?")) {
-            ps.setString(1, nombreRol);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) {
-                    return null;
-                }
-                byte[] datos = rs.getBytes("PERMISSIONS");
-                return datos == null ? "" : new String(datos, StandardCharsets.UTF_8);
-            }
-        }
-    }
-
-    private static void actualizarPermisosRol(Connection con, String nombreRol, String nuevoContenido) throws SQLException {
-        try (PreparedStatement ps = con.prepareStatement("UPDATE ROLES SET PERMISSIONS = ? WHERE NAME = ?")) {
-            ps.setBytes(1, nuevoContenido.getBytes(StandardCharsets.UTF_8));
-            ps.setString(2, nombreRol);
-            ps.executeUpdate();
-        }
-    }
+
+
+
 
     // --- RESOURCES: helpers genericos ---
-
-    private static boolean existeRecurso(Connection con, String nombre) throws SQLException {
-        try (PreparedStatement ps = con.prepareStatement("SELECT 1 FROM RESOURCES WHERE NAME = ?")) {
-            ps.setString(1, nombre);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
-            }
-        }
-    }
+
 
     private static String leerContenidoTexto(Connection con, String nombre) throws SQLException {
         try (PreparedStatement ps = con.prepareStatement("SELECT CONTENT FROM RESOURCES WHERE NAME = ?")) {
@@ -303,25 +197,7 @@ public final class InstaladorEcoPos {
             ps.executeUpdate();
         }
     }
-
-    private static void guardarRecurso(Connection con, String nombre, int tipo, byte[] contenido, boolean existia) throws SQLException {
-        if (existia) {
-            try (PreparedStatement ps = con.prepareStatement("UPDATE RESOURCES SET CONTENT = ? WHERE NAME = ?")) {
-                ps.setBytes(1, contenido);
-                ps.setString(2, nombre);
-                ps.executeUpdate();
-            }
-        } else {
-            String id = java.util.UUID.randomUUID().toString();
-            try (PreparedStatement ps = con.prepareStatement("INSERT INTO RESOURCES (ID, NAME, RESTYPE, CONTENT) VALUES (?, ?, ?, ?)")) {
-                ps.setString(1, id);
-                ps.setString(2, nombre);
-                ps.setInt(3, tipo);
-                ps.setBytes(4, contenido);
-                ps.executeUpdate();
-            }
-        }
-    }
+
 
     // --- lectura de plantillas empaquetadas en este jar ---
 

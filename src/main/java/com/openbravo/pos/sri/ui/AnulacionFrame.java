@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 /**
  * Emite una Nota de Credito contra una factura ya AUTORIZADA
  * ({@link AnulacionService}) - dialogo modal lanzado desde el boton "Anular
- * factura" del {@link HistorialFrame}. Permite devolver la factura completa o
+ * factura" de {@link PanelComprobantes}. Permite devolver la factura completa o
  * solo algunos productos / cantidades (Nota de Credito parcial); lo que ya se
  * devolvio en notas anteriores de la misma factura no se puede devolver otra
  * vez. Bloquea mientras firma/envia/consulta al SRI y al terminar refresca el

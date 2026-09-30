@@ -72,37 +72,39 @@ Listo. ecopos-sri-connector esta instalado/actualizado en esta base de datos.
 > `host=`, `puerto=`, `baseDatos=`, `usuario=` y `clave=`. La clave se
 > cifra sola la primera vez.
 
-## 3. Configurar los datos del negocio
+## 3. Configurar la facturación electrónica
 
-Abre EcoPos (`start.bat`), entra como **Administrador** y ve a
-**Administración > Sistema**. Presiona el botón de **configuración del
-conector SRI** y completa:
+Abre EcoPos (`start.bat`), entra como **Administrador** y en el menú
+**Sistema** abre **Facturación electrónica**. Todo está en esa pantalla:
 
-- RUC, razón social y nombre comercial (opcional)
-- Dirección matriz y dirección del establecimiento
-- Establecimiento y punto de emisión (3 dígitos cada uno, por ejemplo `001`)
-- Ambiente: **PRUEBAS** primero. Cambia a **PRODUCCIÓN** solo cuando el
-  negocio esté listo para emitir facturas reales.
-- El certificado `.p12` (botón "Examinar...") y su contraseña
+- **Emisión**: marca **"Emitir factura electrónica en cada venta"** cuando
+  quieras empezar a facturar.
+- **Datos del negocio**: RUC, razón social, nombre comercial (opcional),
+  dirección matriz y del establecimiento.
+- **Punto de emisión y ambiente**: establecimiento y punto de emisión (3
+  dígitos cada uno, por ejemplo `001`). Ambiente **Pruebas** primero; cambia
+  a **Producción** solo cuando el negocio esté listo para facturas reales.
+- **Firma electrónica (.p12)**: elige el archivo y escribe la clave. EcoPos
+  te muestra al instante de quién es la firma y **hasta cuándo es válida**
+  (y te avisa si vence en menos de 30 días).
+- **Correo** (opcional): el servidor SMTP para enviar las facturas a los
+  clientes.
+- **Verificación**: revisa la lista y presiona **"Probar conexión con el
+  SRI"**.
 
-Presiona **Guardar**. No hace falta reiniciar EcoPos: la próxima venta ya
-usa estos datos.
+Presiona **Guardar cambios**. No hace falta reiniciar EcoPos.
 
-## 4. (Opcional) Configurar el envío por correo
+## 4. Probar
 
-En **Administración > Sistema**, abre el **Historial de facturación** y
-presiona **"Configurar correo..."**. Completa los datos del servidor de
-correo (SMTP) del negocio. Sin esto, las facturas se emiten igual, solo que
-no se envían por correo al cliente.
-
-## 5. Probar
-
-1. En EcoPos, en la pantalla de venta, presiona **"SRI: SI"** (verde). Es
-   un interruptor para **todas** las ventas desde ahora, no solo para esta.
-2. Cierra una venta normal.
-3. Abre el **Historial de facturación** (Administración > Sistema). La venta
-   aparece primero como PENDIENTE o ENVIADO y, unos segundos después, como
-   **AUTORIZADO** (en verde).
+1. Cobra una venta normal. Si quieres la factura a nombre de alguien, elige
+   **"Factura con datos"** en la pantalla de cobro y escribe su cédula o RUC
+   (EcoPos la valida al instante).
+2. Abajo a la derecha aparece un aviso: "Enviando la factura al SRI…" y
+   luego **"Factura 001-001-000000001 autorizada"**.
+3. En **Ventas → Comprobantes electrónicos** ves todas las facturas y notas
+   de crédito con su estado, y desde ahí puedes ver el RIDE, reenviarlo por
+   correo, reintentar o emitir una nota de crédito. También desde **Editar
+   ventas**, al abrir una venta, ves su factura.
 
 ## Si ya tenías una versión anterior (con servicio de Windows)
 
@@ -126,18 +128,17 @@ archivos que ya no se usan: `ecopos-sri-connector-service.exe`,
 
 ## Problemas comunes
 
-- **No aparecen los botones o el menú de facturación**: ¿abriste EcoPos
-  después de correr el instalador (paso 2)? Los menús se cargan al iniciar
-  sesión.
-- **El botón de configuración dice que no encuentra el conector**: revisa
-  que el archivo se llame exactamente `ecopos-sri-connector.jar` y esté
-  dentro de `sri-conector/`, junto a `start.bat`. Revisa también que
-  EcoPos esté corriendo con Java 11 o más nuevo (paso 0).
-- **Las ventas no aparecen en el Historial**: ¿está el interruptor en
-  "SRI: SI"? Revisa también que el paso 3 esté guardado.
-- **La factura queda en RECHAZADO o ERROR**: lee la columna "Error" del
-  Historial. Casi siempre es un dato del negocio mal escrito (paso 3) o un
-  certificado vencido o equivocado. Corrígelo y presiona **"Reintentar
-  envío"**. Las que quedan en ERROR por falta de internet o porque el SRI no
-  responde se reintentan solas cada 15 minutos mientras EcoPos esté
-  abierto.
+- **No aparece el menú de facturación**: cierra EcoPos y vuelve a abrirlo;
+  los menús nuevos se agregan solos al iniciar.
+- **La pantalla dice que la facturación no está instalada**: revisa que el
+  archivo se llame exactamente `ecopos-sri-connector.jar` y esté dentro de
+  `sri-conector/`, junto a `start.bat`, y que EcoPos corra con Java 11 o más
+  nuevo (paso 0).
+- **Las ventas no generan factura**: revisa que "Emitir factura electrónica
+  en cada venta" esté marcado (paso 3). El indicador de la barra superior
+  dice "Facturación: apagada" cuando no lo está.
+- **Una factura queda "Rechazada" o "Con error"**: ábrela en Comprobantes
+  electrónicos; al lado se explica el motivo en palabras simples (por
+  ejemplo, una cédula mal escrita o una firma vencida). Corrígelo y presiona
+  **Reintentar**. Las que fallan por falta de internet se reintentan solas
+  cada 15 minutos mientras EcoPos esté abierto.

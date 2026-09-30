@@ -14,8 +14,8 @@ import java.nio.file.Path;
  * el de ECOPos, no el de {@code sri-conector/} - {@code EcoPosSriBridgeImpl}
  * llama {@link #establecerCarpetaBase(Path)} con la carpeta real de
  * {@code sri-conector/} como primer paso de su construccion, antes de tocar
- * cualquier clase que dependa de estas rutas (ConfiguracionFrame,
- * ConfiguracionCorreoFrame, HistorialFrame, ConectorPrincipal).
+ * cualquier clase que dependa de estas rutas (PanelFacturacion,
+ * PanelComprobantes, ConectorPrincipal).
  */
 public final class RutasConector {
 

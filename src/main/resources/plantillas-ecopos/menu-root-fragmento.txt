@@ -1,2 +1,0 @@
-    group.addExecution("/com/openbravo/images/configuration.png", "Menu.SriConnectorConfig", "/com/openbravo/pos/templates/SriConnectorConfig.bs");
-    group.addExecution("/com/openbravo/images/reports.png", "Menu.SriConnectorHistorial", "/com/openbravo/pos/templates/SriConnectorHistorial.bs");
