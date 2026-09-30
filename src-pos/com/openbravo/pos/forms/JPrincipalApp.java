@@ -105,6 +105,13 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
             menu_open = new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/menu-left.png"));
             menu_close = new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/menu-right.png"));
         }
+        if (EcoPosTema.esTemaModerno(javax.swing.UIManager.getLookAndFeel().getClass().getName())) {
+            // Tema moderno: icono "hamburguesa" SVG, igual al abrir y al cerrar el menu.
+            com.formdev.flatlaf.extras.FlatSVGIcon hamburguesa = new com.formdev.flatlaf.extras.FlatSVGIcon("com/openbravo/images/svg/menu-2.svg", 22, 22);
+            hamburguesa.setColorFilter(new com.formdev.flatlaf.extras.FlatSVGIcon.ColorFilter().add(java.awt.Color.BLACK, new java.awt.Color(0x37474F), new java.awt.Color(0xCFD8DC)));
+            menu_open = hamburguesa;
+            menu_close = hamburguesa;
+        }
         assignMenuButtonIcon();        
                 
         // m_jPanelTitle.setBorder(RoundedBorder.createGradientBorder());  - JG 2 Sept 2013 commented-out (for flat look)

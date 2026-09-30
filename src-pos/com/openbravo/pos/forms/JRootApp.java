@@ -307,10 +307,55 @@ public class JRootApp extends JPanel implements AppView {
         jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         }
         }
-           
+
+        aplicarEstiloModerno();
         showLogin();
 
         return true;
+    }
+
+    /**
+     * Solo con los temas modernos (EcoPosTema): pantalla de inicio limpia
+     * (saludo corto; el aviso legal GPL completo sigue disponible en
+     * "Acerca de EcoPos") e indicador de estado del SRI en la barra superior.
+     */
+    private void aplicarEstiloModerno() {
+        if (!EcoPosTema.esTemaModerno(javax.swing.UIManager.getLookAndFeel().getClass().getName())) {
+            return;
+        }
+        String textoInicio = m_props.getProperty("start.text");
+        if (textoInicio == null || textoInicio.isEmpty()) {
+            final String avisoLegal = jLabel1.getText()
+                    .replace(" (fork de uniCenta oPOS)", "")
+                    .replace(" (fork of uniCenta oPOS)", "")
+                    .replace("<html>", "<html><div style='width:460px'>");
+            jLabel1.setText("<html><center><span style='font-size:20pt'><b>\u00A1Hola!</b></span><br>"
+                    + "<span style='font-size:12pt; color:#607D8B'>Elige tu usuario para empezar a vender</span></center>");
+            javax.swing.JButton acercaDe = new javax.swing.JButton("Acerca de EcoPos y licencia");
+            acercaDe.putClientProperty("JButton.buttonType", "borderless");
+            acercaDe.setForeground(new java.awt.Color(0x607D8B));
+            acercaDe.setFocusable(false);
+            acercaDe.setAlignmentX(0.5F);
+            acercaDe.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    javax.swing.JOptionPane.showMessageDialog(JRootApp.this, new javax.swing.JLabel(avisoLegal),
+                            "Acerca de EcoPos", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                }
+            });
+            jPanel4.add(acercaDe);
+        }
+
+        // Barra superior: indicador SRI a la izquierda del logo.
+        m_jPanelTitle.remove(poweredby);
+        javax.swing.JPanel derecha = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 8, 4));
+        derecha.setOpaque(false);
+        derecha.add(new com.openbravo.pos.sri.IndicadorSri(session));
+        derecha.add(poweredby);
+        m_jPanelTitle.add(derecha, java.awt.BorderLayout.LINE_END);
+        m_jPanelTitle.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, javax.swing.UIManager.getColor("Component.borderColor")),
+                javax.swing.BorderFactory.createEmptyBorder(2, 10, 2, 4)));
     }
    
    
@@ -600,8 +645,18 @@ public class JRootApp extends JPanel implements AppView {
                 btn.setMinimumSize(new Dimension(110, 60));
 // Added: JG 27 Jul 13
                 btn.setHorizontalAlignment(SwingConstants.CENTER);
-                btn.setHorizontalTextPosition(AbstractButton.CENTER);                 
+                btn.setHorizontalTextPosition(AbstractButton.CENTER);
                 btn.setVerticalTextPosition(AbstractButton.BOTTOM);
+                if (EcoPosTema.esTemaModerno(javax.swing.UIManager.getLookAndFeel().getClass().getName())) {
+                    // Tarjeta de usuario: iniciales en un circulo de color, nombre debajo.
+                    btn.setIcon(new AvatarIniciales(user.getName(), 52));
+                    btn.setIconTextGap(8);
+                    btn.setFont(btn.getFont().deriveFont(java.awt.Font.BOLD, 13f));
+                    Dimension tarjeta = new Dimension(132, 112);
+                    btn.setMaximumSize(tarjeta);
+                    btn.setPreferredSize(tarjeta);
+                    btn.setMinimumSize(tarjeta);
+                }
 
                 jPeople.add(btn);                    
             }
