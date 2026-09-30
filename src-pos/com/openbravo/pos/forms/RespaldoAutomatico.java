@@ -47,15 +47,23 @@ public final class RespaldoAutomatico {
                 : new File(dir.trim());
     }
 
-    /** El respaldo mas reciente, o null si nunca se hizo uno. */
+    /** Prefijo de los archivos de ESTA base ("ecopos-<base>-"), para no mezclar respaldos de varias bases. */
+    private static String prefijo(AppProperties props) {
+        String url = props.getProperty("db.URL");
+        Matcher m = url == null ? null : URL_MYSQL.matcher(url);
+        return m != null && m.matches() ? PREFIJO + m.group(3) + "-" : PREFIJO;
+    }
+
+    /** El respaldo mas reciente de esta base, o null si nunca se hizo uno. */
     public static File ultimo(AppProperties props) {
         File[] archivos = carpeta(props).listFiles();
         if (archivos == null) {
             return null;
         }
+        String prefijo = prefijo(props);
         File ultimo = null;
         for (File f : archivos) {
-            if (f.getName().startsWith(PREFIJO) && f.getName().endsWith(".sql.gz")
+            if (f.getName().startsWith(prefijo) && f.getName().endsWith(".sql.gz")
                     && (ultimo == null || f.lastModified() > ultimo.lastModified())) {
                 ultimo = f;
             }
@@ -136,7 +144,7 @@ public final class RespaldoAutomatico {
         if (!temporal.renameTo(destino)) {
             throw new IllegalStateException("No se pudo renombrar " + temporal);
         }
-        limpiarViejos(carpeta, conservar(props));
+        limpiarViejos(carpeta, prefijo(props), conservar(props));
         LOG.info("Copia de seguridad creada: " + destino);
         return destino;
     }
@@ -149,14 +157,14 @@ public final class RespaldoAutomatico {
         }
     }
 
-    private static void limpiarViejos(File carpeta, int conservar) {
+    private static void limpiarViejos(File carpeta, String prefijo, int conservar) {
         File[] archivos = carpeta.listFiles();
         if (archivos == null) {
             return;
         }
         List<File> respaldos = new ArrayList<File>();
         for (File f : archivos) {
-            if (f.getName().startsWith(PREFIJO) && f.getName().endsWith(".sql.gz")) {
+            if (f.getName().startsWith(prefijo) && f.getName().endsWith(".sql.gz")) {
                 respaldos.add(f);
             }
         }
