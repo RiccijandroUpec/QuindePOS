@@ -63,7 +63,8 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         jtxtStartupLogo.getDocument().addDocumentListener(dirty);
         jbtnLogoName.addActionListener(new DirectoryEvent(jtxtStartupLogo));
         
-        // Installed skins
+        // Installed skins (EcoPos Claro/Oscuro incluidos)
+        com.openbravo.pos.forms.EcoPosTema.registrar();
         LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
         for (LookAndFeelInfo laf : lafs) {
             jcboLAF.addItem(new LAFInfo(laf.getName(), laf.getClassName()));
@@ -151,7 +152,7 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         
         LAFInfo laf = (LAFInfo) jcboLAF.getSelectedItem();
         config.setProperty("swing.defaultlaf", laf == null
-                ? System.getProperty("swing.defaultlaf", "javax.swing.plaf.metal.MetalLookAndFeel")
+                ? System.getProperty("swing.defaultlaf", com.openbravo.pos.forms.EcoPosTema.CLARO)
                 : laf.getClassName());
 
         config.setProperty("machine.screenmode", comboValue(jcboMachineScreenmode.getSelectedItem()));

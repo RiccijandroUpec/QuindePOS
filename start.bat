@@ -46,6 +46,7 @@ set CP=%CP%;"%DIRNAME%lib/RXTXcomm.jar"
 set CP=%CP%;"%DIRNAME%lib/jpos1121.jar"
 set CP=%CP%;"%DIRNAME%lib/swingx-all-1.6.4.jar"
 set CP=%CP%;"%DIRNAME%lib/substance.jar"
+set CP=%CP%;"%DIRNAME%lib/flatlaf-3.5.4.jar"
 set CP=%CP%;"%DIRNAME%lib/substance-swingx.jar"
 set CP=%CP%;"%DIRNAME%lib/substance-extras.jar"
 REM Needed for NetBeans-generated forms (org.jdesktop.layout.GroupLayout) and

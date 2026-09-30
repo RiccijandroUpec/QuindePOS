@@ -192,8 +192,34 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     
     /** Creates new form JTicketView */
     public JPanelTicket() {
-        
+
         initComponents ();
+        aplicarEstiloModerno();
+    }
+
+    /**
+     * Con los temas modernos (EcoPos Claro/Oscuro): el TOTAL como en los POS
+     * actuales - grande, en verde EcoPos, imposible de no ver. Con los temas
+     * viejos no cambia nada.
+     */
+    private void aplicarEstiloModerno() {
+        if (!com.openbravo.pos.forms.EcoPosTema.esTemaModerno(javax.swing.UIManager.getLookAndFeel().getClass().getName())) {
+            return;
+        }
+        java.awt.Color verde = new java.awt.Color(0x2E, 0x7D, 0x32);
+        m_jTotalEuros.setBackground(verde);
+        m_jTotalEuros.setForeground(java.awt.Color.WHITE);
+        m_jTotalEuros.setFont(m_jTotalEuros.getFont().deriveFont(java.awt.Font.BOLD, 26f));
+        m_jTotalEuros.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 8, 2, 8));
+        m_jLblTotalEuros1.setForeground(verde);
+        m_jLblTotalEuros1.setFont(m_jLblTotalEuros1.getFont().deriveFont(java.awt.Font.BOLD, 16f));
+        javax.swing.border.Border borde = javax.swing.BorderFactory.createCompoundBorder(
+                javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getColor("Component.borderColor"), 1, true),
+                javax.swing.BorderFactory.createEmptyBorder(2, 6, 2, 6));
+        m_jSubtotalEuros.setBorder(borde);
+        m_jTaxesEuros.setBorder(borde);
+        m_jPanTotals.setPreferredSize(new java.awt.Dimension(420, 80));
+        m_jTicketId.setFont(m_jTicketId.getFont().deriveFont(14f));
     }
    
     /**

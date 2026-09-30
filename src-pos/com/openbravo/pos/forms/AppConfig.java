@@ -224,7 +224,7 @@ public class AppConfig implements AppProperties {
         m_propsconfig.setProperty("user.country", l.getCountry());
         m_propsconfig.setProperty("user.variant", l.getVariant());     
         
-        m_propsconfig.setProperty("swing.defaultlaf", System.getProperty("swing.defaultlaf", "javax.swing.plaf.metal.MetalLookAndFeel"));
+        m_propsconfig.setProperty("swing.defaultlaf", System.getProperty("swing.defaultlaf", EcoPosTema.CLARO));
 //        m_propsconfig.setProperty("swing.defaultlaf", System.getProperty("swing.defaultlaf", "javax.swing.plaf.synth.SynthLookAndFeel"));        
         
         m_propsconfig.setProperty("machine.printer", "screen");

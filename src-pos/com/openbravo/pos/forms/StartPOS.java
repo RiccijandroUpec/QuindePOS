@@ -110,8 +110,9 @@ public class StartPOS {
                 Formats.setDateTimePattern(config.getProperty("format.datetime"));               
                 
                 // Set the look and feel.
-                try {             
-                    
+                EcoPosTema.registrar();
+                try {
+
                     Object laf = Class.forName(config.getProperty("swing.defaultlaf")).newInstance();                    
                     if (laf instanceof LookAndFeel){
                         UIManager.setLookAndFeel((LookAndFeel) laf);
