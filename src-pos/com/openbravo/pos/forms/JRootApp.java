@@ -355,7 +355,18 @@ public class JRootApp extends JPanel implements AppView {
         m_jPanelTitle.remove(poweredby);
         javax.swing.JPanel derecha = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 8, 4));
         derecha.setOpaque(false);
-        derecha.add(new com.openbravo.pos.sri.IndicadorSri(session));
+        com.openbravo.pos.sri.IndicadorSri indicador = new com.openbravo.pos.sri.IndicadorSri(session);
+        // Tocar el indicador abre "Comprobantes electronicos" (si el usuario tiene permiso).
+        indicador.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+        indicador.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (m_principalapp != null) {
+                    m_principalapp.showTask("com.openbravo.pos.sri.JPanelComprobantesSri");
+                }
+            }
+        });
+        derecha.add(indicador);
         derecha.add(poweredby);
         m_jPanelTitle.add(derecha, java.awt.BorderLayout.LINE_END);
         m_jPanelTitle.setBorder(javax.swing.BorderFactory.createCompoundBorder(

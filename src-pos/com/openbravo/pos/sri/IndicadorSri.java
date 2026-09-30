@@ -67,7 +67,7 @@ public final class IndicadorSri extends JLabel {
         }
         setVisible(true);
         if (!facturacionActiva()) {
-            mostrar(GRIS, "SRI: apagado", "La facturaci\u00F3n electr\u00F3nica est\u00E1 apagada (bot\u00F3n \"SRI: SI\" para activarla)");
+            mostrar(GRIS, "Facturaci\u00F3n: apagada", "La facturaci\u00F3n electr\u00F3nica est\u00E1 apagada. Act\u00EDvala en Configuraci\u00F3n \u2192 Facturaci\u00F3n electr\u00F3nica");
             return;
         }
         try {
@@ -78,16 +78,16 @@ public final class IndicadorSri extends JLabel {
                 int problemas = rs.getInt(1);
                 int enviando = rs.getInt(2);
                 if (problemas > 0) {
-                    mostrar(ROJO, "SRI: " + problemas + " a revisar",
-                            "Hay comprobantes con error o rechazados - rev\u00EDsalos en Administraci\u00F3n > Historial de facturaci\u00F3n");
+                    mostrar(ROJO, "Facturaci\u00F3n: " + problemas + " por revisar",
+                            "Hay comprobantes con error o rechazados. Toca para revisarlos.");
                 } else if (enviando > 0) {
-                    mostrar(AMBAR, "SRI: enviando " + enviando, "Comprobantes en camino al SRI");
+                    mostrar(AMBAR, "Facturaci\u00F3n: enviando " + enviando, "Comprobantes en camino al SRI. Toca para verlos.");
                 } else {
-                    mostrar(VERDE, "SRI: al d\u00EDa", "Todas las facturas est\u00E1n autorizadas");
+                    mostrar(VERDE, "Facturaci\u00F3n al d\u00EDa", "Todas las facturas est\u00E1n autorizadas. Toca para verlas.");
                 }
             }
         } catch (Exception e) {
-            mostrar(GRIS, "SRI: sin datos", "No se pudo leer el estado de la facturaci\u00F3n: " + e.getMessage());
+            mostrar(GRIS, "Facturaci\u00F3n: sin datos", "No se pudo leer el estado de la facturaci\u00F3n: " + e.getMessage());
         }
     }
 

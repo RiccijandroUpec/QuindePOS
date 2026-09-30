@@ -28,6 +28,7 @@ group = menu.addGroup("Menu.Main");
         group.addPanel("/com/openbravo/images/sale.png", "Menu.Ticket", "com.openbravo.pos.sales.JPanelTicketSales");
         group.addPanel("/com/openbravo/images/chart.png", "Menu.Dashboard", "com.openbravo.pos.panels.JPanelDashboard");
         group.addPanel("/com/openbravo/images/saleedit.png", "Menu.TicketEdit", "com.openbravo.pos.sales.JPanelTicketEdits");
+        group.addPanel("/com/openbravo/images/reports.png", "Menu.Comprobantes", "com.openbravo.pos.sri.JPanelComprobantesSri");
         group.addPanel("/com/openbravo/images/customerpay.png", "Menu.CustomersPayment", "com.openbravo.pos.customers.CustomersPayment");
         group.addPanel("/com/openbravo/images/payments.png", "Menu.Payments", "com.openbravo.pos.panels.JPanelPayments");
         group.addPanel("/com/openbravo/images/calculator.png", "Menu.CloseTPV", "com.openbravo.pos.panels.JPanelCloseMoney");
@@ -147,8 +148,7 @@ group = menu.addGroup("Menu.Backoffice");
     group.addPanel("/com/openbravo/images/configuration.png", "Menu.Configuration", "com.openbravo.pos.config.JPanelConfiguration");
     group.addPanel("/com/openbravo/images/printer.png", "Menu.Printer", "com.openbravo.pos.panels.JPanelPrinter");
     group.addPanel("/com/openbravo/images/timer.png", "Menu.CheckInCheckOut", "com.openbravo.pos.epm.JPanelEmployeePresence");
-    group.addExecution("/com/openbravo/images/configuration.png", "Menu.SriConnectorConfig", "/com/openbravo/pos/templates/SriConnectorConfig.bs");
-    group.addExecution("/com/openbravo/images/reports.png", "Menu.SriConnectorHistorial", "/com/openbravo/pos/templates/SriConnectorHistorial.bs");
+    group.addPanel("/com/openbravo/images/configuration.png", "Menu.FacturacionElectronica", "com.openbravo.pos.sri.JPanelFacturacionSri");
 
 // Deprecated options. Only required with Openbravo ERP software
 //       submenu.addTitle("Menu.Maintenance.ERP");

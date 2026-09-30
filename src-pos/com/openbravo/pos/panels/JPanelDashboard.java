@@ -53,6 +53,8 @@ public class JPanelDashboard extends JPanel implements JPanelView {
     private final JLabel tickets = new JLabel();
     private final JLabel ticketPromedio = new JLabel();
     private final JLabel stockBajoTotal = new JLabel();
+    private final JLabel facturasHoy = new JLabel();
+    private final JLabel facturasDetalle = new JLabel();
     private final GraficoHoras grafico = new GraficoHoras();
     private final JPanel masVendidos = new JPanel();
     private final JPanel formasPago = new JPanel();
@@ -84,12 +86,13 @@ public class JPanelDashboard extends JPanel implements JPanelView {
         derecha.add(refrescar);
         cabecera.add(derecha, BorderLayout.EAST);
 
-        JPanel tarjetas = new JPanel(new GridLayout(1, 4, 12, 0));
+        JPanel tarjetas = new JPanel(new GridLayout(1, 5, 12, 0));
         tarjetas.setOpaque(false);
         tarjetas.add(tarjeta("Ventas de hoy", ventasHoy, ventasComparacion));
         tarjetas.add(tarjeta("Tickets", tickets, null));
         tarjetas.add(tarjeta("Ticket promedio", ticketPromedio, null));
         tarjetas.add(tarjeta("Por agotarse", stockBajoTotal, null));
+        tarjetas.add(tarjeta("Facturas electr\u00F3nicas hoy", facturasHoy, facturasDetalle));
 
         JPanel norte = new JPanel(new BorderLayout(0, 12));
         norte.setOpaque(false);
@@ -161,6 +164,7 @@ public class JPanelDashboard extends JPanel implements JPanelView {
             llenarMasVendidos(con, hoy);
             llenarFormasPago(con, hoy);
             int bajos = llenarStockBajo(con);
+            llenarFacturacion(con, hoy);
             stockBajoTotal.setText(String.valueOf(bajos));
             stockBajoTotal.setForeground(bajos > 0 ? rojo() : UIManager.getColor("Label.foreground"));
             java.io.File respaldo = com.openbravo.pos.forms.RespaldoAutomatico.ultimo(app.getProperties());
@@ -244,6 +248,36 @@ public class JPanelDashboard extends JPanel implements JPanelView {
         }
         if (formasPago.getComponentCount() == 0) {
             formasPago.add(vacio("Todav\u00EDa no hay cobros hoy"));
+        }
+    }
+
+    /** Facturas electronicas de hoy: autorizadas y cuantas hay que revisar (si el conector SRI esta instalado). */
+    private void llenarFacturacion(Connection con, Timestamp desde) {
+        try (PreparedStatement ps = con.prepareStatement(
+                "SELECT SUM(CASE WHEN estado = 'AUTORIZADO' THEN 1 ELSE 0 END), "
+                + "SUM(CASE WHEN estado IN ('RECHAZADO','ERROR') THEN 1 ELSE 0 END), "
+                + "SUM(CASE WHEN estado IN ('PENDIENTE','ENVIADO') THEN 1 ELSE 0 END) "
+                + "FROM ecopos_sri_comprobantes WHERE fecha_emision >= ?")) {
+            ps.setTimestamp(1, desde);
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                int autorizadas = rs.getInt(1);
+                int revisar = rs.getInt(2);
+                int proceso = rs.getInt(3);
+                facturasHoy.setText(String.valueOf(autorizadas));
+                facturasHoy.setForeground(verde());
+                if (revisar > 0) {
+                    facturasDetalle.setText(revisar + " por revisar (Comprobantes electr\u00F3nicos)");
+                    facturasDetalle.setForeground(rojo());
+                } else {
+                    facturasDetalle.setText(proceso > 0 ? proceso + " en proceso" : "todas autorizadas");
+                    facturasDetalle.setForeground(UIManager.getColor("Label.disabledForeground"));
+                }
+            }
+        } catch (SQLException e) {
+            facturasHoy.setText("\u2014");
+            facturasDetalle.setText("facturaci\u00F3n no instalada");
+            facturasDetalle.setForeground(UIManager.getColor("Label.disabledForeground"));
         }
     }
 

@@ -1517,6 +1517,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                                         EcoPosSriBridge sriBridge = EcoPosSriGlue.getInstance(m_App.getProperties());
                                         if (sriBridge != null) {
                                             sriBridge.procesarTicketAsync(ticket.getId());
+                                            com.openbravo.pos.sri.AvisoFactura.seguir(this, m_App, sriBridge, ticket.getId());
                                         }
                                     }
                                 }

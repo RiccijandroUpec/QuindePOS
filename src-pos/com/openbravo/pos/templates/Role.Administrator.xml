@@ -172,7 +172,7 @@
     <class name="Menu.ChangePassword"/>
     <class name="com.openbravo.pos.panels.JPanelPrinter"/>
     <class name="com.openbravo.pos.config.JPanelConfiguration"/>
-    <class name="/com/openbravo/pos/templates/SriConnectorConfig.bs"/>
-    <class name="/com/openbravo/pos/templates/SriConnectorHistorial.bs"/>
+    <class name="com.openbravo.pos.sri.JPanelFacturacionSri"/>
+    <class name="com.openbravo.pos.sri.JPanelComprobantesSri"/>
 
 </permissions>

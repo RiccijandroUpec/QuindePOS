@@ -47,13 +47,6 @@
 	<!-- SET Open Cashdrawer (Default=ENABLED) -->
 	<button key="button.opendrawer" image="img.cashdrawer" template="Printer.OpenDrawer"/>
 
-	<!-- SET SRI e-invoicing GLOBAL toggle (Default=ENABLED) - DATA-ONLY,
-	     ecopos-sri-connector. Compact icon buttons (img.sriinvoiceon/off,
-	     green check / gray X) instead of wide text-only buttons - see
-	     Ticket.Close.xml for where the global on/off state these write is
-	     read. -->
-	<button key="button.sriinvoiceon" titlekey="button.sriinvoiceon" image="img.sriinvoiceon" code="script.SriInvoiceOn"/>
-	<button key="button.sriinvoiceoff" titlekey="button.sriinvoiceoff" image="img.sriinvoiceoff" code="script.SriInvoiceOff"/>
 
 <!-- END Sales Ticket Button Bar - Show icons -->
 

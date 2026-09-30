@@ -40,6 +40,7 @@ public final class ActualizacionesEcoPos {
             crearTablaArqueos(con);
             agregarResumenTributario(con);
             agregarPromociones(con);
+            integrarFacturacionElectronica(con);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudieron aplicar las actualizaciones de EcoPos", e);
         }
@@ -104,6 +105,77 @@ public final class ActualizacionesEcoPos {
         agregarPanelAdministrativo(con, "com.openbravo.pos.promociones.JPanelPromociones",
                 "/com/openbravo/images/bookmark.png", "Menu.Promociones",
                 "\"Menu.ResumenTributario\", \"com.openbravo.pos.panels.JPanelResumenTributario\");");
+    }
+
+    /**
+     * La facturacion electronica deja de ser un modulo aparte: "Facturacion
+     * electronica" (configuracion) y "Comprobantes electronicos" se abren
+     * DENTRO de EcoPos como cualquier otra pantalla (antes eran ventanas
+     * aparte lanzadas por SriConnectorConfig.bs / SriConnectorHistorial.bs),
+     * y los botones "SRI: SI / SRI: NO" salen de la pantalla de venta (el
+     * interruptor ahora esta en la configuracion).
+     */
+    private static void integrarFacturacionElectronica(Connection con) throws SQLException {
+        String claseConfig = "com.openbravo.pos.sri.JPanelFacturacionSri";
+        String claseComprobantes = "com.openbravo.pos.sri.JPanelComprobantesSri";
+        String menu = leerRecurso(con, "Menu.Root");
+        if (menu != null) {
+            String nuevo = reemplazarLinea(menu, "SriConnectorConfig.bs",
+                    "group.addPanel(\"/com/openbravo/images/configuration.png\", \"Menu.FacturacionElectronica\", \"" + claseConfig + "\");");
+            nuevo = reemplazarLinea(nuevo, "SriConnectorHistorial.bs", null);
+            if (!nuevo.equals(menu)) {
+                guardarRecurso(con, "Menu.Root", nuevo);
+                LOG.info("Menu.Root: facturacion electronica integrada");
+            }
+        }
+        agregarPanelAdministrativo(con, claseComprobantes, "/com/openbravo/images/reports.png", "Menu.Comprobantes",
+                "\"Menu.TicketEdit\", \"com.openbravo.pos.sales.JPanelTicketEdits\");");
+        for (String rol : new String[]{"Administrador", "Gerente"}) {
+            String permisos = leerPermisos(con, rol);
+            if (permisos == null) {
+                continue;
+            }
+            String nuevos = permisos.replace("<class name=\"/com/openbravo/pos/templates/SriConnectorConfig.bs\"/>",
+                    "<class name=\"" + claseConfig + "\"/>");
+            nuevos = reemplazarLinea(nuevos, "SriConnectorHistorial.bs\"/>", null);
+            if (!nuevos.equals(permisos)) {
+                guardarPermisos(con, rol, nuevos);
+            }
+        }
+        String botones = leerRecurso(con, "Ticket.Buttons");
+        if (botones != null) {
+            String sinSri = reemplazarLinea(reemplazarLinea(botones, "key=\"button.sriinvoiceon\"", null),
+                    "key=\"button.sriinvoiceoff\"", null);
+            if (!sinSri.equals(botones)) {
+                guardarRecurso(con, "Ticket.Buttons", sinSri);
+                LOG.info("Ticket.Buttons: quitados los botones SRI SI/NO");
+            }
+        }
+    }
+
+    /** Reemplaza (o quita, si nuevaLinea es null) cada linea que contiene el marcador, conservando su sangria. */
+    static String reemplazarLinea(String texto, String marcador, String nuevaLinea) {
+        StringBuilder sb = new StringBuilder();
+        int inicio = 0;
+        while (inicio < texto.length()) {
+            int fin = texto.indexOf('\n', inicio);
+            fin = fin < 0 ? texto.length() : fin + 1;
+            String linea = texto.substring(inicio, fin);
+            if (linea.contains(marcador)) {
+                if (nuevaLinea != null) {
+                    String salto = linea.endsWith("\r\n") ? "\r\n" : linea.endsWith("\n") ? "\n" : "";
+                    int j = 0;
+                    while (j < linea.length() && (linea.charAt(j) == ' ' || linea.charAt(j) == '\t')) {
+                        j++;
+                    }
+                    sb.append(linea, 0, j).append(nuevaLinea).append(salto);
+                }
+            } else {
+                sb.append(linea);
+            }
+            inicio = fin;
+        }
+        return sb.toString();
     }
 
     /**

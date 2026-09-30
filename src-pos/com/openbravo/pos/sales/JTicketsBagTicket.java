@@ -93,6 +93,7 @@ public class JTicketsBagTicket extends JTicketsBag {
         initComponents();
         
         m_TicketsBagTicketBag = new JTicketsBagTicketBag(this);
+        agregarFacturaElectronica();
         
         m_jTicketEditor.addEditorKeys(m_jKeys);
         
@@ -241,6 +242,77 @@ public class JTicketsBagTicket extends JTicketsBag {
         m_jTicketEditor.activate();
     }
     
+    // --- Factura electronica de la venta mostrada (si el conector SRI esta instalado) ---
+
+    private final javax.swing.JLabel estadoFactura = new javax.swing.JLabel();
+    private final javax.swing.JButton botonVerFactura = new javax.swing.JButton("Ver factura");
+    private final javax.swing.JButton botonNotaCredito = new javax.swing.JButton("Nota de cr\u00E9dito");
+
+    private com.openbravo.pos.sri.EcoPosSriBridge puenteSri() {
+        java.io.File jar = new java.io.File(new java.io.File(System.getProperty("dirname.path", "./")),
+                "sri-conector/ecopos-sri-connector.jar");
+        return jar.exists() ? com.openbravo.pos.sri.EcoPosSriGlue.getInstance(m_App.getProperties()) : null;
+    }
+
+    private void agregarFacturaElectronica() {
+        if (puenteSri() == null) {
+            return;
+        }
+        estadoFactura.setFont(estadoFactura.getFont().deriveFont(java.awt.Font.BOLD));
+        botonVerFactura.setFocusable(false);
+        botonNotaCredito.setFocusable(false);
+        botonVerFactura.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (m_ticket != null) {
+                    puenteSri().verRideDeTicket(JTicketsBagTicket.this, m_ticket.getId());
+                }
+            }
+        });
+        botonNotaCredito.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (m_ticket != null && com.openbravo.pos.forms.AutorizacionSupervisor.autorizar(JTicketsBagTicket.this, m_App,
+                        "Emitir una nota de cr\u00E9dito", "Ticket " + m_ticket.getTicketId())) {
+                    puenteSri().notaCreditoDeTicket(JTicketsBagTicket.this, m_ticket.getId());
+                    actualizarFacturaElectronica();
+                }
+            }
+        });
+        jPanel2.add(estadoFactura);
+        jPanel2.add(botonVerFactura);
+        jPanel2.add(botonNotaCredito);
+        actualizarFacturaElectronica();
+    }
+
+    /** Estado de la factura electronica de la venta mostrada, con los botones que correspondan. */
+    private void actualizarFacturaElectronica() {
+        com.openbravo.pos.sri.EcoPosSriBridge puente = puenteSri();
+        if (puente == null) {
+            return;
+        }
+        String[] estado = m_ticket == null ? null : puente.estadoFacturaDeTicket(m_ticket.getId());
+        boolean autorizada = estado != null && "AUTORIZADO".equals(estado[0]);
+        botonVerFactura.setVisible(estado != null);
+        botonNotaCredito.setVisible(autorizada);
+        if (m_ticket == null) {
+            estadoFactura.setText(" ");
+        } else if (estado == null) {
+            estadoFactura.setText("Sin factura electr\u00F3nica");
+            estadoFactura.setForeground(javax.swing.UIManager.getColor("Label.disabledForeground"));
+        } else if (autorizada) {
+            estadoFactura.setText("\u25CF Factura " + estado[1] + " autorizada");
+            estadoFactura.setForeground(new java.awt.Color(0x2E7D32));
+        } else if ("RECHAZADO".equals(estado[0]) || "ERROR".equals(estado[0])) {
+            estadoFactura.setText("\u25CF Factura " + estado[1] + ": revisar");
+            estadoFactura.setToolTipText(estado[2]);
+            estadoFactura.setForeground(new java.awt.Color(0xC62828));
+        } else {
+            estadoFactura.setText("\u25CF Factura " + estado[1] + " en proceso");
+            estadoFactura.setForeground(new java.awt.Color(0xB26A00));
+        }
+    }
+
     private void printTicket() {
         
         // imprimo m_ticket
@@ -263,6 +335,7 @@ public class JTicketsBagTicket extends JTicketsBag {
             m_jTicketId.setText(null);            
         } else {
             m_jTicketId.setText(m_ticket.getName());
+            actualizarFacturaElectronica();
             
             try {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
@@ -319,7 +392,7 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         jButton2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/search24.png"))); // NOI18N
-        jButton2.setText(AppLocal.getIntString("button.print")); // NOI18N
+        jButton2.setText("Buscar"); // NOI18N
         jButton2.setToolTipText("Search Tickets");
         jButton2.setFocusPainted(false);
         jButton2.setFocusable(false);
@@ -337,7 +410,7 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         m_jEdit.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         m_jEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/sale_editline.png"))); // NOI18N
-        m_jEdit.setText(AppLocal.getIntString("button.print")); // NOI18N
+        m_jEdit.setText(AppLocal.getIntString("button.edit")); // NOI18N
         m_jEdit.setToolTipText("Edit current Ticket");
         m_jEdit.setFocusPainted(false);
         m_jEdit.setFocusable(false);
@@ -355,7 +428,7 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         m_jRefund.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         m_jRefund.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/inbox.png"))); // NOI18N
-        m_jRefund.setText(AppLocal.getIntString("button.print")); // NOI18N
+        m_jRefund.setText(AppLocal.getIntString("button.refund")); // NOI18N
         m_jRefund.setToolTipText("Receipt Refund");
         m_jRefund.setFocusPainted(false);
         m_jRefund.setFocusable(false);
@@ -373,7 +446,7 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         m_jPrint.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         m_jPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer24.png"))); // NOI18N
-        m_jPrint.setText(AppLocal.getIntString("button.print")); // NOI18N
+        m_jPrint.setText("Reimprimir"); // NOI18N
         m_jPrint.setToolTipText("Reprint Receipt");
         m_jPrint.setFocusPainted(false);
         m_jPrint.setFocusable(false);

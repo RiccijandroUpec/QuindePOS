@@ -130,6 +130,15 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase I — Facturación electrónica integrada (2026-09-30)
+Antes la facturación se abría en ventanas aparte ("EcoPos SRI Connector - …") y se sentía como otro programa. Ahora es parte de EcoPos, como en otros POS:
+- **Sistema → Facturación electrónica**: una sola pantalla con el interruptor "Emitir factura electrónica en cada venta", datos del negocio, punto de emisión, ambiente (con aviso claro de Pruebas/Producción), **firma electrónica con su titular y fecha de vencimiento** (avisa si vence en menos de 30 días), correo de envío y una lista de verificación con **"Probar conexión con el SRI"**.
+- **Ventas → Comprobantes electrónicos**: resumen del periodo (autorizados, en proceso, por revisar, total), filtros por periodo, estado y tipo, búsqueda por número, cliente, cédula o ticket, estados en color y un panel de detalle que **explica los errores del SRI en palabras simples**, con las acciones Ver RIDE, Enviar por correo, Reintentar, Nota de crédito y Ver XML.
+- **Aviso después de cobrar**: abajo a la derecha, "Enviando la factura al SRI…" y luego "✓ Factura 001-001-000000123 autorizada" (o el motivo si hay que revisarla). Al tocarlo abre Comprobantes electrónicos.
+- **Editar ventas** muestra la factura de la venta abierta con "Ver factura" y "Nota de crédito" (esta última pide autorización de supervisor a quien no la tenga). Además, sus botones ya no dicen todos "Imprimir": ahora son Buscar, Editar, Devolver y Reimprimir.
+- El indicador de la barra superior dice "Facturación al día / enviando / N por revisar / apagada" y al tocarlo abre Comprobantes electrónicos. El Panel del negocio suma la tarjeta "Facturas electrónicas hoy".
+- Se quitaron los botones "SRI: SI / SRI: NO" de la pantalla de venta. Las bases existentes se actualizan solas al abrir EcoPos.
+
 ### Fase H — Promociones automáticas (2026-09-30)
 - Nuevo menú **Promociones** (Administrador y Gerente) para crear reglas sin programar: **"Lleva N paga M"** (2x1, 3x2...) y **"% de descuento"**, por producto o por categoría, con horario y días opcionales (**happy hour**, por ejemplo 20% de 17 a 19 h de lunes a viernes).
 - La venta las aplica sola al agregar productos o cambiar cantidades, bajando el precio de la línea: el ticket, los totales, los reportes y la factura SRI salen con el precio realmente cobrado. Si varias reglas aplican, el cliente recibe la mejor.
@@ -226,7 +235,8 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 **Operación**
 - ✅ Estilo moderno, iconos y pantalla de venta nueva
 - 🟡 Copia de seguridad automática: diaria y local ✅; copia en la nube pendiente
-- ⬜ Asistente de primera configuración
+- 🟡 Configuración de facturación en una sola pantalla con verificación ✅; asistente de primera configuración para el resto (negocio, impresora, impuestos) pendiente
+- ⬜ Ticket impreso con la marca y datos del negocio (la vista previa todavía muestra el logo y textos en inglés de la plantilla original)
 - ⬜ Actualizaciones automáticas
 - ⬜ Versión para tablet / Android
 - ⬜ Tienda en línea integrada
