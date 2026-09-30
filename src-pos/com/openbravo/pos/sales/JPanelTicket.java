@@ -582,8 +582,17 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                 line.setTaxInfo(taxeslogic.getTaxInfo(line.getProductTaxCategoryID(), m_oTicket.getCustomer()));
             }  
         
-            // The ticket name
+            // The ticket name (+ lo que ya compro el cliente, si la venta tiene uno)
             m_jTicketId.setText(m_oTicket.getName(m_oTicketExt));
+            m_jTicketId.setToolTipText(null);
+            if (m_oTicket.getCustomerId() != null) {
+                String historial = com.openbravo.pos.customers.HistorialCliente.resumen(m_App.getSession(), m_oTicket.getCustomerId());
+                if (historial != null) {
+                    m_jTicketId.setText("<html>" + escaparHtml(m_oTicket.getName(m_oTicketExt))
+                            + "<br><span style='color:#78909C'>" + historial + "</span></html>");
+                    m_jTicketId.setToolTipText(historial);
+                }
+            }
 
             // Limpiamos todas las filas y anadimos las del ticket actual
             m_ticketlines.clearTicketLines();
@@ -679,6 +688,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     /** Pide autorizacion de supervisor si el usuario no tiene el permiso (ver AutorizacionSupervisor). */
     public boolean autorizarAccion(String accion, String detalle) {
         return com.openbravo.pos.forms.AutorizacionSupervisor.autorizar(this, m_App, accion, detalle);
+    }
+
+    private static String escaparHtml(String texto) {
+        return texto == null ? "" : texto.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     private static boolean tienePagoACuenta(java.util.List<com.openbravo.pos.payment.PaymentInfo> pagos) {

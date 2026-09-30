@@ -180,6 +180,16 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         if (!jar.exists()) {
             return;
         }
+        // Pago dividido mas visible: el "+" de siempre, con texto.
+        // (marcados como ya estilizados: si no, EcoPosEstilo los trata como teclas "+"/"-" del teclado)
+        m_jButtonAdd.putClientProperty("ecopos.estilo", Boolean.TRUE);
+        m_jButtonRemove.putClientProperty("ecopos.estilo", Boolean.TRUE);
+        m_jButtonAdd.setIcon(null);
+        m_jButtonRemove.setIcon(null);
+        m_jButtonAdd.setText("+ Dividir pago");
+        m_jButtonRemove.setText("\u2212 Quitar pago");
+        m_jButtonAdd.setToolTipText("Registra este monto y cobra el resto con otra forma de pago");
+        m_jButtonRemove.setToolTipText("Quitar el \u00FAltimo pago parcial");
         comprobante = new PanelComprobante(app.getSession());
         comprobante.setAlTerminarDatos(new Runnable() {
             @Override

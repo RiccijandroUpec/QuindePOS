@@ -130,6 +130,12 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase F — Clientes, pago dividido y resumen tributario (2026-09-30)
+- **Historial del cliente al atenderlo**: cuando la venta tiene cliente, debajo del número de ticket se ve cuántas compras lleva, cuánto ha gastado y cuándo fue la última; lo mismo aparece en "Factura con datos" al escribir su cédula o RUC.
+- **Pago dividido visible**: el cobro muestra "+ Dividir pago" y "− Quitar pago" (antes eran solo "+" y "−").
+- **Resumen tributario del mes** (Administrador y Gerente): ventas por tarifa de IVA con base imponible, IVA y número de comprobantes, devoluciones aparte, estado de los comprobantes SRI del mes y exportación a CSV para el contador. Es la base de la sección de ventas del formulario 104.
+- El Panel del negocio queda **después** de Ventas en el menú, para que al iniciar sesión se siga abriendo la pantalla de venta.
+
 ### Fase E — Caja y seguridad (2026-09-30)
 - **Autorización de supervisor**: si un usuario sin el permiso `sales.SinAutorizacion` (Administrador y Gerente lo tienen) quiere eliminar una línea, eliminar una venta, aplicar un descuento, hacer una devolución o abrir el cajón, se pide la clave de un supervisor. Cada autorización queda registrada en la tabla `ecopos_auditoria` (quién, quién autorizó, qué y cuándo). Solo se activa cuando al menos un supervisor tiene clave, para no bloquear instalaciones donde nadie la tiene.
 - **Arqueo de caja con cierre ciego**: al cerrar caja, el cajero cuenta billetes y monedas de dólar sin ver cuánto debería haber; después se muestra lo esperado en efectivo (ventas + entradas − salidas) y el sobrante o faltante. Se guarda en `ecopos_arqueos` con el detalle por denominación. Se apaga con `caja.arqueo=false`.
@@ -173,7 +179,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - 🟡 Pagos locales: Transferencia y DeUna ya se registran; falta integración directa con DeUna, Payphone y datáfonos Datafast/Medianet (requiere cuentas de comercio)
 - ⬜ Enviar factura o ticket por WhatsApp
 - ⬜ Registro de retenciones recibidas
-- ⬜ Reportes tributarios (resumen para el formulario 104, ATS)
+- 🟡 Reportes tributarios: resumen mensual de ventas por tarifa de IVA ✅ (base del 104); ATS pendiente
 - ⬜ Varias cajas o locales con su propio punto de emisión
 - ⬜ Guía de remisión, nota de débito, liquidación de compra
 - ⬜ Nota de crédito parcial (devolver solo un producto)
@@ -181,7 +187,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 
 **Cobro y caja**
 - ✅ Pantalla de pago moderna (efectivo rápido en dólares, Exacto, cambio en grande)
-- 🟡 Pago dividido: ya existe (botón "+" del cobro), falta hacerlo más visible
+- ✅ Pago dividido visible ("+ Dividir pago" en el cobro)
 - ✅ Arqueo por denominación y cierre ciego
 - ✅ Autorización de supervisor con clave para eliminar, descontar, devolver o abrir el cajón (con registro de auditoría)
 - ⬜ Propina / 10% de servicio
@@ -196,7 +202,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 **Ventas y clientes**
 - ⬜ Promociones automáticas (2x1, combos, happy hour)
 - ⬜ Programa de puntos / fidelidad
-- ⬜ Historial de compras del cliente al atenderlo
+- ✅ Historial de compras del cliente al atenderlo
 - ⬜ Tarjetas de regalo con saldo
 
 **Restaurante**

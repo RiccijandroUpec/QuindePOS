@@ -275,7 +275,8 @@ public class PanelComprobante extends JPanel {
                 correo.setText(existente[2] == null ? "" : existente[2]);
                 autocompletando = false;
             }
-            mensaje += " \u00B7 cliente registrado";
+            String historial = com.openbravo.pos.customers.HistorialCliente.resumen(session, existente[0]);
+            mensaje += " \u00B7 cliente registrado" + (historial == null ? "" : " (" + historial + ")");
         } else {
             idClienteExistente = null;
             mensaje += " \u00B7 cliente nuevo (se guardar\u00E1 al cobrar)";

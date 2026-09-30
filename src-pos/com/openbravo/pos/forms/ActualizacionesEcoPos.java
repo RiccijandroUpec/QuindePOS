@@ -38,21 +38,39 @@ public final class ActualizacionesEcoPos {
             agregarPermisoSinAutorizacion(con);
             crearTablaAuditoria(con);
             crearTablaArqueos(con);
+            agregarResumenTributario(con);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudieron aplicar las actualizaciones de EcoPos", e);
         }
     }
 
-    /** Fase D: "Panel del negocio" como primera opcion del menu, para Administrador y Gerente. */
+    /**
+     * Fase D: "Panel del negocio" justo DESPUES de Ventas (EcoPos abre la
+     * primera opcion del menu al iniciar sesion, y esa debe seguir siendo la
+     * venta), para Administrador y Gerente. Si una version anterior de esta
+     * actualizacion lo dejo antes de Ventas, lo mueve.
+     */
     private static void agregarPanelNegocio(Connection con) throws SQLException {
         String menu = leerRecurso(con, "Menu.Root");
-        if (menu != null && !menu.contains(CLASE_PANEL_NEGOCIO) && menu.contains(ANCLA_MENU_VENTAS)) {
-            String linea = "group.addPanel(\"/com/openbravo/images/chart.png\", \"Menu.Dashboard\", \"" + CLASE_PANEL_NEGOCIO + "\");";
-            int i = menu.indexOf(ANCLA_MENU_VENTAS);
-            String sangria = sangriaDeLinea(menu, i);
-            menu = menu.substring(0, i) + linea + "\n" + sangria + menu.substring(i);
-            guardarRecurso(con, "Menu.Root", menu);
-            LOG.info("Menu.Root: agregado el Panel del negocio");
+        String linea = "group.addPanel(\"/com/openbravo/images/chart.png\", \"Menu.Dashboard\", \"" + CLASE_PANEL_NEGOCIO + "\");";
+        if (menu != null && menu.contains(ANCLA_MENU_VENTAS)) {
+            int posLinea = menu.indexOf(linea);
+            int posVentas = menu.indexOf(ANCLA_MENU_VENTAS);
+            if (posLinea >= 0 && posLinea < posVentas) {
+                // Quitar la linea vieja completa (sangria + texto + salto) para reinsertarla despues de Ventas.
+                int inicioLinea = menu.lastIndexOf('\n', posLinea) + 1;
+                int finLinea = menu.indexOf('\n', posLinea) + 1;
+                menu = menu.substring(0, inicioLinea) + menu.substring(finLinea);
+                posLinea = -1;
+            }
+            if (posLinea < 0 && !menu.contains(CLASE_PANEL_NEGOCIO)) {
+                int i = menu.indexOf(ANCLA_MENU_VENTAS);
+                String sangria = sangriaDeLinea(menu, i);
+                int finVentas = menu.indexOf('\n', i);
+                menu = menu.substring(0, finVentas + 1) + sangria + linea + "\n" + menu.substring(finVentas + 1);
+                guardarRecurso(con, "Menu.Root", menu);
+                LOG.info("Menu.Root: Panel del negocio despues de Ventas");
+            }
         }
         for (String rol : new String[]{"Administrador", "Gerente"}) {
             String permisos = leerPermisos(con, rol);
@@ -61,6 +79,30 @@ public final class ActualizacionesEcoPos {
                         ANCLA_PERMISO_VENTAS + "\n    <class name=\"" + CLASE_PANEL_NEGOCIO + "\"/>");
                 guardarPermisos(con, rol, permisos);
                 LOG.info("Rol " + rol + ": permiso para el Panel del negocio");
+            }
+        }
+    }
+
+    /** Fase F: "Resumen tributario" despues de "Cerrar caja", para Administrador y Gerente. */
+    private static void agregarResumenTributario(Connection con) throws SQLException {
+        String clase = "com.openbravo.pos.panels.JPanelResumenTributario";
+        String ancla = "\"Menu.CloseTPV\", \"com.openbravo.pos.panels.JPanelCloseMoney\");";
+        String menu = leerRecurso(con, "Menu.Root");
+        if (menu != null && !menu.contains(clase) && menu.contains(ancla)) {
+            int fin = menu.indexOf(ancla) + ancla.length();
+            int inicioLinea = menu.lastIndexOf('\n', fin) + 1;
+            String sangria = sangriaDeLinea(menu, menu.indexOf("group.", inicioLinea));
+            menu = menu.substring(0, fin) + "\n" + sangria
+                    + "group.addPanel(\"/com/openbravo/images/reports.png\", \"Menu.ResumenTributario\", \"" + clase + "\");"
+                    + menu.substring(fin);
+            guardarRecurso(con, "Menu.Root", menu);
+            LOG.info("Menu.Root: agregado el Resumen tributario");
+        }
+        String permiso = "<class name=\"" + clase + "\"/>";
+        for (String rol : new String[]{"Administrador", "Gerente"}) {
+            String permisos = leerPermisos(con, rol);
+            if (permisos != null && !permisos.contains(permiso) && permisos.contains(ANCLA_PERMISO_VENTAS)) {
+                guardarPermisos(con, rol, permisos.replace(ANCLA_PERMISO_VENTAS, ANCLA_PERMISO_VENTAS + "\n    " + permiso));
             }
         }
     }
