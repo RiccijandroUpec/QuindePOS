@@ -22,12 +22,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class ComprobanteXmlMapperTest {
 
     private static Comprobante comprobanteDeEjemplo() {
+        return comprobanteDeEjemplo(Cliente.consumidorFinal());
+    }
+
+    private static Comprobante comprobanteDeEjemplo(Cliente cliente) {
         DatosEmisor emisor = new DatosEmisor(
                 "1790012345001", "ALMACENES DE PRUEBA S.A.", "ALMACENES PRUEBA",
                 "Av. Amazonas y Naciones Unidas", "Av. Amazonas y Naciones Unidas",
                 null, true, "001", "001", Ambiente.PRUEBAS, null, null);
-
-        Cliente cliente = Cliente.consumidorFinal();
 
         BigDecimal precioUnitario = new BigDecimal("10.00");
         BigDecimal baseImponible = new BigDecimal("10.00");
@@ -133,5 +135,31 @@ class ComprobanteXmlMapperTest {
         assertTrue(xml.contains("<razonSocial>ALMACENES DE PRUEBA S.A.</razonSocial>"));
         assertTrue(xml.contains("<codDoc>01</codDoc>"));
         assertTrue(xml.contains("PRODUCTO DE PRUEBA"));
+    }
+
+    @Test
+    void consumidorFinalSinDatosDeContactoNoLlevaInfoAdicional() {
+        Factura factura = ComprobanteXmlMapper.map(comprobanteDeEjemplo());
+        assertNull(factura.getInfoAdicional());
+    }
+
+    @Test
+    void datosDeContactoDelClienteVanEnInfoAdicional() throws Exception {
+        Cliente cliente = new Cliente("05", "1710034065", "MARIA PEREZ", "Centro Ibarra", "maria@correo.ec", " ");
+        Factura factura = ComprobanteXmlMapper.map(comprobanteDeEjemplo(cliente));
+
+        var campos = factura.getInfoAdicional().getCampoAdicional();
+        assertEquals(2, campos.size(), "el telefono vacio no se incluye");
+        assertEquals("Dirección", campos.get(0).getNombre());
+        assertEquals("Centro Ibarra", campos.get(0).getValue());
+        assertEquals("Email", campos.get(1).getNombre());
+        assertEquals("maria@correo.ec", campos.get(1).getValue());
+
+        // El XML resultante sigue cumpliendo el XSD oficial del SRI (factura 2.1.0).
+        String xml = FacturaXmlWriter.toXml(factura);
+        javax.xml.validation.SchemaFactory fabrica =
+                javax.xml.validation.SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        javax.xml.validation.Schema esquema = fabrica.newSchema(getClass().getResource("/xsd/factura_V2.1.0.xsd"));
+        esquema.newValidator().validate(new javax.xml.transform.stream.StreamSource(new java.io.StringReader(xml)));
     }
 }

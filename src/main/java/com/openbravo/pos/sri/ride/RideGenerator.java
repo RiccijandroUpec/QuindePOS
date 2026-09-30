@@ -1,37 +1,21 @@
 package com.openbravo.pos.sri.ride;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.oned.Code128Writer;
 import com.openbravo.pos.sri.xml.FacturaXmlReader;
 import com.openbravo.pos.sri.xml.generado.Factura;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
- * Genera la Representacion Impresa de Documento Electronico (RIDE) en PDF a
- * partir del XML autorizado por el SRI, siguiendo los campos obligatorios
- * documentados en el Anexo 2 de la ficha tecnica (no es un calco pixel a
- * pixel del layout de ejemplo del SRI, pero incluye todos los campos que
- * exige: RUC, numero, numero de autorizacion, clave de acceso + codigo de
- * barras, ambiente, emision, datos del emisor y comprador, detalle, y
- * totales). El PDF generado tiene validez tributaria igual que cualquier
- * otra representacion impresa que cumpla esos requisitos (Resolucion 233,
- * junio 2018, seccion 8.19 de la ficha tecnica).
+ * Genera la Representacion Impresa de Documento Electronico (RIDE) de una
+ * factura en PDF a partir del XML autorizado por el SRI, con el formato
+ * habitual del SRI (ver {@link RideRenderer}) y todos los campos que exige el
+ * Anexo 2 de la ficha tecnica: RUC, numero, numero de autorizacion, clave de
+ * acceso + codigo de barras, ambiente, emision, datos del emisor y comprador,
+ * detalle, subtotales por tarifa, informacion adicional y forma de pago. El
+ * PDF tiene validez tributaria igual que cualquier otra representacion
+ * impresa que cumpla esos requisitos (Resolucion 233, junio 2018, seccion
+ * 8.19 de la ficha tecnica).
  *
  * Recibe el XML ya AUTORIZADO (el que el SRI devuelve dentro de
  * {@code <autorizacion><comprobante>}, guardado en
@@ -42,22 +26,6 @@ import java.time.format.DateTimeFormatter;
  * comprobante.
  */
 public final class RideGenerator {
-
-    private static final float MARGEN = 40f;
-    private static final float ANCHO_PAGINA = PDRectangle.A4.getWidth();
-    private static final DateTimeFormatter FORMATO_FECHA_AUTORIZACION = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-
-    /** codigo (tabla 19 del SRI) -> nombre del impuesto, para no etiquetar ICE/IRBPNR como "IVA". */
-    private static String nombreImpuesto(String codigo) {
-        if ("2".equals(codigo)) {
-            return "IVA";
-        } else if ("3".equals(codigo)) {
-            return "ICE";
-        } else if ("5".equals(codigo)) {
-            return "IRBPNR";
-        }
-        return "Impuesto (código " + codigo + ")";
-    }
 
     private RideGenerator() {
     }
@@ -74,257 +42,79 @@ public final class RideGenerator {
      *                          si aun no se conoce.
      */
     public static byte[] generar(String xmlAutorizado, LocalDateTime fechaAutorizacion) throws IOException {
-        Factura factura = FacturaXmlReader.leer(xmlAutorizado);
-
-        try (PDDocument documento = new PDDocument()) {
-            PDPage pagina = new PDPage(PDRectangle.A4);
-            documento.addPage(pagina);
-
-            PDFont fuenteNormal = PDType1Font.HELVETICA;
-            PDFont fuenteNegrita = PDType1Font.HELVETICA_BOLD;
-
-            try (PDPageContentStream cs = new PDPageContentStream(documento, pagina)) {
-                float y = PDRectangle.A4.getHeight() - MARGEN;
-                y = escribirEncabezado(documento, cs, factura, fuenteNormal, fuenteNegrita, y, fechaAutorizacion);
-                y = escribirDatosComprador(cs, factura, fuenteNormal, fuenteNegrita, y);
-                y = escribirDetalle(cs, factura, fuenteNormal, fuenteNegrita, y);
-                y = escribirTotales(cs, factura, fuenteNormal, fuenteNegrita, y);
-                escribirInfoAdicional(cs, factura, fuenteNormal, fuenteNegrita, y);
-            }
-
-            ByteArrayOutputStream salida = new ByteArrayOutputStream();
-            documento.save(salida);
-            return salida.toByteArray();
-        }
+        return RideRenderer.generar(modelo(FacturaXmlReader.leer(xmlAutorizado), fechaAutorizacion));
     }
 
-    private static float escribirEncabezado(PDDocument documento, PDPageContentStream cs, Factura factura,
-                                             PDFont normal, PDFont negrita, float y,
-                                             LocalDateTime fechaAutorizacion) throws IOException {
+    static ModeloRide modelo(Factura factura, LocalDateTime fechaAutorizacion) {
         var it = factura.getInfoTributaria();
-
-        texto(cs, negrita, 14, MARGEN, y, "R.U.C.: " + it.getRuc());
-        y -= 20;
-        texto(cs, negrita, 16, MARGEN, y, "FACTURA");
-        y -= 18;
-        texto(cs, normal, 10, MARGEN, y, "No. " + it.getEstab() + "-" + it.getPtoEmi() + "-" + it.getSecuencial());
-        y -= 16;
-        texto(cs, normal, 9, MARGEN, y, "NÚMERO DE AUTORIZACIÓN:");
-        y -= 12;
-        texto(cs, normal, 8, MARGEN, y, it.getClaveAcceso());
-        y -= 14;
-        texto(cs, normal, 9, MARGEN, y,
-                "FECHA Y HORA DE AUTORIZACIÓN: " + (fechaAutorizacion != null ? fechaAutorizacion.format(FORMATO_FECHA_AUTORIZACION) : ""));
-        y -= 12;
-        texto(cs, normal, 9, MARGEN, y, "AMBIENTE: " + ("1".equals(it.getAmbiente()) ? "PRUEBAS" : "PRODUCCIÓN"));
-        y -= 12;
-        texto(cs, normal, 9, MARGEN, y, "EMISIÓN: NORMAL");
-        y -= 16;
-
-        texto(cs, normal, 9, MARGEN, y, "CLAVE DE ACCESO");
-        y -= 45;
-        dibujarCodigoBarras(documento, cs, it.getClaveAcceso(), MARGEN, y, 260, 40);
-        y -= 15;
-
-        // Datos del emisor, a la derecha del encabezado (reutiliza la misma altura de arriba)
-        float xDerecha = ANCHO_PAGINA / 2 + 20;
-        float yEmisor = PDRectangle.A4.getHeight() - MARGEN - 20;
-        texto(cs, negrita, 10, xDerecha, yEmisor, textoOVacio(it.getRazonSocial()));
-        yEmisor -= 12;
-        if (it.getNombreComercial() != null) {
-            texto(cs, normal, 8, xDerecha, yEmisor, textoOVacio(it.getNombreComercial()));
-            yEmisor -= 12;
-        }
-        texto(cs, normal, 8, xDerecha, yEmisor, "Matriz: " + textoOVacio(it.getDirMatriz()));
-        yEmisor -= 12;
-        var infoFactura = factura.getInfoFactura();
-        if (infoFactura.getDirEstablecimiento() != null) {
-            texto(cs, normal, 8, xDerecha, yEmisor, "Sucursal: " + infoFactura.getDirEstablecimiento());
-            yEmisor -= 12;
-        }
-        if (infoFactura.getContribuyenteEspecial() != null) {
-            texto(cs, normal, 8, xDerecha, yEmisor, "Contribuyente especial: " + infoFactura.getContribuyenteEspecial());
-            yEmisor -= 12;
-        }
-        texto(cs, normal, 8, xDerecha, yEmisor,
-                "Obligado a llevar contabilidad: " + (infoFactura.getObligadoContabilidad() != null ? infoFactura.getObligadoContabilidad().value() : "NO"));
-
-        return y - 10;
-    }
-
-    private static float escribirDatosComprador(PDPageContentStream cs, Factura factura, PDFont normal, PDFont negrita, float y) throws IOException {
         var info = factura.getInfoFactura();
-        linea(cs, MARGEN, y, ANCHO_PAGINA - MARGEN, y);
-        y -= 14;
-        texto(cs, negrita, 9, MARGEN, y, "Razón Social / Nombres y Apellidos: ");
-        texto(cs, normal, 9, MARGEN + 190, y, textoOVacio(info.getRazonSocialComprador()));
-        y -= 13;
-        texto(cs, negrita, 9, MARGEN, y, "Identificación: ");
-        texto(cs, normal, 9, MARGEN + 190, y, textoOVacio(info.getIdentificacionComprador()));
-        y -= 13;
-        texto(cs, negrita, 9, MARGEN, y, "Fecha de emisión: ");
-        texto(cs, normal, 9, MARGEN + 190, y, textoOVacio(info.getFechaEmision()));
-        y -= 13;
-        if (info.getDireccionComprador() != null) {
-            texto(cs, negrita, 9, MARGEN, y, "Dirección: ");
-            texto(cs, normal, 9, MARGEN + 190, y, info.getDireccionComprador());
-            y -= 13;
-        }
-        if (info.getPlaca() != null) {
-            texto(cs, negrita, 9, MARGEN, y, "Placa: ");
-            texto(cs, normal, 9, MARGEN + 190, y, info.getPlaca());
-            y -= 13;
-        }
-        if (info.getGuiaRemision() != null) {
-            texto(cs, negrita, 9, MARGEN, y, "Guía: ");
-            texto(cs, normal, 9, MARGEN + 190, y, info.getGuiaRemision());
-            y -= 13;
-        }
-        return y - 6;
-    }
+        ModeloRide r = new ModeloRide();
+        r.tipo = "FACTURA";
+        r.ruc = it.getRuc();
+        r.numero = it.getEstab() + "-" + it.getPtoEmi() + "-" + it.getSecuencial();
+        r.claveAcceso = it.getClaveAcceso();
+        r.ambiente = ModeloRide.ambiente(it.getAmbiente());
+        r.emision = ModeloRide.emision(it.getTipoEmision());
+        r.fechaAutorizacion = fechaAutorizacion;
+        r.razonSocial = it.getRazonSocial();
+        r.nombreComercial = it.getNombreComercial();
+        r.dirMatriz = it.getDirMatriz();
+        r.agenteRetencion = it.getAgenteRetencion();
+        r.contribuyenteRimpe = it.getContribuyenteRimpe();
+        r.dirEstablecimiento = info.getDirEstablecimiento();
+        r.contribuyenteEspecial = info.getContribuyenteEspecial();
+        r.obligadoContabilidad = info.getObligadoContabilidad() != null ? info.getObligadoContabilidad().value() : "NO";
 
-    private static float escribirDetalle(PDPageContentStream cs, Factura factura, PDFont normal, PDFont negrita, float y) throws IOException {
-        linea(cs, MARGEN, y, ANCHO_PAGINA - MARGEN, y);
-        y -= 14;
+        r.compradorRazonSocial = info.getRazonSocialComprador();
+        r.compradorIdentificacion = info.getIdentificacionComprador();
+        r.fechaEmision = info.getFechaEmision();
+        r.guiaRemision = info.getGuiaRemision();
+        r.compradorDireccion = info.getDireccionComprador();
 
-        float[] columnasX = {MARGEN, MARGEN + 40, MARGEN + 85, MARGEN + 270, MARGEN + 310, MARGEN + 370, MARGEN + 430};
-        String[] encabezados = {"Cód.", "Cód. Aux.", "Descripción", "Cant.", "P. Unit.", "Desc.", "Total"};
-        for (int i = 0; i < encabezados.length; i++) {
-            texto(cs, negrita, 8, columnasX[i], y, encabezados[i]);
-        }
-        y -= 12;
-        linea(cs, MARGEN, y, ANCHO_PAGINA - MARGEN, y);
-        y -= 12;
-
-        for (Factura.Detalles.Detalle detalle : factura.getDetalles().getDetalle()) {
-            texto(cs, normal, 8, columnasX[0], y, textoOVacio(detalle.getCodigoPrincipal()));
-            texto(cs, normal, 8, columnasX[1], y, textoOVacio(detalle.getCodigoAuxiliar()));
-            texto(cs, normal, 8, columnasX[2], y, recortar(textoOVacio(detalle.getDescripcion()), 33));
-            texto(cs, normal, 8, columnasX[3], y, formatoNumero(detalle.getCantidad()));
-            texto(cs, normal, 8, columnasX[4], y, formatoNumero(detalle.getPrecioUnitario()));
-            texto(cs, normal, 8, columnasX[5], y, formatoNumero(detalle.getDescuento()));
-            texto(cs, normal, 8, columnasX[6], y, formatoNumero(detalle.getPrecioTotalSinImpuesto()));
-            y -= 12;
-
-            if (detalle.getPrecioSinSubsidio() != null) {
-                texto(cs, normal, 7, columnasX[2], y, "Precio sin subsidio: " + formatoNumero(detalle.getPrecioSinSubsidio()));
-                y -= 10;
+        for (Factura.Detalles.Detalle d : factura.getDetalles().getDetalle()) {
+            ModeloRide.Linea l = new ModeloRide.Linea();
+            l.codigo = d.getCodigoPrincipal();
+            l.descripcion = d.getDescripcion();
+            l.cantidad = d.getCantidad();
+            l.precioUnitario = d.getPrecioUnitario();
+            l.descuento = d.getDescuento();
+            l.total = d.getPrecioTotalSinImpuesto();
+            if (d.getPrecioSinSubsidio() != null) {
+                l.adicionales.add("Precio sin subsidio: " + d.getPrecioSinSubsidio().toPlainString());
             }
-            if (detalle.getDetallesAdicionales() != null) {
-                for (var adicional : detalle.getDetallesAdicionales().getDetAdicional()) {
-                    texto(cs, normal, 7, columnasX[2], y, textoOVacio(adicional.getNombre()) + ": " + textoOVacio(adicional.getValor()));
-                    y -= 10;
+            if (d.getDetallesAdicionales() != null) {
+                for (var ad : d.getDetallesAdicionales().getDetAdicional()) {
+                    l.adicionales.add(ad.getNombre() + ": " + ad.getValor());
                 }
             }
+            r.detalle.add(l);
         }
-        return y - 8;
-    }
 
-    private static float escribirTotales(PDPageContentStream cs, Factura factura, PDFont normal, PDFont negrita, float y) throws IOException {
-        var info = factura.getInfoFactura();
-        linea(cs, MARGEN, y, ANCHO_PAGINA - MARGEN, y);
-        y -= 14;
-
-        float xEtiqueta = ANCHO_PAGINA - MARGEN - 200;
-        float xValor = ANCHO_PAGINA - MARGEN - 60;
-
-        y = filaTotal(cs, normal, negrita, xEtiqueta, xValor, y, "Subtotal sin impuestos:", formatoNumero(info.getTotalSinImpuestos()));
-        y = filaTotal(cs, normal, negrita, xEtiqueta, xValor, y, "Descuento:", formatoNumero(info.getTotalDescuento()));
-        if (info.getTotalSubsidio() != null) {
-            y = filaTotal(cs, normal, negrita, xEtiqueta, xValor, y, "Subsidio:", formatoNumero(info.getTotalSubsidio()));
-        }
         if (info.getTotalConImpuestos() != null) {
-            // Una fila de SUBTOTAL (base imponible) por cada tarifa/tipo de impuesto, y despues
-            // el valor del impuesto correspondiente - etiquetado por su codigo real (2=IVA,
-            // 3=ICE, 5=IRBPNR), no siempre "IVA" como antes.
-            for (var totalImpuesto : info.getTotalConImpuestos().getTotalImpuesto()) {
-                String nombre = nombreImpuesto(totalImpuesto.getCodigo());
-                String sufijoTarifa = totalImpuesto.getTarifa() != null ? " " + formatoNumero(totalImpuesto.getTarifa()) + "%" : "";
-                y = filaTotal(cs, normal, negrita, xEtiqueta, xValor, y,
-                        "SUBTOTAL " + nombre + sufijoTarifa + ":", formatoNumero(totalImpuesto.getBaseImponible()));
-                y = filaTotal(cs, normal, negrita, xEtiqueta, xValor, y,
-                        nombre + sufijoTarifa + ":", formatoNumero(totalImpuesto.getValor()));
+            for (var ti : info.getTotalConImpuestos().getTotalImpuesto()) {
+                r.sumarImpuesto(ti.getCodigo(), ti.getCodigoPorcentaje(), ti.getBaseImponible(), ti.getValor());
             }
         }
-        y = filaTotal(cs, normal, negrita, xEtiqueta, xValor, y, "Propina:", formatoNumero(info.getPropina()));
-        y = filaTotal(cs, negrita, negrita, xEtiqueta, xValor, y, "VALOR TOTAL:", formatoNumero(info.getImporteTotal()));
-        if (info.getTotalSubsidio() != null) {
-            y = filaTotal(cs, negrita, negrita, xEtiqueta, xValor, y,
-                    "VALOR TOTAL SIN SUBSIDIO:", formatoNumero(info.getImporteTotal().add(info.getTotalSubsidio())));
-            y = filaTotal(cs, normal, negrita, xEtiqueta, xValor, y, "AHORRO POR SUBSIDIO:", formatoNumero(info.getTotalSubsidio()));
-        }
+        r.subtotalSinImpuestos = info.getTotalSinImpuestos();
+        r.totalDescuento = info.getTotalDescuento();
+        r.propina = info.getPropina() != null ? info.getPropina() : java.math.BigDecimal.ZERO;
+        r.total = info.getImporteTotal();
 
-        y -= 6;
         if (info.getPagos() != null) {
-            for (var pago : info.getPagos().getPago()) {
-                texto(cs, normal, 8, MARGEN, y, "Forma de pago: " + pago.getFormaPago() + "  -  " + formatoNumero(pago.getTotal()));
-                y -= 11;
+            for (var p : info.getPagos().getPago()) {
+                ModeloRide.Pago pago = new ModeloRide.Pago();
+                pago.descripcion = ModeloRide.formaPago(p.getFormaPago());
+                pago.valor = p.getTotal();
+                pago.plazo = p.getPlazo() != null ? p.getPlazo().stripTrailingZeros().toPlainString() : "";
+                pago.tiempo = p.getUnidadTiempo();
+                r.pagos.add(pago);
             }
         }
-        return y;
-    }
-
-    /** "Información Adicional" del comprobante (email, telefono, etc. - campoAdicional del XSD, hasta 15 segun el Anexo 1). */
-    private static void escribirInfoAdicional(PDPageContentStream cs, Factura factura, PDFont normal, PDFont negrita, float y) throws IOException {
-        if (factura.getInfoAdicional() == null || factura.getInfoAdicional().getCampoAdicional().isEmpty()) {
-            return;
+        if (factura.getInfoAdicional() != null) {
+            for (var c : factura.getInfoAdicional().getCampoAdicional()) {
+                r.infoAdicional.add(new String[]{c.getNombre(), c.getValue()});
+            }
         }
-        y -= 10;
-        linea(cs, MARGEN, y, ANCHO_PAGINA - MARGEN, y);
-        y -= 14;
-        texto(cs, negrita, 9, MARGEN, y, "Información Adicional");
-        y -= 12;
-        for (var campo : factura.getInfoAdicional().getCampoAdicional()) {
-            texto(cs, normal, 8, MARGEN, y, textoOVacio(campo.getNombre()) + ": " + textoOVacio(campo.getValue()));
-            y -= 11;
-        }
-    }
-
-    private static float filaTotal(PDPageContentStream cs, PDFont fuenteEtiqueta, PDFont fuenteValor,
-                                    float xEtiqueta, float xValor, float y, String etiqueta, String valor) throws IOException {
-        texto(cs, fuenteEtiqueta, 9, xEtiqueta, y, etiqueta);
-        texto(cs, fuenteValor, 9, xValor, y, valor);
-        return y - 13;
-    }
-
-    private static void dibujarCodigoBarras(PDDocument documento, PDPageContentStream cs, String claveAcceso,
-                                             float x, float y, int anchoPx, int altoPx) throws IOException {
-        try {
-            BitMatrix matriz = new Code128Writer().encode(claveAcceso, BarcodeFormat.CODE_128, anchoPx, altoPx);
-            BufferedImage imagen = MatrixToImageWriter.toBufferedImage(matriz);
-            PDImageXObject imagenPdf = LosslessFactory.createFromImage(documento, imagen);
-            cs.drawImage(imagenPdf, x, y, anchoPx / 2f, altoPx / 2f);
-        } catch (Exception e) {
-            // El RIDE sigue siendo valido sin el codigo de barras (es una
-            // ayuda opcional segun la seccion 8.20 de la ficha tecnica) -
-            // no se debe romper la generacion del PDF por esto.
-            texto(cs, PDType1Font.HELVETICA, 7, x, y + altoPx / 2f, "(codigo de barras no disponible)");
-        }
-    }
-
-    private static void texto(PDPageContentStream cs, PDFont fuente, float tamano, float x, float y, String valor) throws IOException {
-        cs.beginText();
-        cs.setFont(fuente, tamano);
-        cs.newLineAtOffset(x, y);
-        cs.showText(valor == null ? "" : valor);
-        cs.endText();
-    }
-
-    private static void linea(PDPageContentStream cs, float x1, float y1, float x2, float y2) throws IOException {
-        cs.moveTo(x1, y1);
-        cs.lineTo(x2, y2);
-        cs.stroke();
-    }
-
-    private static String textoOVacio(String valor) {
-        return valor == null ? "" : valor;
-    }
-
-    private static String formatoNumero(BigDecimal valor) {
-        return valor == null ? "" : valor.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString();
-    }
-
-    private static String recortar(String valor, int maxLargo) {
-        return valor.length() > maxLargo ? valor.substring(0, maxLargo - 1) + "…" : valor;
+        return r;
     }
 }

@@ -157,8 +157,8 @@ public class ComprobanteRepository {
 
     public void insertar(Comprobante c) throws SQLException {
         String sql = "INSERT INTO ecopos_sri_comprobantes " +
-            "(id, ticket_id, tipo_comprobante, comprobante_original_id, motivo, secuencial, ambiente, estado, fecha_emision, intentos) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "(id, ticket_id, tipo_comprobante, comprobante_original_id, motivo, secuencial, clave_acceso, ambiente, estado, fecha_emision, intentos) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, c.getId());
             ps.setString(2, c.getTicketId());
@@ -166,10 +166,13 @@ public class ComprobanteRepository {
             ps.setString(4, c.getComprobanteOriginalId());
             ps.setString(5, c.getMotivo());
             ps.setString(6, c.getSecuencial());
-            ps.setString(7, c.getAmbiente().name());
-            ps.setString(8, c.getEstado().name());
-            ps.setTimestamp(9, Timestamp.valueOf(c.getFechaEmision()));
-            ps.setInt(10, c.getIntentos());
+            // La clave de acceso se guarda desde el inicio: es la que sale impresa en el ticket
+            // y la que se reenvia en cada reintento (nunca se regenera).
+            ps.setString(7, c.getClaveAcceso());
+            ps.setString(8, c.getAmbiente().name());
+            ps.setString(9, c.getEstado().name());
+            ps.setTimestamp(10, Timestamp.valueOf(c.getFechaEmision()));
+            ps.setInt(11, c.getIntentos());
             ps.executeUpdate();
         }
     }

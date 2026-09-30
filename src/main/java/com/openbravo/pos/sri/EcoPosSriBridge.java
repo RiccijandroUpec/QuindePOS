@@ -33,6 +33,21 @@ public interface EcoPosSriBridge {
      */
     String[] estadoFacturaDeTicket(String ticketId);
 
+    /**
+     * Datos de la factura de un ticket para imprimirlos en el ticket, con las
+     * claves: numero, claveAcceso (tambien es el numero de autorizacion),
+     * ambiente, emision, fechaEmision, estado, compradorRazonSocial,
+     * compradorIdentificacion, compradorDireccion, compradorEmail y formasPago
+     * (descripciones del SRI separadas por "|"). Espera como maximo unos
+     * segundos; null si no hay factura o no se pudo preparar a tiempo.
+     *
+     * @param reservarSiFalta true al cobrar: asigna numero y clave de acceso si
+     *                        el ticket aun no tiene factura (sin enviarla todavia;
+     *                        el envio sigue con procesarTicketAsync). false para
+     *                        reimprimir: solo consulta, nunca crea una factura.
+     */
+    java.util.Map<String, String> facturaParaTicket(String ticketId, boolean reservarSiFalta);
+
     /** Abre el RIDE (PDF) de la factura de un ticket. */
     void verRideDeTicket(java.awt.Component padre, String ticketId);
 

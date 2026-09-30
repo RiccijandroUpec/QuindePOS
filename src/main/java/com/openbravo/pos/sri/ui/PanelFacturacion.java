@@ -113,6 +113,17 @@ public class PanelFacturacion extends JPanel {
                 "RUC", ruc, "Razón social", razonSocial, "Nombre comercial", nombreComercial,
                 "Dirección matriz", dirMatriz, "Dirección del establecimiento", dirEstablecimiento,
                 "Contribuyente especial (N° resolución)", contribuyenteEspecial, "", obligadoContabilidad)));
+        JButton elegirLogo = new JButton("Elegir logo…");
+        elegirLogo.addActionListener(e -> elegirLogo());
+        JButton quitarLogo = new JButton("Quitar");
+        quitarLogo.addActionListener(e -> quitarLogo());
+        JPanel filaLogo = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 8, 0));
+        filaLogo.add(vistaLogo);
+        filaLogo.add(elegirLogo);
+        filaLogo.add(quitarLogo);
+        mostrarLogo();
+        contenido.add(seccion("Logo en la factura (PDF)", filaLogo,
+                nota("Sale arriba a la izquierda en el PDF que se envía al cliente. Se guarda al elegirlo.")));
         contenido.add(seccion("Punto de emisión y ambiente", formulario(
                 "Establecimiento (3 dígitos)", establecimiento, "Punto de emisión (3 dígitos)", puntoEmision,
                 "Ambiente", ambiente)));
@@ -276,6 +287,77 @@ public class PanelFacturacion extends JPanel {
             }
         }
         return null;
+    }
+
+    // --- logo de la factura ------------------------------------------------------
+
+    private final JLabel vistaLogo = new JLabel();
+
+    private Path archivoLogo() {
+        return RutasConector.resolver("config/logo.png");
+    }
+
+    private void mostrarLogo() {
+        vistaLogo.setIcon(null);
+        vistaLogo.setText("Sin logo (se muestra el nombre del negocio)");
+        try {
+            if (Files.isRegularFile(archivoLogo())) {
+                java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(archivoLogo().toFile());
+                if (img != null) {
+                    double k = Math.min(160.0 / img.getWidth(), 60.0 / img.getHeight());
+                    vistaLogo.setIcon(new javax.swing.ImageIcon(img.getScaledInstance(
+                            Math.max(1, (int) (img.getWidth() * k)), Math.max(1, (int) (img.getHeight() * k)),
+                            java.awt.Image.SCALE_SMOOTH)));
+                    vistaLogo.setText(null);
+                }
+            }
+        } catch (Exception e) {
+            // Sin vista previa: el logo se puede volver a elegir.
+        }
+    }
+
+    private void elegirLogo() {
+        JFileChooser selector = new JFileChooser();
+        selector.setDialogTitle("Elige el logo de tu negocio");
+        selector.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Imagen (*.png, *.jpg)", "png", "jpg", "jpeg"));
+        if (selector.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        try {
+            java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(selector.getSelectedFile());
+            if (img == null) {
+                JOptionPane.showMessageDialog(this, "Ese archivo no es una imagen PNG o JPG.", "Logo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            // Se guarda como PNG de hasta 800 px de ancho: suficiente para imprimir y liviano para el correo.
+            if (img.getWidth() > 800) {
+                int alto = Math.max(1, img.getHeight() * 800 / img.getWidth());
+                java.awt.image.BufferedImage chica = new java.awt.image.BufferedImage(800, alto, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+                java.awt.Graphics2D g = chica.createGraphics();
+                g.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                g.drawImage(img, 0, 0, 800, alto, null);
+                g.dispose();
+                img = chica;
+            }
+            Files.createDirectories(archivoLogo().getParent());
+            javax.imageio.ImageIO.write(img, "png", archivoLogo().toFile());
+            Files.deleteIfExists(RutasConector.resolver("config/logo.jpg"));
+            Files.deleteIfExists(RutasConector.resolver("config/logo.jpeg"));
+            mostrarLogo();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "No se pudo guardar el logo: " + e.getMessage(), "Logo", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void quitarLogo() {
+        try {
+            Files.deleteIfExists(archivoLogo());
+            Files.deleteIfExists(RutasConector.resolver("config/logo.jpg"));
+            Files.deleteIfExists(RutasConector.resolver("config/logo.jpeg"));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "No se pudo quitar el logo: " + e.getMessage(), "Logo", JOptionPane.ERROR_MESSAGE);
+        }
+        mostrarLogo();
     }
 
     // --- firma, ambiente, checklist, conexion ------------------------------------

@@ -190,12 +190,13 @@ public final class AccionesComprobante {
                     }
                     byte[] pdf = generarRide(fila);
                     ConfiguracionCorreo config = ConfiguracionCorreoLoader.cargar(rutaCorreo());
-                    String tipo = fila.tipo == TipoComprobante.NOTA_CREDITO ? "Nota de Crédito" : "Factura";
+                    String xmlAutorizado = xml.get().masReciente();
+                    com.openbravo.pos.sri.correo.MensajeComprobante mensaje = com.openbravo.pos.sri.correo.MensajeComprobante
+                            .armar(fila.tipo == TipoComprobante.NOTA_CREDITO, xmlAutorizado);
                     new NotificadorCorreo(config).enviarComprobante(destinatario,
-                            tipo + " electrónica " + fila.numero,
-                            "Adjunto el comprobante electrónico autorizado por el SRI (XML y representación impresa en PDF).",
-                            "comprobante-" + fila.numero + ".xml", xml.get().masReciente().getBytes(StandardCharsets.UTF_8),
-                            "comprobante-" + fila.numero + ".pdf", pdf);
+                            mensaje.asunto, mensaje.cuerpo,
+                            mensaje.archivoXml, xmlAutorizado.getBytes(StandardCharsets.UTF_8),
+                            mensaje.archivoPdf, pdf);
                 } catch (Exception e) {
                     error = e;
                 }

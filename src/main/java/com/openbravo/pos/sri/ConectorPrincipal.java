@@ -183,10 +183,40 @@ public final class ConectorPrincipal {
             return;
         }
 
+        Comprobante comprobante = prepararComprobante(ticketId, true);
+        if (comprobante == null) {
+            return;
+        }
+        comprobante.incrementarIntentos();
+
+        String xmlSinFirmar = FacturaXmlWriter.toXml(ComprobanteXmlMapper.map(comprobante));
+        envioComprobanteService.firmarEnviarYConsultar(comprobante, xmlSinFirmar);
+
+        intentarEnvioAutomaticoPorCorreo(comprobante);
+    }
+
+    /**
+     * Arma la factura de un ticket con su numero y clave de acceso, sin
+     * enviarla al SRI. Se usa antes de imprimir el ticket, para que el ticket
+     * salga ya con los datos de la factura (la clave de acceso es tambien el
+     * numero de autorizacion). Idempotente: si ya existia, devuelve la misma.
+     *
+     * @param reservarSiFalta true para asignar numero (y guardar la fila) si el
+     *                        ticket todavia no tiene factura; false solo consulta
+     *                        (reimpresiones: nunca crea facturas nuevas).
+     * @return el comprobante, o null si el ticket no existe o (sin reservar) no tiene factura
+     */
+    public Comprobante prepararComprobante(String ticketId, boolean reservarSiFalta) throws Exception {
+        Optional<ComprobanteRepository.RegistroExistente> registroPrevio =
+                comprobanteRepository.buscarPorTicketId(ticketId);
+        if (registroPrevio.isEmpty() && !reservarSiFalta) {
+            return null;
+        }
+
         Optional<TicketCrudo> ticketCrudo = ticketReader.leer(ticketId);
         if (ticketCrudo.isEmpty()) {
             LOG.error("Ticket {} no existe en ECOPos - se descarta (el flag no debio generarse)", ticketId);
-            return;
+            return null;
         }
 
         // El secuencial (y, mas abajo, la claveAcceso) NUNCA se regeneran en
@@ -205,18 +235,14 @@ public final class ConectorPrincipal {
             // que nunca se inserto, y el reintento no actualizaria nada en la tabla.
             comprobante.setId(registro.id);
             comprobante.setIntentos(registro.intentos);
+            comprobante.setEstado(registro.estado);
             if (registro.claveAcceso != null) {
                 comprobante.setClaveAcceso(registro.claveAcceso);
             }
         } else {
             comprobanteRepository.insertar(comprobante);
         }
-        comprobante.incrementarIntentos();
-
-        String xmlSinFirmar = FacturaXmlWriter.toXml(ComprobanteXmlMapper.map(comprobante));
-        envioComprobanteService.firmarEnviarYConsultar(comprobante, xmlSinFirmar);
-
-        intentarEnvioAutomaticoPorCorreo(comprobante);
+        return comprobante;
     }
 
     /**
@@ -246,12 +272,12 @@ public final class ConectorPrincipal {
         try {
             byte[] pdf = RideGenerator.generar(comprobante.getXmlRespuestaSri(), comprobante.getFechaAutorizacion());
             ConfiguracionCorreo configuracionCorreo = ConfiguracionCorreoLoader.cargar(archivoCorreo);
+            com.openbravo.pos.sri.correo.MensajeComprobante mensaje =
+                    com.openbravo.pos.sri.correo.MensajeComprobante.armar(false, comprobante.getXmlRespuestaSri());
             new NotificadorCorreo(configuracionCorreo).enviarComprobante(destinatario,
-                    "Factura electrónica - " + comprobante.getSecuencial(),
-                    "Adjunto el comprobante electrónico autorizado por el SRI (XML y representación impresa en PDF).",
-                    "factura-" + comprobante.getSecuencial() + ".xml",
-                    comprobante.getXmlRespuestaSri().getBytes(StandardCharsets.UTF_8),
-                    "factura-" + comprobante.getSecuencial() + ".pdf", pdf);
+                    mensaje.asunto, mensaje.cuerpo,
+                    mensaje.archivoXml, comprobante.getXmlRespuestaSri().getBytes(StandardCharsets.UTF_8),
+                    mensaje.archivoPdf, pdf);
             LOG.info("Correo enviado automaticamente a {} para el comprobante {}", destinatario, comprobante.getId());
         } catch (Exception e) {
             LOG.warn("No se pudo enviar automaticamente el correo del comprobante {} a {}", comprobante.getId(), destinatario, e);

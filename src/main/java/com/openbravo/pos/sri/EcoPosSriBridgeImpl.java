@@ -150,6 +150,53 @@ public final class EcoPosSriBridgeImpl implements EcoPosSriBridge {
                 fila.estado == com.openbravo.pos.sri.dominio.EstadoComprobante.AUTORIZADO ? null : MensajesSri.explicar(fila.mensajeError)};
     }
 
+    /** Espera maxima para preparar la factura antes de imprimir (el cajero no debe quedarse esperando). */
+    private static final long SEGUNDOS_PREPARAR_FACTURA = 6;
+
+    @Override
+    public java.util.Map<String, String> facturaParaTicket(String ticketId, boolean reservarSiFalta) {
+        java.util.concurrent.Future<java.util.Map<String, String>> tarea = executor.submit(() -> {
+            ClassLoaderPropio.fijarEnHiloActual();
+            com.openbravo.pos.sri.dominio.Comprobante c = obtenerConector().prepararComprobante(ticketId, reservarSiFalta);
+            return c == null ? null : datosParaTicket(c);
+        });
+        try {
+            return tarea.get(SEGUNDOS_PREPARAR_FACTURA, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            // El ticket se imprime igual (sin los datos de la factura); la factura sigue su curso.
+            LOG.warn("No se pudo preparar a tiempo la factura del ticket {} para imprimirla", ticketId, e);
+            return null;
+        }
+    }
+
+    private static java.util.Map<String, String> datosParaTicket(com.openbravo.pos.sri.dominio.Comprobante c) {
+        java.util.Map<String, String> d = new java.util.LinkedHashMap<>();
+        d.put("numero", c.getEmisor().getEstablecimiento() + "-" + c.getEmisor().getPuntoEmision() + "-" + c.getSecuencial());
+        d.put("claveAcceso", c.getClaveAcceso());
+        d.put("ambiente", c.getAmbiente() == com.openbravo.pos.sri.dominio.Ambiente.PRODUCCION ? "PRODUCCION" : "PRUEBAS");
+        d.put("emision", "NORMAL");
+        d.put("fechaEmision", c.getFechaEmision() != null
+                ? c.getFechaEmision().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "");
+        d.put("estado", c.getEstado() != null ? c.getEstado().name() : "");
+        d.put("compradorRazonSocial", vacio(c.getCliente().getRazonSocial()));
+        d.put("compradorIdentificacion", vacio(c.getCliente().getIdentificacion()));
+        d.put("compradorDireccion", vacio(c.getCliente().getDireccion()));
+        d.put("compradorEmail", vacio(c.getCliente().getEmail()));
+        StringBuilder pagos = new StringBuilder();
+        for (com.openbravo.pos.sri.dominio.Pago p : c.getPagos()) {
+            String desc = p.getFormaPago().getDescripcion();
+            if (pagos.indexOf(desc) < 0) {
+                pagos.append(pagos.length() == 0 ? "" : "|").append(desc);
+            }
+        }
+        d.put("formasPago", pagos.toString());
+        return d;
+    }
+
+    private static String vacio(String s) {
+        return s == null ? "" : s.trim();
+    }
+
     @Override
     public void verRideDeTicket(java.awt.Component padre, String ticketId) {
         ClassLoaderPropio.fijarEnHiloActual();

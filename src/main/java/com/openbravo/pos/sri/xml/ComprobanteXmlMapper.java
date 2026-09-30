@@ -45,7 +45,36 @@ public final class ComprobanteXmlMapper {
         factura.setInfoTributaria(mapInfoTributaria(comprobante));
         factura.setInfoFactura(mapInfoFactura(comprobante));
         factura.setDetalles(mapDetalles(comprobante));
+        factura.setInfoAdicional(mapInfoAdicional(comprobante));
         return factura;
+    }
+
+    /**
+     * "Informacion Adicional" con los datos de contacto del cliente (Direccion,
+     * Telefono, Email), como en el RIDE habitual del SRI. Solo los que tengan
+     * valor; null si no hay ninguno (el XSD no admite infoAdicional vacio).
+     */
+    private static Factura.InfoAdicional mapInfoAdicional(Comprobante c) {
+        Cliente cliente = c.getCliente();
+        if (cliente == null) {
+            return null;
+        }
+        Factura.InfoAdicional info = new Factura.InfoAdicional();
+        agregarCampo(info, "Dirección", cliente.getDireccion());
+        agregarCampo(info, "Teléfono", cliente.getTelefono());
+        agregarCampo(info, "Email", cliente.getEmail());
+        return info.getCampoAdicional().isEmpty() ? null : info;
+    }
+
+    private static void agregarCampo(Factura.InfoAdicional info, String nombre, String valor) {
+        if (valor == null || valor.isBlank()) {
+            return;
+        }
+        Factura.InfoAdicional.CampoAdicional campo = new Factura.InfoAdicional.CampoAdicional();
+        campo.setNombre(nombre);
+        String v = valor.trim();
+        campo.setValue(v.length() > 300 ? v.substring(0, 300) : v);
+        info.getCampoAdicional().add(campo);
     }
 
     private static InfoTributaria mapInfoTributaria(Comprobante c) {
