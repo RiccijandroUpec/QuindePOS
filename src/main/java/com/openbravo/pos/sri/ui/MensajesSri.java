@@ -42,11 +42,11 @@ public final class MensajesSri {
         }
         if (m.contains("TIMED OUT") || m.contains("TIMEOUT") || m.contains("UNKNOWNHOST") || m.contains("CONNECT")
                 || m.contains("SOCKET") || m.contains("UNREACHABLE") || m.contains("CONEXI")) {
-            return "No hubo conexión con el SRI (sin internet o el SRI no respondió). EcoPos lo reintenta solo cada "
+            return "No hubo conexión con el SRI (sin internet o el SRI no respondió). Quinde POS lo reintenta solo cada "
                     + "15 minutos; también puedes presionar Reintentar.";
         }
         if (m.contains("EN PROCESO") || m.contains("PPR")) {
-            return "El SRI todavía está procesando el comprobante. EcoPos vuelve a consultar solo.";
+            return "El SRI todavía está procesando el comprobante. Quinde POS vuelve a consultar solo.";
         }
         if (m.contains("DATOS-EMISOR") || m.contains("CONFIGURA LOS DATOS")) {
             return "Falta configurar la facturación electrónica (datos del negocio y firma).";

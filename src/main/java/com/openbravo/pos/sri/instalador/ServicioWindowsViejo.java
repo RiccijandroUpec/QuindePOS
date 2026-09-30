@@ -32,7 +32,7 @@ final class ServicioWindowsViejo {
                 System.out.println("[=] No hay servicio de Windows viejo del conector instalado.");
                 return;
             }
-            System.out.println("[!] Se encontro el servicio de Windows viejo '" + ID_SERVICIO + "' - ya no hace falta (el conector corre dentro de EcoPos). Retirandolo...");
+            System.out.println("[!] Se encontro el servicio de Windows viejo '" + ID_SERVICIO + "' - ya no hace falta (el conector corre dentro de Quinde POS). Retirandolo...");
             ejecutar(List.of("sc", "stop", ID_SERVICIO));
             Path exe = carpetaConector.resolve(EXE_WINSW);
             int resultado = Files.exists(exe)
@@ -55,7 +55,7 @@ final class ServicioWindowsViejo {
         System.out.println("    Abre CMD como Administrador y corre:");
         System.out.println("        sc stop " + ID_SERVICIO);
         System.out.println("        sc delete " + ID_SERVICIO);
-        System.out.println("    Mientras siga instalado, podria reintentar comprobantes al mismo tiempo que EcoPos.");
+        System.out.println("    Mientras siga instalado, podria reintentar comprobantes al mismo tiempo que Quinde POS.");
     }
 
     private static int ejecutar(List<String> comando) throws IOException, InterruptedException {

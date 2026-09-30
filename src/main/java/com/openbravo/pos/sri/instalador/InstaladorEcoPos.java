@@ -53,7 +53,7 @@ public final class InstaladorEcoPos {
         DataSource dataSource = ConexionLoader.cargar(archivoConexion);
 
         try (Connection con = dataSource.getConnection()) {
-            System.out.println("Conectado a la base de datos de EcoPos. Instalando/actualizando ecopos-sri-connector...\n");
+            System.out.println("Conectado a la base de datos de Quinde POS. Instalando/actualizando ecopos-sri-connector...\n");
 
             crearTablaPropiaSiFalta(con);
             agregarColumnasNotaCreditoSiFaltan(con);
@@ -64,7 +64,7 @@ public final class InstaladorEcoPos {
             // electronicos", sus permisos y el retiro de los botones SRI SI/NO los
             // aplica EcoPos solo al abrirse (ActualizacionesEcoPos): aqui ya no se
             // tocan Menu.Root, Ticket.Buttons ni ROLES.
-            System.out.println("[=] Menus y permisos: EcoPos los agrega solo la proxima vez que se abra.");
+            System.out.println("[=] Menus y permisos: Quinde POS los agrega solo la proxima vez que se abra.");
 
             System.out.println("\nListo. ecopos-sri-connector esta instalado/actualizado en esta base de datos.");
         }
@@ -138,7 +138,7 @@ public final class InstaladorEcoPos {
     private static void quitarHookViejoTicketClose(Connection con) throws SQLException {
         String actual = leerContenidoTexto(con, "Ticket.Close");
         if (actual == null) {
-            System.out.println("[!] No se encontro el recurso 'Ticket.Close' en RESOURCES - se omite (¿EcoPos sin sembrar todavia?)");
+            System.out.println("[!] No se encontro el recurso 'Ticket.Close' en RESOURCES - se omite (¿Quinde POS sin sembrar todavia?)");
             return;
         }
         String nuevoContenido = sinHookViejoTicketClose(actual);
@@ -147,7 +147,7 @@ public final class InstaladorEcoPos {
             return;
         }
         actualizarContenidoTexto(con, "Ticket.Close", nuevoContenido);
-        System.out.println("[-] Ticket.Close: quitado el hook viejo (archivo .flag) - ahora EcoPos llama al conector directamente.");
+        System.out.println("[-] Ticket.Close: quitado el hook viejo (archivo .flag) - ahora Quinde POS llama al conector directamente.");
     }
 
     /** Devuelve el script sin el bloque viejo del .flag, o el mismo texto si no lo tiene. Paquete-privado para las pruebas. */

@@ -394,7 +394,7 @@ public class PanelFacturacion extends JPanel {
         Properties p = new Properties();
         p.setProperty("activo", String.valueOf(activo));
         try (OutputStream out = Files.newOutputStream(archivoEstado)) {
-            p.store(out, "EcoPos - facturacion electronica en cada venta");
+            p.store(out, "Quinde POS - facturacion electronica en cada venta");
         }
     }
 
@@ -459,7 +459,7 @@ public class PanelFacturacion extends JPanel {
     }
 
     private static Color verde() {
-        return oscuro() ? new Color(0x81C784) : new Color(0x2E7D32);
+        return oscuro() ? new Color(0xA8E6C1) : new Color(0x1B5E3F);
     }
 
     private static Color ambar() {

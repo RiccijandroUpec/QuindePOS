@@ -351,7 +351,7 @@ public class PanelComprobantes extends JPanel {
                 + "</div></html>");
         String explicacion = f.estado == EstadoComprobante.AUTORIZADO ? null : MensajesSri.explicar(f.mensajeError);
         if (explicacion == null && (f.estado == EstadoComprobante.PENDIENTE || f.estado == EstadoComprobante.ENVIADO)) {
-            explicacion = "En camino al SRI. EcoPos consulta su autorización automáticamente.";
+            explicacion = "En camino al SRI. Quinde POS consulta su autorización automáticamente.";
         }
         detalleExplicacion.setText(explicacion == null ? "" : explicacion);
         detalleExplicacion.setForeground(f.estado == EstadoComprobante.AUTORIZADO ? UIManager.getColor("Label.foreground") : colorEstado(f));
@@ -392,7 +392,7 @@ public class PanelComprobantes extends JPanel {
     }
 
     private static Color verde() {
-        return oscuro() ? new Color(0x81C784) : new Color(0x2E7D32);
+        return oscuro() ? new Color(0xA8E6C1) : new Color(0x1B5E3F);
     }
 
     private static Color ambar() {

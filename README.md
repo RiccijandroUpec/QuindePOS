@@ -13,10 +13,10 @@
 
 Módulo Java **independiente** (Maven, propio jar) que emite facturación
 electrónica ante el **SRI** (Servicio de Rentas Internas del Ecuador) a
-partir de las ventas registradas en [EcoPos](https://github.com/RiccijandroUpec/EcoPos).
+partir de las ventas registradas en [Quinde POS](https://github.com/RiccijandroUpec/EcoPos) (antes EcoPos).
 
 **Hecho en Ecuador, para Ecuador.** Cualquier negocio ecuatoriano que use
-EcoPos puede instalar esto en su propia computadora y empezar a facturar
+Quinde POS puede instalar esto en su propia computadora y empezar a facturar
 electrónicamente — ver [`INSTALAR.md`](INSTALAR.md) para la guía paso a
 paso (no hace falta saber programar). Este documento (`README.md`) es la
 documentación técnica para quien desarrolla o quiere entender/contribuir
