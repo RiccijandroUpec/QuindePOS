@@ -48,17 +48,17 @@ final class Ui {
     }
 
     /** Ancho de los textos largos (para que se partan en lineas y no se corten). */
-    static final int ANCHO_TEXTO = 520;
+    static final int ANCHO_TEXTO = 430;
 
     static JLabel texto(String html) {
-        JLabel l = new JLabel("<html><div style='width:" + ANCHO_TEXTO + "px'>" + html + "</div></html>");
+        JLabel l = new JLabel("<html><body style='width:" + ANCHO_TEXTO + "px'>" + html + "</body></html>");
         l.setFont(l.getFont().deriveFont(15f));
         l.setAlignmentX(Component.LEFT_ALIGNMENT);
         return l;
     }
 
     static JLabel nota(String html) {
-        JLabel l = new JLabel("<html><div style='width:" + ANCHO_TEXTO + "px'>" + html + "</div></html>");
+        JLabel l = new JLabel("<html><body style='width:" + ANCHO_TEXTO + "px'>" + html + "</body></html>");
         l.setFont(l.getFont().deriveFont(13f));
         l.setForeground(suave());
         l.setAlignmentX(Component.LEFT_ALIGNMENT);

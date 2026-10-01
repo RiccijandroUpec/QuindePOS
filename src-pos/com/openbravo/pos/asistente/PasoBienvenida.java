@@ -63,8 +63,9 @@ final class PasoBienvenida extends Paso {
         }
         col.add(Ui.subtitulo("Vamos a configurar:"));
         col.add(Ui.texto("\u2022 Los datos de tu negocio y tu logo (para el ticket y la factura)<br>"
+                + "\u2022 Tu tipo de negocio, el IVA y el cierre de caja<br>"
                 + "\u2022 La clave del administrador y los usuarios de caja<br>"
-                + "\u2022 Despu\u00E9s: tu tipo de negocio, impuestos, impresora, productos y facturaci\u00F3n electr\u00F3nica"));
+                + "\u2022 Tu impresora de tickets, con una prueba"));
         col.add(Ui.subtitulo("\u00BFC\u00F3mo prefieres ver Quinde POS?"));
 
         String actual = ctx.props.getProperty("swing.defaultlaf");
