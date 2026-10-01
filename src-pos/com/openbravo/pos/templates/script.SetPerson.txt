@@ -20,10 +20,10 @@
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 // **************************************************************************
+// Quinde POS - Mesero que atiende la venta
+import com.openbravo.pos.sales.Dialogos;
 
-value = javax.swing.JOptionPane.showInputDialog("Mesero", ticket.getProperty("person")); 
-
-if (value != null) { 
-        ticket.setProperty("person", value); 
-
+value = Dialogos.pedirTexto("Mesero", "Nombre del mesero:", ticket.getProperty("person"));
+if (value != null) {
+    ticket.setProperty("person", value.trim());
 }

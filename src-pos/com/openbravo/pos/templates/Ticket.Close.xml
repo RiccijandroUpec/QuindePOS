@@ -17,48 +17,8 @@
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 // **************************************************************************
-// Ticket.Close
-// This script displays the amount of Cash Change (CashTendered - TicketValue) to be given to Customer
-
-import java.awt.Font; 
-import javax.swing.plaf.FontUIResource; 
-import com.openbravo.pos.payment.PaymentInfo;
-import javax.swing.JOptionPane;
-import javax.swing.JDialog;
-
-boolean isCash = false;
-String change = "";
-PaymentInfo p = ticket.payments.getFirst();
-
-if ("cash".equals(p.getName())) {
-    isCash = true;
-    change = p.printChange();
-}
-
-// Get details of the original font before we change it otherwise all dialogboxes will use new settings
-JOptionPane pane = new JOptionPane();
-Font originalFont=pane.getFont();
-
-UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font("ARIAL",Font.PLAIN,20)));
-message = "Cambio: " + change;
- JLabel FontText = new JLabel(message);
- FontText.setFont (new Font ( "Arial", Font.BOLD, 36) );
-
-if(isCash) {
-     JOptionPane pane = new JOptionPane();
-     pane.setMessage(FontText);
-     pane.setPreferredSize( new Dimension(450,150));
-     JDialog dialog = pane.createDialog("Pago en efectivo");
-    new Thread(new Runnable() {
-         void run() {
-            dialog.show();
-        } 
-    }).start();
-}
-
-// Return to default settings
-UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font(originalFont.getName(),originalFont.getStyle(),originalFont.getSize())));
-
-// ecopos-sri-connector: since 2026-07-17 this runs merged in the same
-// process/JVM as ECOPos, invoked directly from JPanelTicket.closeTicket
-// right after this script - no flag file/separate service anymore.
+// Quinde POS - Ticket.Close (se ejecuta al terminar cada venta)
+// Muestra el cambio a entregar cuando se pago en efectivo. Suma todos los pagos en
+// efectivo (tambien en un pago dividido), no aparece si no hay cambio, se cierra solo
+// y no le quita el foco a la venta siguiente (teclado y lector de codigos siguen andando).
+com.openbravo.pos.sales.AvisoCambio.mostrar(ticket);

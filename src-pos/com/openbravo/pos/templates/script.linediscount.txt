@@ -19,33 +19,29 @@
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 // **************************************************************************
-// This script applies UsersInput %Discount for the Item Line value
-// To use in the sales screen: Highlight the line you want to discount
-// Then Tap in the %Discount amount and touch the % button
-
-import com.openbravo.format.Formats;
-import com.openbravo.pos.ticket.TicketLineInfo;
-import com.openbravo.pos.ticket.TicketProductInfo;
-
-discountrate = sales.getInputValue()/100;
+// Quinde POS - Descuento a la linea seleccionada, en %
+// Selecciona la linea, escribe el porcentaje en el teclado y toca el boton (o el sistema lo
+// pregunta). 0% quita el descuento. Convive con las promociones y no cambia el nombre del producto.
+import com.openbravo.pos.sales.Dialogos;
+import com.openbravo.pos.sales.DescuentoManual;
 
 index = sales.getSelectedIndex();
-if (index >= 0) {
-    line = ticket.getLine(index);
-    if (line.getPrice() > 0.0 && discountrate > 0.0) {
-
-        sdiscount = Formats.PERCENT.formatValue(discountrate);
-        ticket.insertLine(index + 1,
-            new TicketLineInfo(
-                    "Descuento " + sdiscount,
-                    line.getProductTaxCategoryID(),
-                    line.getMultiply(),
-                    -(double)((line.getPriceTax() * discountrate * 100) / (1+line.getTaxRate()))/100,
-                    line.getTaxInfo()));
-        sales.setSelectedIndex(index + 1);
-    } else {
-         java.awt.Toolkit.getDefaultToolkit().beep();
-    }
-} else {
-    java.awt.Toolkit.getDefaultToolkit().beep();
+if (index < 0) {
+    Dialogos.aviso("Descuento", "Selecciona la linea a la que quieres aplicar el descuento.");
+    return null;
 }
+pct = sales.getInputValue();
+if (pct <= 0) {
+    pct = Dialogos.pedirPorcentaje("Descuento a la linea", "Porcentaje de descuento para \"" + ticket.getLine(index).getProductName() + "\" (0 para quitarlo):");
+    if (pct == null) {
+        return null;
+    }
+}
+if (pct > 100) {
+    Dialogos.advertencia("Descuento", "El descuento no puede ser mayor a 100%.");
+    return null;
+}
+if (!DescuentoManual.aplicarALinea(ticket.getLine(index), pct)) {
+    Dialogos.aviso("Descuento", "Esta linea no tiene precio al que aplicar descuento.");
+}
+sales.setSelectedIndex(index);

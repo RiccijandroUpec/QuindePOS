@@ -20,32 +20,26 @@
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 // **************************************************************************
-// This script applies UsersInput% Discount for the Total Receipt value
+// Quinde POS - Descuento a toda la venta, en %
+// Escribe el porcentaje en el teclado antes de tocar el boton, o el sistema lo pregunta.
+// 0% quita el descuento. Se calcula sobre el precio de lista (no se acumula), convive con
+// las promociones y no cambia el nombre de los productos (que es el que va en la factura).
+import com.openbravo.pos.sales.Dialogos;
+import com.openbravo.pos.sales.DescuentoManual;
 
-import com.openbravo.format.Formats;
-import com.openbravo.pos.ticket.TicketLineInfo;
-import com.openbravo.pos.ticket.TicketProductInfo; 
-
-discountrate = 1 - (sales.getInputValue())/100;
-
-index = sales.getSelectedIndex();
-if (index >= 0) {
-    if (ticket.getTotal() > 0.0 && discountrate > 0.0) {
-        sdiscount = Formats.PERCENT.formatValue((1-discountrate));
-        for (int number= 0; number < ticket.getLinesCount(); number++) {
-            line = ticket.getLine(number);
-            ticket.setLine(number,
-            new TicketLineInfo(
-                    line.getProductID(),
-                    line.getProductName() + " - " + sdiscount,
-                    line.getProductTaxCategoryID(),
-                    line.getMultiply(),
-                    (double)Math.rint(line.getPrice() * discountrate *100) /100d,
-                    line.getTaxInfo())); 
-        }  
-    } else {  
-        java.awt.Toolkit.getDefaultToolkit().beep();
-    }
-} else {
-    java.awt.Toolkit.getDefaultToolkit().beep();
+if (ticket.getLinesCount() == 0) {
+    Dialogos.aviso("Descuento", "Agrega productos antes de aplicar un descuento.");
+    return null;
 }
+pct = sales.getInputValue();
+if (pct <= 0) {
+    pct = Dialogos.pedirPorcentaje("Descuento a toda la venta", "Porcentaje de descuento (0 para quitarlo):");
+    if (pct == null) {
+        return null;
+    }
+}
+if (pct > 100) {
+    Dialogos.advertencia("Descuento", "El descuento no puede ser mayor a 100%.");
+    return null;
+}
+DescuentoManual.aplicarATodo(ticket, pct);

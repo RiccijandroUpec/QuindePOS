@@ -45,6 +45,8 @@ public final class ActualizacionesEcoPos {
             ticketQuinde(con);
             scriptsEnEspanol(con);
             billetesEnDolares(con);
+            scriptsModernos(con);
+            limpiarComentarioSri(con);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudieron aplicar las actualizaciones de EcoPos", e);
         }
@@ -273,6 +275,55 @@ public final class ActualizacionesEcoPos {
                     guardarRecursoBytes(con, o[0], nuevo);
                     LOG.info(o[0] + ": imagen en dolares");
                 }
+            }
+        }
+    }
+
+    /**
+     * Scripts de la venta reescritos (aviso de cambio, descuentos, notas, mesero, cocina, stock):
+     * se reemplazan solo si el de la base es una version de fabrica conocida (comparando la huella
+     * del texto sin importar los finales de linea), asi no se pisa nada personalizado.
+     */
+    private static void scriptsModernos(Connection con) throws SQLException {
+        String[][] scripts = {
+            {"Ticket.Close", "Ticket.Close.xml", "0a69099a45951406a5c35540283a1d85b89ad69508d633c46b6e62e7b2b322b7", "19a77fbf7b87e823a3dd3d0d213a2bcdab4ff0dfc52814d8e8f2f2ccd61b971c", "35996d4c1eb3ed8a4b769ce6ae72882280e6d0b0b763672a631262ad721f2195", "41dbcd9ac38bdaa7790f71cd0dc1edbc2214d47fd730febfc5812c91d5db39c0", "6fe5025f33382e5d34221bfc696d8e85882d49a8345808a9c1c0f918cf4c69b9", "9bf576f0157ef9ca8b363a8378e8c8fdc5f37e9d4f3d95ad9fc822587347088e", "f17ba88a98d1149eee290969fa9eb86978fbbae32e800fa647eef0bf74f51f1a"},
+            {"script.totaldiscount", "script.totaldiscount.txt", "ee4a2ded0cfad63cc384d93dcc504cccbc663768512d439d4f0eaaca538e81d7"},
+            {"script.linediscount", "script.linediscount.txt", "04c538064d73bacf62220d3dc1cb04440225bd795153125036f208553ca3a637", "55b5a63c1ad5ad175b20231ad0c8ff33341ca3f5d2b28cbf8f3c3d4a3b058cbc"},
+            {"script.AddLineNote", "script.AddLineNote.txt", "4177a30828ce459e0d8358dab80baf8878451d2ceceebd7e4531874b7b21465d", "ab3cf7a34ebb0b392ce62f231c6b1407c2bae3b2c07e378774574ea09407e34d"},
+            {"script.SetPerson", "script.SetPerson.txt", "6c89bfa1995e17d3a2f002fe5688574e4b4df15541120df0c9502d288653eed8", "a038e311394609f5733ff54a9bc54a570c89a5d954ab8d74f385e9b2b284b79c"},
+            {"script.SendOrder", "script.SendOrder.txt", "2fffcdf5342a9cf451664c3d2c6d39c3b9728bc0cd1bf817dcdd8dbb8b9b1aba", "ec27c8899559569d5b6e5befabbd4cffca4d28c7924091c3d5d9abb454782733"},
+            {"script.Event.Total", "script.Event.Total.txt", "5455dbfd17de9c20b1315c48aec50ec7e1f8039fe8bdbcd0382357118a4c189c", "a9882e11dad80917cb06ac659db080aa8d8bb06d35c5924f46f8048828ff2eff"},
+            {"script.StockCurrentAdd", "script.StockCurrentAdd.txt", "3b9166743586ddb7ae64af2eac6eb2d8b6c7ad75739f075bb5746da7b7ee7865", "9037f82002ce34eb6828a11e6661700767a872038212a1543638e622b0714cf2"},
+            {"script.StockCurrentSet", "script.StockCurrentSet.txt", "0b8f359febe454a52fdb999844feb4df506793cdfef99f0d5d9980f8fc98e7ef", "bf25943c7167007661e10efa0ffcceb08f835a95e56a107e78860ae407542ea1"},
+        };
+        for (String[] sc : scripts) {
+            byte[] actual = leerRecursoBytes(con, sc[0]);
+            if (actual == null) {
+                continue;
+            }
+            String huella = sha256(new String(actual, StandardCharsets.UTF_8).replace("\r\n", "\n").trim()
+                    .getBytes(StandardCharsets.UTF_8));
+            for (int i = 2; i < sc.length; i++) {
+                if (sc[i].equals(huella)) {
+                    byte[] nuevo = leerClasspath("/com/openbravo/pos/templates/" + sc[1]);
+                    if (nuevo != null) {
+                        guardarRecursoBytes(con, sc[0], nuevo);
+                        LOG.info(sc[0] + ": script actualizado");
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    /** Ticket.Buttons: quita el comentario de los viejos botones "Facturar SRI SI/NO", que ya no existen. */
+    private static void limpiarComentarioSri(Connection con) throws SQLException {
+        String actual = leerRecurso(con, "Ticket.Buttons");
+        if (actual != null && actual.contains("SRI e-invoicing GLOBAL toggle")) {
+            String limpio = actual.replaceAll("(?s)[ \t]*<!-- SET SRI e-invoicing GLOBAL toggle.*?-->\r?\n?", "");
+            if (!limpio.equals(actual)) {
+                guardarRecurso(con, "Ticket.Buttons", limpio);
+                LOG.info("Ticket.Buttons: comentario de los botones SRI viejos quitado");
             }
         }
     }

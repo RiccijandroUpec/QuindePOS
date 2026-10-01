@@ -19,14 +19,20 @@
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 // **************************************************************************
-// This script lets you add a note to a sales transaction line
+// Quinde POS - Nota para la linea seleccionada (sale en la comanda de cocina)
+import com.openbravo.pos.sales.Dialogos;
 
-index = sales.getSelectedIndex(); 
-if (index >= 0) {   
-    line = ticket.getLine(index);   
-    value = javax.swing.JOptionPane.showInputDialog("Nota para esta línea (por ejemplo: sin sal)", line.getProperty("notes")); 
-    if (value != null) { 
-        // the user pressed OK 
-        line.setProperty("notes", value); 
-    } 
+index = sales.getSelectedIndex();
+if (index < 0) {
+    Dialogos.aviso("Nota", "Selecciona la linea a la que quieres agregar una nota.");
+    return null;
+}
+line = ticket.getLine(index);
+value = Dialogos.pedirTexto("Nota", "Nota para \"" + line.getProductName() + "\" (por ejemplo: sin sal):", line.getProperty("notes"));
+if (value != null) {
+    if (value.trim().length() == 0) {
+        line.getProperties().remove("notes");
+    } else {
+        line.setProperty("notes", value.trim());
+    }
 }

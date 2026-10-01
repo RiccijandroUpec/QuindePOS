@@ -20,35 +20,32 @@
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 // **************************************************************************
+// Quinde POS - Enviar a cocina
+// Imprime la comanda (Printer.TicketKitchen) con los productos de cocina que aun no se enviaron
+// y los marca como enviados, para no repetirlos en el siguiente envio.
+import com.openbravo.pos.sales.Dialogos;
 
-boolean kitchen = false;
-
-for(int i= 0; i < ticket.getLinesCount(); i++){
-	line = ticket.getLine(i);
-
-	if (line.isProductKitchen() && (line.getProperty("sendstatus") == null)){
-		line.setProperty("sendstatus", "No");
-	}
-	if((line.isProductKitchen()) && (line.getProperty("sendstatus").equals("No"))){
-		kitchen = true;
-	}
+boolean hayNuevos = false;
+for (int i = 0; i < ticket.getLinesCount(); i++) {
+    line = ticket.getLine(i);
+    if (line.isProductKitchen()) {
+        if (line.getProperty("sendstatus") == null) {
+            line.setProperty("sendstatus", "No");
+        }
+        if ("No".equals(line.getProperty("sendstatus"))) {
+            hayNuevos = true;
+        }
+    }
 }
-
-if (kitchen) {
-	sales.printTicket("Printer.TicketKitchen");
+if (!hayNuevos) {
+    Dialogos.aviso("Cocina", "No hay nada nuevo para enviar a cocina.");
+    return null;
 }
-if (kitchen){
-	javax.swing.JOptionPane.showMessageDialog(null, "Pedido enviado a cocina");
-} else {
-	javax.swing.JOptionPane.showMessageDialog(null, "No hay nada nuevo para enviar a cocina", "Cocina", JOptionPane.WARNING_MESSAGE);
+sales.printTicket("Printer.TicketKitchen");
+for (int i = 0; i < ticket.getLinesCount(); i++) {
+    line = ticket.getLine(i);
+    if (line.isProductKitchen() && "No".equals(line.getProperty("sendstatus"))) {
+        line.setProperty("sendstatus", "OK");
+    }
 }
-
-for(int i = ticket.getLinesCount()-1; i>= 0 ; i--){
-	line = ticket.getLine(i);
-	String a = line.getProperty("sendstatus");
-
-		
-	if((line.isProductKitchen()) && (line.getProperty("sendstatus").equals("No"))){
-		line.setProperty("sendstatus", "OK");
-	}
-}
+Dialogos.aviso("Cocina", "Pedido enviado a cocina.");

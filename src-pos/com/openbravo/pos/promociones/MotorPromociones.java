@@ -28,6 +28,8 @@ import java.util.logging.Logger;
 public final class MotorPromociones {
 
     public static final String PRECIO_LISTA = "ecopos.precioLista";
+    /** Descuento manual de la linea en % (boton Descuento), que se aplica encima de la promocion. */
+    public static final String DESCUENTO_MANUAL = "ecopos.descuento";
     public static final String PROMOCION = "ecopos.promocion";
 
     public static final String TIPO_NXM = "NXM";
@@ -87,6 +89,13 @@ public final class MotorPromociones {
     private List<Regla> reglas = new ArrayList<Regla>();
     private long leidas;
 
+    /** Para pruebas: reglas fijas en memoria, sin base de datos. */
+    MotorPromociones(List<Regla> reglasFijas) {
+        this.session = null;
+        this.reglas = new ArrayList<Regla>(reglasFijas);
+        this.leidas = Long.MAX_VALUE / 2;
+    }
+
     public MotorPromociones(Session session) {
         this.session = session;
     }
@@ -129,11 +138,15 @@ public final class MotorPromociones {
             }
             String lista = linea.getProperty(PRECIO_LISTA);
             Regla regla = mejorRegla(vigentes, linea);
-            if (regla == null && lista == null) {
-                continue; // nunca tuvo promocion: no se toca
+            double descuento = descuentoManual(linea);
+            if (regla == null && lista == null && descuento == 0) {
+                continue; // nunca tuvo promocion ni descuento: no se toca
             }
             double precioLista = lista == null ? linea.getPrice() : Double.parseDouble(lista);
             double nuevo = precioConPromocion(precioLista, linea.getMultiply(), regla);
+            if (descuento > 0) {
+                nuevo = redondear4(nuevo * (1 - descuento / 100.0));
+            }
             if (lista == null) {
                 linea.setProperty(PRECIO_LISTA, Double.toString(precioLista));
             }
@@ -151,6 +164,16 @@ public final class MotorPromociones {
             }
         }
         return cambiadas;
+    }
+
+    /** Descuento manual de la linea (0 si no tiene). */
+    public static double descuentoManual(TicketLineInfo linea) {
+        String d = linea.getProperty(DESCUENTO_MANUAL);
+        try {
+            return d == null ? 0 : Math.max(0, Math.min(100, Double.parseDouble(d)));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     /** La regla que deja el precio mas bajo para esa linea (el cliente siempre recibe la mejor promocion). */

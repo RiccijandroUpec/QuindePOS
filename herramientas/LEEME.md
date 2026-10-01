@@ -7,6 +7,7 @@ Scripts de Python (3.8+) que generan o actualizan archivos del proyecto. No form
 | `ticket_quinde.py` | Genera las plantillas del ticket impreso (venta, vista previa, reimpresión y visor) |
 | `plantillas_caja.py` | Genera el cierre de caja (Z), el corte parcial (X) y la comanda de cocina |
 | `plantillas_varias.py` | Abono a cuenta, movimiento de inventario, mensajes del visor, etiqueta de producto y traducción de las plantillas antiguas |
+| `scripts_venta.py` | Genera los scripts de la venta (aviso de cambio, descuentos, nota, mesero, cocina, stock) |
 | `scripts_es.py` | Traduce los mensajes de los scripts de la venta (los mismos pares los aplica `ActualizacionesEcoPos` a las bases existentes) |
 | `estilo_reportes.py` | Aplica el estilo de Quinde POS a los reportes `.jrxml` (encabezado con el negocio y el logo, paleta, gráficos) |
 | `arreglos_reportes.py` | Corrige problemas de los reportes originales (expresiones, SQL, gráficos SVG, reportes sin datos) |
