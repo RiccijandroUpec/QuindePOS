@@ -4,6 +4,8 @@
 
 <p align="center"><b>Punto de venta libre para Ecuador</b> — con facturación electrónica del SRI incluida.</p>
 
+<p align="center">🌐 <a href="https://riccijandroupec.github.io/EcoPos/"><b>riccijandroupec.github.io/EcoPos</b></a></p>
+
 <p align="center">
 <img src="https://img.shields.io/badge/Java-11-ED8B00?logo=openjdk&logoColor=white" alt="Java 11">
 <img src="https://img.shields.io/badge/UI-Swing%20%2B%20FlatLaf-2E9E6B" alt="Swing + FlatLaf">
@@ -176,7 +178,7 @@ flowchart LR
 | `facturacion-sri/` | Módulo de facturación electrónica SRI (Maven, Java 11): factura, nota de crédito, firma, RIDE y correo — ver su [README](facturacion-sri/README.md) y la [guía de instalación](facturacion-sri/INSTALAR.md) |
 | `branding/` | Logo (SVG, PNG, ICO), paleta, tipografía y los generadores de las imágenes de la marca |
 | `herramientas/` | Scripts que generan las plantillas del ticket, del cierre de caja y el estilo de los reportes |
-| `docs/capturas/` | Capturas de pantalla de este README |
+| `docs/` | Página del proyecto (GitHub Pages: `docs/index.html`) y las capturas de este README |
 | `lib/` | Dependencias de terceros (`.jar`) incluidas en el repo |
 | `locales/` | Traducciones de la interfaz |
 | `reports/` | Plantillas JasperReports |
@@ -473,13 +475,15 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ✅ Scripts de la venta modernos: aviso de cambio, descuentos que conviven con promociones, control de stock sin fugas de conexiones
 - ⬜ Ticket en formato A4 todavía con textos de la plantilla original
 - ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
-- ⬜ Renombrar el repositorio de GitHub a Quinde POS y crear un sitio o página del proyecto
+- ✅ Página del proyecto (GitHub Pages, carpeta `docs/`)
+- ⬜ Renombrar el repositorio de GitHub a Quinde POS
 - ⬜ Actualizaciones automáticas
 - ⬜ Versión para tablet / Android
 - ⬜ Tienda en línea integrada
 
 ## 🔗 Enlaces importantes
 
+- 🌐 Página del proyecto: [riccijandroupec.github.io/EcoPos](https://riccijandroupec.github.io/EcoPos/)
 - 📦 Repositorio: [github.com/RiccijandroUpec/EcoPos](https://github.com/RiccijandroUpec/EcoPos)
 - 🧾 Facturación electrónica: [README del módulo](facturacion-sri/README.md) · [guía de instalación](facturacion-sri/INSTALAR.md)
 - 🏛️ SRI en línea (firma, comprobantes): [srienlinea.sri.gob.ec](https://srienlinea.sri.gob.ec/)
