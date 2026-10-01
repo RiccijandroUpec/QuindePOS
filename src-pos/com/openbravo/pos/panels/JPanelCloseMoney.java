@@ -265,6 +265,9 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
               
        }   
     
+    /** Arqueo del cierre que se esta imprimiendo (null en el corte parcial o sin arqueo). */
+    private ArqueoImpreso arqueoParaImprimir;
+
     private void printPayments(String report) {
         
         String sresource = m_dlSystem.getResourceAsXML(report);
@@ -276,6 +279,10 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
                 script.put("payments", m_PaymentsToClose);
                 script.put("nosales",result.toString());                
+                script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
+                script.put("arqueo", arqueoParaImprimir);
+                script.put("cajero", com.openbravo.pos.util.StringUtils.encodeXML(m_App.getAppUserView().getUser().getName()));
+                script.put("impreso", new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
                 m_TTP.printTicket(script.eval(sresource).toString());
 // JG 16 May 2012 use multicatch
             } catch (ScriptException | TicketPrinterException e) {
@@ -816,7 +823,9 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
                 m_PaymentsToClose.setDateEnd(dNow);
 
                 // print report
+                arqueoParaImprimir = arqueo != null ? new ArqueoImpreso(arqueo) : null;
                 printPayments("Printer.CloseCash");
+                arqueoParaImprimir = null;
 
                 // Mostramos el mensaje
                 JOptionPane.showMessageDialog(this, AppLocal.getIntString("message.closecashok"), AppLocal.getIntString("message.title"), JOptionPane.INFORMATION_MESSAGE);

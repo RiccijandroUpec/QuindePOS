@@ -19,80 +19,99 @@
 -->
 
 <output>
-  <ticket>
-    <image>Printer.Ticket.Logo</image>
-        <line></line>
-        <line></line>
-        <line size="1">
-            <text align ="center" bold="true" length="42">Close Cash Report</text>
-        </line>
-        <line></line>
-        <line>
-           <text align ="left" bold="true" length="32">Payments Report</text>
-           <text align ="right" bold="true" length="10">Amount</text>
-        </line>
-        <line><text>------------------------------------------</text></line>
-        #foreach ($line in $payments.getPaymentLines())
-        <line>
-            <text align ="left" length="32">${line.printType()} ${line.printReason()}</text>
-            <text align ="right" length="10">${line.printValue()}</text>
-        </line>
-        #end
-        <line><text>------------------------------------------</text></line>
-        <line>
-            <text align ="left" length="32" bold="true">Total Sales</text>
-            <text align ="right" length="10" bold="true">${payments.printPaymentsTotal()}</text>
-        </line>
-        <line>
-            <text align ="left" length="22">Number of Payments:</text>
-            <text align ="right" length="10">${payments.printPayments()}</text>
-        </line>
-        <line></line>
-        <line>
-            <text align ="left" bold="true" length="32">Tax Analysis</text>
-            <text align ="right" bold="true" length="10">Amount</text>
-        </line>
-        <line><text>------------------------------------------</text></line>
-        #foreach ($line in $payments.getSaleLines())
-        <line>
-            <text align ="left" length="32">${line.printTaxName()}</text>
-            <text align ="right" length="10">${line.printTaxes()}</text>
-        </line>
-        #end
-        <line><text>------------------------------------------</text></line>
-        <line>
-            <text align ="left" length="32">Receipts:</text>
-            <text align ="right" length="10">${payments.printSales()}</text>
-        </line>
-        <line></line>
-        <line size="1">
-            <text align ="left" length="32" bold="true">SubTotal</text>
-            <text align ="right" length="10" bold="true">${payments.printSalesBase()}</text>
-        </line>
-        <line size="1">
-            <text align ="left" length="32" bold="true">Taxes</text>
-            <text align ="right" length="10" bold="true">${payments.printSalesTaxes()}</text>
-        </line>
-        <line size="1">
-            <text align ="left" length="32" bold="true">Totals</text>
-            <text align ="right" length="10" bold="true">${payments.printSalesTotal()}</text>
-        </line>
-        <line><text>------------------------------------------</text></line>
-        <line>
-            <text length="18">Terminal:</text>
-            <text>${payments.printHost()}</text>
-        </line>
-        <line>
-            <text length="18">Sequence:</text>
-            <text>${payments.printSequence()}</text>
-        </line>
-        <line>
-            <text length="18">Start Date:</text>
-            <text>${payments.printDateStart()}</text>
-        </line>
-        <line>
-            <text length="18">End Date:</text>
-            <text>${payments.printDateEnd()}</text>
-        </line>
-    </ticket>
+<ticket>
+	<image>Printer.Ticket.Logo</image>
+#if ($negocio && $negocio.configurado)
+	<line></line>
+	<line></line>
+	<line size="1"><text align="center" length="42" bold="true">${negocio.nombre}</text></line>
+	#if ($negocio.ruc != "")
+	<line><text align="center" length="42">RUC: ${negocio.ruc}</text></line>
+	#end
+#end
+	<line></line>
+	<line><text align="left" length="42">==========================================</text></line>
+	<line></line>
+	<line size="1"><text align="center" length="42" bold="true">CIERRE DE CAJA (Z)</text></line>
+	<line><text align="left" length="42">==========================================</text></line>
+	<line><text align="left" length="14">Caja No.:</text><text>${payments.printSequence()}</text></line>
+	<line><text align="left" length="14">Equipo:</text><text>${payments.printHost()}</text></line>
+	<line><text align="left" length="14">Desde:</text><text>${payments.printDateStart()}</text></line>
+	<line><text align="left" length="14">Hasta:</text><text>${payments.printDateEnd()}</text></line>
+#if ($cajero)
+	<line><text align="left" length="14">Cajero:</text><text>${cajero}</text></line>
+#end
+#if ($impreso)
+	<line><text align="left" length="14">Impreso:</text><text>${impreso}</text></line>
+#end
+	<line></line>
+	<line><text align="left" length="42" bold="true">RESUMEN DE VENTAS</text></line>
+	<line><text align="left" length="42">------------------------------------------</text></line>
+	<line><text align="left" length="30">Tickets</text><text align="right" length="12">${payments.printSales()}</text></line>
+	<line><text align="left" length="30">Subtotal sin impuestos</text><text align="right" length="12">${payments.printSalesBase()}</text></line>
+	<line><text align="left" length="30">Impuestos</text><text align="right" length="12">${payments.printSalesTaxes()}</text></line>
+	<line></line>
+	<line size="1"><text align="left" length="20" bold="true">TOTAL VENDIDO</text><text align="right" length="22" bold="true">${payments.printSalesTotal()}</text></line>
+	<line></line>
+	<line><text align="left" length="42" bold="true">IMPUESTOS POR TARIFA</text></line>
+	<line><text align="left" length="42">------------------------------------------</text></line>
+	<line><text align="left" length="12" bold="true">Tarifa</text><text align="right" length="10" bold="true">Base</text><text align="right" length="10" bold="true">IVA</text><text align="right" length="10" bold="true">Total</text></line>
+#foreach ($line in $payments.getSaleLines())
+	<line><text align="left" length="12">${line.printTaxName()}</text><text align="right" length="10">${line.printTaxNet()}</text><text align="right" length="10">${line.printTaxes()}</text><text align="right" length="10">${line.printTaxGross()}</text></line>
+#end
+	<line></line>
+	<line><text align="left" length="42" bold="true">FORMAS DE PAGO</text></line>
+	<line><text align="left" length="42">------------------------------------------</text></line>
+#foreach ($line in $payments.getPaymentLines())
+	<line><text align="left" length="22">${line.printType()}</text><text align="left" length="10">${line.printReason()}</text><text align="right" length="10">${line.printValue()}</text></line>
+#end
+	<line><text align="left" length="42">------------------------------------------</text></line>
+	<line><text align="left" length="30" bold="true">Total cobrado</text><text align="right" length="12" bold="true">${payments.printPaymentsTotal()}</text></line>
+	<line><text align="left" length="30">Movimientos</text><text align="right" length="12">${payments.printPayments()}</text></line>
+#if ($nosales && $nosales != "0")
+	<line><text align="left" length="30">Aperturas de cajon sin venta</text><text align="right" length="12">${nosales}</text></line>
+#end
+#if ($arqueo)
+	<line></line>
+	<line><text align="left" length="42" bold="true">ARQUEO DE EFECTIVO</text></line>
+	<line><text align="left" length="42">------------------------------------------</text></line>
+#foreach ($d in $arqueo.detalle)
+	<line><text align="left" length="42">  ${d}</text></line>
+#end
+	<line><text align="left" length="42">------------------------------------------</text></line>
+	<line><text align="left" length="30">Fondo de caja</text><text align="right" length="12">${arqueo.fondo}</text></line>
+	<line><text align="left" length="30">+ Efectivo esperado</text><text align="right" length="12">${arqueo.esperado}</text></line>
+	<line><text align="left" length="30">= Deberia haber</text><text align="right" length="12">${arqueo.deberiaHaber}</text></line>
+	<line><text align="left" length="30" bold="true">Contado</text><text align="right" length="12" bold="true">${arqueo.contado}</text></line>
+	<line></line>
+	#if ($arqueo.cuadra)
+	<line size="1"><text align="center" length="42" bold="true">LA CAJA CUADRA</text></line>
+	#else
+	<line size="1"><text align="left" length="20" bold="true">${arqueo.estado}</text><text align="right" length="22" bold="true">${arqueo.diferencia}</text></line>
+	#end
+#end
+	<line></line>
+	<line><text align="left" length="42" bold="true">VENTAS POR CATEGORIA</text></line>
+	<line><text align="left" length="42">------------------------------------------</text></line>
+	<line><text align="left" length="24" bold="true">Categoria</text><text align="right" length="8" bold="true">Cant.</text><text align="right" length="10" bold="true">Total</text></line>
+#foreach ($line in $payments.getCategorySalesLines())
+	<line><text align="left" length="24">${line.printCategoryName()}</text><text align="right" length="8">${line.printCategoryUnits()}</text><text align="right" length="10">${line.printCategorySum()}</text></line>
+#end
+#if ($payments.getRemovedProductLines() && $payments.getRemovedProductLines().size() > 0)
+	<line></line>
+	<line><text align="left" length="42" bold="true">LINEAS ELIMINADAS</text></line>
+	<line><text align="left" length="42">------------------------------------------</text></line>
+	<line><text align="left" length="16" bold="true">Usuario</text><text align="left" length="20" bold="true">Producto</text><text align="right" length="6" bold="true">Cant.</text></line>
+#foreach ($line in $payments.getRemovedProductLines())
+	<line><text align="left" length="16">${line.printWorkerName()}</text><text align="left" length="20">${line.printProductName()}</text><text align="right" length="6">${line.printTotalUnits()}</text></line>
+#end
+#end
+	<line></line>
+	<line></line>
+	<line></line>
+	<line><text align="left" length="20">____________________</text><text align="left" length="2"></text><text align="left" length="20">____________________</text></line>
+	<line><text align="center" length="20">Cajero</text><text align="left" length="2"></text><text align="center" length="20">Supervisor</text></line>
+	<line></line>
+	<line><text align="center" length="42">Quinde POS - punto de venta libre</text></line>
+</ticket>
 </output>

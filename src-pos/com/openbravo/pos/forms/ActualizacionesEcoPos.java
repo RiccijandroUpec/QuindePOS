@@ -174,12 +174,16 @@ public final class ActualizacionesEcoPos {
             {"Printer.TicketPreview", "Touch Friendly Point Of Sale"},
             {"Printer.ReprintTicket", "Touch Friendly Point Of Sale"},
             {"Printer.Ticket2", "Thank You for your custom"},
+            {"Printer.CloseCash", "Close Cash Report"},
+            {"Printer.PartialCash", "Partial Cash Report"},
+            {"Printer.TicketKitchen", "Kitchen Order"},
         };
         for (String[] p : plantillas) {
             String actual = leerRecurso(con, p[0]);
             // Tambien la primera version del ticket de Quinde POS (sin los datos de la factura electronica).
             boolean primeraVersion = actual != null && actual.contains("Quinde POS - punto de venta libre")
-                    && !actual.contains("$factura") && !p[0].equals("Printer.Ticket2");
+                    && !actual.contains("$factura")
+                    && (p[0].equals("Printer.Ticket") || p[0].equals("Printer.TicketPreview") || p[0].equals("Printer.ReprintTicket"));
             if (actual != null && (actual.contains(p[1]) || primeraVersion)) {
                 byte[] nueva = leerClasspath("/com/openbravo/pos/templates/" + p[0] + ".xml");
                 if (nueva != null) {

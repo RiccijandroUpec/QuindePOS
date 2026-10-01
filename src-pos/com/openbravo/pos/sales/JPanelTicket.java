@@ -1648,6 +1648,7 @@ if (pickupSize!=null && (Integer.parseInt(pickupSize) >= tmpPickupId.length())){
                 script.put("place", ticketext);
                 script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
                 script.put("factura", facturaParaImprimir);
+                script.put("xml", new com.openbravo.pos.ticket.TextoTicket());
                 script.put("warranty", warrantyPrint);
                 script.put("pickupid",getPickupString(ticket));
 
