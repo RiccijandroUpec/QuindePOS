@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <title>Quinde POS</title>
+  <!-- Quinde (colibri) geometrico, concepto "Selva". Paleta: Quinde #2E9E6B, Selva #1B5E3F,
+       Brote #A8E6C1, Coral #F2705E, Tinta #10231A. -->
+  <polygon points="54,48 46,12 62,44" fill="#1B5E3F"/>
+  <polygon points="58,46 70,8 66,40" fill="#2E9E6B"/>
+  <polygon points="62,38 76,34 80,46 68,52" fill="#2E9E6B"/>
+  <polygon points="68,52 80,46 74,58" fill="#F2705E"/>
+  <polygon points="56,46 68,52 62,64 48,60" fill="#1B5E3F"/>
+  <polygon points="62,64 74,58 58,74" fill="#2E9E6B"/>
+  <polygon points="48,60 62,64 58,74 40,76" fill="#A8E6C1"/>
+  <polygon points="40,76 58,74 30,96" fill="#1B5E3F"/>
+  <polygon points="30,96 22,110 38,90" fill="#10231A"/>
+  <polygon points="30,96 12,100 34,88" fill="#2E9E6B"/>
+  <polygon points="80,42 112,36 80,45" fill="#10231A"/>
+  <circle cx="73" cy="41" r="1.6" fill="#FFFFFF"/>
+</svg>
