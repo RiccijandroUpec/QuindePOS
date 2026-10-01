@@ -54,7 +54,7 @@
       <a href="#sri">Facturación SRI</a>
       <a href="#capturas">Capturas</a>
       <a href="#empezar">Cómo empezar</a>
-      <a class="boton chico" href="https://github.com/RiccijandroUpec/EcoPos">
+      <a class="boton chico" href="https://github.com/RiccijandroUpec/QuindePOS">
         <svg aria-hidden="true"><use href="#i-github"/></svg> GitHub
       </a>
     </nav>
@@ -70,12 +70,12 @@
         <h1 id="titulo">El punto de venta <span class="resalte">para tu negocio</span> en Ecuador</h1>
         <p class="bajada">Vende rápido, cuadra tu caja y emite la <b>factura electrónica del SRI</b> sin pagar licencias ni programas aparte. Quinde POS funciona en tu computadora, con o sin pantalla táctil.</p>
         <div class="acciones">
-          <a class="boton" href="https://github.com/RiccijandroUpec/EcoPos/archive/refs/heads/main.zip">
-            <svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar gratis
+          <a class="boton" href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">
+            <svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar para Windows
           </a>
           <a class="boton secundario" href="#empezar">Cómo empezar</a>
         </div>
-        <p class="nota-portada">Código abierto con licencia GPL v3 · Windows, Linux y macOS</p>
+        <p class="nota-portada">Instalador para Windows 10 y 11 con Java y base de datos incluidos · Código abierto GPL v3</p>
       </div>
       <div class="marco">
         <div class="puntos" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -235,31 +235,37 @@
     <div class="contenedor">
       <div class="encabezado">
         <h2 id="t-empezar">Cómo empezar</h2>
-        <p>Instálalo en tu computadora en unos minutos.</p>
+        <p>Un solo instalador y un asistente que te guía: en minutos estás vendiendo.</p>
       </div>
       <div class="pasos">
         <div class="paso">
-          <h3>Instala Java 11</h3>
-          <p>Gratis desde <a href="https://adoptium.net/temurin/releases/?version=11">Adoptium Temurin</a>.</p>
+          <h3>Descarga el instalador</h3>
+          <p><a href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">QuindePOS-Setup.exe</a> para Windows 10 y 11. Trae Java y la base de datos: no instalas nada más.</p>
         </div>
         <div class="paso">
-          <h3>Instala la base de datos</h3>
-          <p>MariaDB o MySQL; lo más fácil es <a href="https://www.apachefriends.org/">XAMPP</a>.</p>
+          <h3>Instálalo</h3>
+          <p>Deja la base de datos incluida (recomendado) o conéctalo a tu servidor MySQL/MariaDB.</p>
         </div>
         <div class="paso">
-          <h3>Descarga Quinde POS</h3>
-          <p>Desde <a href="https://github.com/RiccijandroUpec/EcoPos">GitHub</a> y ábrelo con <code>start.bat</code>.</p>
+          <h3>Sigue el asistente</h3>
+          <p>Tu negocio y logo, tipo de negocio, IVA, usuarios, impresora con ticket de prueba y productos (también desde Excel).</p>
         </div>
         <div class="paso">
           <h3>Activa la facturación</h3>
-          <p>Con tu firma electrónica (.p12), siguiendo la <a href="https://github.com/RiccijandroUpec/EcoPos/blob/main/facturacion-sri/INSTALAR.md">guía paso a paso</a>.</p>
+          <p>Con tu firma electrónica (.p12), en el mismo asistente o siguiendo la <a href="https://github.com/RiccijandroUpec/QuindePOS/blob/main/facturacion-sri/INSTALAR.md">guía paso a paso</a>.</p>
         </div>
       </div>
-<pre><code><span class="c"># Para quien quiera compilarlo desde el código</span>
-git clone https://github.com/RiccijandroUpec/EcoPos.git
-cd EcoPos
-ant -f build_working.xml todo   <span class="c"># Quinde POS + facturación electrónica</span>
-start.bat                       <span class="c"># en Linux o macOS: ./start.sh</span></code></pre>
+      <p class="aviso-instalador">El instalador aún no tiene firma digital: si Windows muestra «Windows protegió su PC», toca <b>Más información → Ejecutar de todas formas</b>.</p>
+      <figure class="asistente">
+        <div class="marco"><img src="capturas/asistente.png" alt="Asistente de configuración de Quinde POS con los pasos: bienvenida, tu negocio, tipo de negocio, caja e impuestos, usuarios, impresora, productos y facturación SRI" width="1080" height="720" loading="lazy"></div>
+        <figcaption>Asistente de configuración<span>Se abre solo la primera vez. Cada paso se puede dejar para después y retomarlo desde Sistema → Asistente.</span></figcaption>
+      </figure>
+<pre><code><span class="c"># Linux, macOS o para compilarlo desde el código (Java 11 + MySQL/MariaDB)</span>
+git clone https://github.com/RiccijandroUpec/QuindePOS.git
+cd QuindePOS
+ant -f build_working.xml todo         <span class="c"># Quinde POS + facturación electrónica</span>
+start.bat                             <span class="c"># en Linux o macOS: ./start.sh</span>
+ant -f build_working.xml instalador   <span class="c"># arma el instalador de Windows (Inno Setup)</span></code></pre>
     </div>
   </section>
 
@@ -290,10 +296,10 @@ start.bat                       <span class="c"># en Linux o macOS: ./start.sh</
           <p>Quinde POS es software libre con licencia GPL v3: puedes usarlo, estudiarlo, modificarlo y compartirlo sin pagar nada.</p>
           <p>Las ideas, reportes de errores y aportes de código son bienvenidos desde cualquier parte del Ecuador y del mundo.</p>
           <div class="acciones" style="margin-top:20px">
-            <a class="boton" href="https://github.com/RiccijandroUpec/EcoPos">
+            <a class="boton" href="https://github.com/RiccijandroUpec/QuindePOS">
               <svg aria-hidden="true"><use href="#i-github"/></svg> Ver el código
             </a>
-            <a class="boton secundario" href="https://github.com/RiccijandroUpec/EcoPos/issues">Reportar un problema</a>
+            <a class="boton secundario" href="https://github.com/RiccijandroUpec/QuindePOS/issues">Reportar un problema</a>
           </div>
         </div>
         <ul class="redes" aria-label="Contacto">

@@ -353,6 +353,11 @@ pre {
   line-height: 1.7;
 }
 pre .c { color: #7FB596; }
+.aviso-instalador { margin: 24px 0 0; color: var(--texto-suave); font-size: 15px; }
+.asistente { margin: 36px auto 0; max-width: 820px; }
+.asistente .marco { box-shadow: var(--sombra); }
+.asistente figcaption { margin-top: 12px; font-weight: 800; text-align: center; }
+.asistente figcaption span { display: block; font-weight: 400; color: var(--texto-suave); font-size: 15px; }
 code { font-family: ui-monospace, Consolas, Menlo, monospace; }
 
 /* ---------- Tecnologias e identidad ---------- */
