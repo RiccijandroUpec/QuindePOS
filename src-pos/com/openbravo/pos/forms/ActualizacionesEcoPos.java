@@ -182,7 +182,7 @@ public final class ActualizacionesEcoPos {
             {"Printer.CustomerPaid", "Account Balance"},
             {"Printer.CustomerPaid2", "Total Paid"},
             {"Printer.Inventory", "Inventory Record"},
-            {"Printer.Start", "Point Of Sale"},
+            {"Printer.Start", "<text>Point Of Sale</text>"},
             {"Printer.TicketTotal", "Thank You"},
             {"Printer.TicketClose", "Tendered:"},
             {"Printer.Product", "Pts."},
