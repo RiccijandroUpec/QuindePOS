@@ -44,6 +44,10 @@ final class PasoListo extends Paso {
     protected JComponent crearPanel() {
         JPanel col = Ui.columna();
         col.add(resumen);
+        col.add(Ui.subtitulo("Atajos para vender m\u00E1s r\u00E1pido"));
+        col.add(Ui.texto("<b>F2</b> buscar un producto por nombre o c\u00F3digo \u00B7 <b>F12</b> cobrar \u00B7 "
+                + "<b>Esc</b> limpiar la b\u00FAsqueda<br>"
+                + "Tocar el mismo producto otra vez suma una unidad. El lector de c\u00F3digos de barras funciona sin hacer nada."));
         col.add(javax.swing.Box.createVerticalStrut(18));
         col.add(Ui.nota("Lo que qued\u00F3 pendiente lo puedes terminar cuando quieras en:<br>"
                 + "<b>Sistema \u2192 Asistente de configuraci\u00F3n</b>."));

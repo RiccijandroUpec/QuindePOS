@@ -284,6 +284,20 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase U — Asistente de configuración (onboarding) (2026-10-01)
+La primera vez que se abre Quinde POS en un negocio nuevo aparece un asistente que deja la caja lista en minutos. Cada paso se puede dejar "para después", el progreso se guarda en la base (se retoma en cualquier caja) y se vuelve a abrir desde **Sistema → Asistente de configuración** (solo el Administrador).
+1. **Bienvenida**: tema claro u oscuro, que se aplica al instante.
+2. **Tu negocio**: nombre comercial, razón social, RUC (validado), dirección, obligado a llevar contabilidad y **logo**. Se guardan donde ya los usan el ticket, los reportes, el PDF y la factura del SRI; el logo también puede ir al ticket impreso, convertido a blanco y negro para impresoras térmicas.
+3. **Tipo de negocio** (tienda, cafetería, restaurante u otro): propone y activa mesas, el botón "Enviar a cocina", el aviso de pedidos sin enviar al cobrar y el control de stock.
+4. **Caja e impuestos**: detecta tarifas de IVA que el SRI no acepta (como un 10 %) y las corrige a 15 % con un toque; arqueo ciego y copia de seguridad diaria.
+5. **Usuarios**: clave del administrador (hoy se podía entrar sin clave), cajeros con PIN y qué usuarios se muestran en la pantalla de inicio.
+6. **Impresora**: elige entre las impresoras de Windows, **imprime un ticket de prueba** (con opción de abrir el cajón) y la impresora de cocina si se usa.
+7. **Productos**: productos de ejemplo según el tipo de negocio, **importar desde Excel** (CSV, con plantilla para descargar; precios con IVA incluido, acepta coma decimal y archivos de Excel en español) o empezar vacío.
+8. **Facturación SRI**: la misma pantalla de facturación electrónica, dentro del asistente.
+9. **¡Listo!**: resumen de lo hecho y lo pendiente, y atajos (F2, F12…).
+- Mientras falten pasos, el **Panel del negocio** muestra "Completa la configuración de Quinde POS (4 de 7)" con un botón para continuar.
+- En un negocio que ya tiene ventas no se abre solo (no interrumpe); queda el aviso del panel. Nuevas pruebas de la importación de CSV y del activado de opciones.
+
 ### Fase T — Recursos con el aviso de licencia de Quinde POS (2026-10-01)
 - Los 45 recursos (plantillas de impresión, scripts, menú) y los roles ya no empiezan con el texto en inglés del programa original: ahora llevan un **aviso corto en español de Quinde POS**. Se conserva lo que la licencia GPL exige: la línea de copyright (incluido el original, 2009-2014) y que el archivo es software libre bajo la GPL v3, sin garantía.
 - El resto de cada recurso no cambia. Las bases existentes se actualizan solas al abrir la app (también lo que el negocio haya personalizado, porque solo se toca ese comentario).
@@ -444,7 +458,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ✅ Alertas de stock bajo (en el Panel del negocio)
 - ⬜ Kardex con costo promedio
 - ⬜ Lotes y fechas de caducidad
-- ⬜ Carga de productos desde Excel y edición masiva de precios
+- 🟡 Carga de productos desde Excel (CSV) ✅ en el asistente; edición masiva de precios pendiente
 
 **Ventas y clientes**
 - ✅ Promociones automáticas (2x1, 3x2, % por producto o categoría, happy hour); combos de productos distintos pendientes
@@ -466,7 +480,8 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 **Operación**
 - ✅ Estilo moderno, iconos y pantalla de venta nueva
 - 🟡 Copia de seguridad automática: diaria y local ✅; copia en la nube pendiente
-- 🟡 Configuración de facturación en una sola pantalla con verificación ✅; asistente de primera configuración para el resto (negocio, impresora, impuestos) pendiente
+- ✅ Asistente de configuración (onboarding): negocio, tipo, IVA, usuarios, impresora con prueba, productos y facturación
+- ⬜ Instalador para Windows con Java y base de datos incluidos (en curso)
 - ✅ Ticket impreso con la marca y datos del negocio, en español
 - ✅ Cierre de caja (Z), corte parcial (X) y comanda de cocina en español, con arqueo y firmas
 - ✅ Reportes con el estilo de la marca, el negocio y el logo, en español

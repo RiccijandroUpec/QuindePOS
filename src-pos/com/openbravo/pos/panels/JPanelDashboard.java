@@ -60,6 +60,9 @@ public class JPanelDashboard extends JPanel implements JPanelView {
     private final JPanel formasPago = new JPanel();
     private final JPanel stockBajo = new JPanel();
     private final JLabel actualizado = new JLabel();
+    /** "Completa la configuracion de Quinde POS (3 de 7)" mientras el asistente no se termine. */
+    private final JPanel avisoAsistente = new JPanel(new BorderLayout(12, 0));
+    private final JLabel textoAsistente = new JLabel();
 
     public JPanelDashboard(AppView app) {
         this.app = app;
@@ -97,7 +100,12 @@ public class JPanelDashboard extends JPanel implements JPanelView {
         JPanel norte = new JPanel(new BorderLayout(0, 12));
         norte.setOpaque(false);
         norte.add(cabecera, BorderLayout.NORTH);
-        norte.add(tarjetas, BorderLayout.CENTER);
+        JPanel medio = new JPanel(new BorderLayout(0, 12));
+        medio.setOpaque(false);
+        medio.add(avisoAsistente, BorderLayout.NORTH);
+        medio.add(tarjetas, BorderLayout.CENTER);
+        norte.add(medio, BorderLayout.CENTER);
+        construirAvisoAsistente();
         add(norte, BorderLayout.NORTH);
 
         JPanel centro = new JPanel(new GridLayout(1, 2, 12, 0));
@@ -120,6 +128,46 @@ public class JPanelDashboard extends JPanel implements JPanelView {
     @Override
     public void activate() throws BasicException {
         cargar();
+        actualizarAvisoAsistente();
+    }
+
+    private static final String PERMISO_ASISTENTE = "com.openbravo.pos.asistente.AccionAsistente";
+
+    private void construirAvisoAsistente() {
+        avisoAsistente.setBackground(com.formdev.flatlaf.FlatLaf.isLafDark() ? new java.awt.Color(0x17352A) : new java.awt.Color(0xE8F6EE));
+        avisoAsistente.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new java.awt.Color(0x2E9E6B), 1, true),
+                BorderFactory.createEmptyBorder(10, 14, 10, 14)));
+        textoAsistente.setFont(textoAsistente.getFont().deriveFont(15f));
+        avisoAsistente.add(textoAsistente, BorderLayout.CENTER);
+        JButton continuar = new JButton("Continuar la configuraci\u00F3n");
+        continuar.setFocusable(false);
+        continuar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                com.openbravo.pos.asistente.Asistente.abrir(JPanelDashboard.this, app, new Runnable() {
+                    @Override
+                    public void run() {
+                        actualizarAvisoAsistente();
+                    }
+                });
+            }
+        });
+        avisoAsistente.add(continuar, BorderLayout.EAST);
+        avisoAsistente.setVisible(false);
+    }
+
+    private void actualizarAvisoAsistente() {
+        boolean puede = app.getAppUserView() != null && app.getAppUserView().getUser() != null
+                && app.getAppUserView().getUser().hasPermission(PERMISO_ASISTENTE);
+        int[] avance = puede ? com.openbravo.pos.asistente.Asistente.avance(app) : null;
+        if (avance == null) {
+            avisoAsistente.setVisible(false);
+            return;
+        }
+        textoAsistente.setText("<html><b>Completa la configuraci\u00F3n de Quinde POS</b> \u2014 "
+                + avance[0] + " de " + avance[1] + " pasos listos (tu negocio, impresora, productos, facturaci\u00F3n\u2026)</html>");
+        avisoAsistente.setVisible(true);
     }
 
     @Override
