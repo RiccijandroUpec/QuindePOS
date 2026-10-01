@@ -29,7 +29,8 @@ pendiente se reintenta solo la próxima vez que lo abras.
 Dentro de la carpeta de EcoPos (donde está `start.bat`), crea una carpeta
 llamada **`sri-conector`** y copia ahí el archivo
 **`ecopos-sri-connector.jar`**. Si no lo tienes, pídeselo a quien te
-entregó EcoPos, o genéralo desde este repositorio con `mvn clean package`.
+entregó Quinde POS, o genéralo desde la carpeta principal de Quinde POS con
+`ant -f build_working.xml sri` (lo deja directamente en `sri-conector/`).
 
 Debe quedar así:
 

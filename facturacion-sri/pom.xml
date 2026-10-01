@@ -9,13 +9,23 @@
     <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>ECOPos SRI Connector</name>
+    <name>Quinde POS - Facturacion electronica SRI</name>
     <description>
-        Modulo independiente que integra ECOPos (POS Java/Swing) con los
-        servicios de facturacion electronica del SRI (Servicio de Rentas
-        Internas, Ecuador). Se distribuye como jar propio; ECOPos solo lo
-        referencia a traves de un hook minimo, sin depender de su build.
+        Modulo de Quinde POS (POS Java/Swing para Ecuador) que emite los
+        comprobantes electronicos ante el SRI (Servicio de Rentas Internas):
+        factura y nota de credito, firma XAdES-BES, envio, RIDE en PDF y correo.
+        Se compila con Maven y se distribuye como jar propio que Quinde POS
+        carga al arrancar (ver build_working.xml, objetivo "sri").
     </description>
+    <url>https://github.com/RiccijandroUpec/EcoPos</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License v3.0 or later</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

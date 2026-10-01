@@ -41,6 +41,7 @@ public final class EcoPosSriGlue {
     private static final String RUTA_JAR_RELATIVA = CARPETA_CONECTOR_RELATIVA + "/ecopos-sri-connector.jar";
 
     private static EcoPosSriBridge instancia;
+    private static String problema;
     private static ClassLoaderConector classLoaderConector;
     private static boolean inicializado;
 
@@ -121,7 +122,36 @@ public final class EcoPosSriGlue {
 
         Class<?> claseImpl = classLoaderConector.loadClass("com.openbravo.pos.sri.EcoPosSriBridgeImpl");
         Constructor<?> constructor = claseImpl.getConstructor(String.class, String.class, String.class, Path.class, ExecutorService.class);
-        return (EcoPosSriBridge) constructor.newInstance(propiedades.getProperty("db.URL"), usuario, clave, carpetaConector, executor);
+        EcoPosSriBridge puente = (EcoPosSriBridge) constructor.newInstance(
+                propiedades.getProperty("db.URL"), usuario, clave, carpetaConector, executor);
+
+        // El modulo tiene que estar compilado con la misma version del contrato que Quinde POS:
+        // si no, falla con errores raros a mitad de una venta. Mejor detectarlo aqui y avisar.
+        int versionModulo;
+        try {
+            versionModulo = puente.versionContrato();
+        } catch (AbstractMethodError e) {
+            versionModulo = 1;
+        }
+        if (versionModulo != EcoPosSriBridge.VERSION_CONTRATO) {
+            problema = "El m\u00F3dulo de facturaci\u00F3n (sri-conector) es de otra versi\u00F3n (" + versionModulo
+                    + ") que Quinde POS (" + EcoPosSriBridge.VERSION_CONTRATO + "). Actual\u00EDzalo: "
+                    + "ant -f build_working.xml sri, o copia el ecopos-sri-connector.jar de la misma versi\u00F3n.";
+            LOG.warning(problema);
+            try {
+                puente.cerrar();
+            } catch (Throwable e) {
+                // Se descarta igual.
+            }
+            executor.shutdownNow();
+            return null;
+        }
+        return puente;
+    }
+
+    /** Si el modulo esta instalado pero no se pudo usar (por ejemplo, otra version), el motivo; si no, null. */
+    public static synchronized String getProblema() {
+        return problema;
     }
 
     /** Libera los recursos del puente y del classloader dedicado. Registrado como shutdown hook de la JVM. */

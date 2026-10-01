@@ -66,6 +66,11 @@ public final class IndicadorSri extends JLabel {
             return;
         }
         setVisible(true);
+        String problema = EcoPosSriGlue.getProblema();
+        if (problema != null) {
+            mostrar(ROJO, "Facturaci\u00F3n: actualizar m\u00F3dulo", problema);
+            return;
+        }
         if (!facturacionActiva()) {
             mostrar(GRIS, "Facturaci\u00F3n: apagada", "La facturaci\u00F3n electr\u00F3nica est\u00E1 apagada. Act\u00EDvala en Configuraci\u00F3n \u2192 Facturaci\u00F3n electr\u00F3nica");
             return;

@@ -112,6 +112,11 @@ public final class EcoPosSriBridgeImpl implements EcoPosSriBridge {
     }
 
     @Override
+    public int versionContrato() {
+        return VERSION_CONTRATO;
+    }
+
+    @Override
     public void procesarTicketAsync(String ticketId) {
         executor.submit(() -> {
             ClassLoaderPropio.fijarEnHiloActual();

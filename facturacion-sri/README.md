@@ -9,11 +9,16 @@
 ![PDFBox](https://img.shields.io/badge/PDF-Apache%20PDFBox-D22128?logo=apache&logoColor=white)
 ![ZXing](https://img.shields.io/badge/Barcode-ZXing-black)
 ![jakarta.mail](https://img.shields.io/badge/Correo-jakarta.mail-EA4335?logo=gmail&logoColor=white)
-![License](https://img.shields.io/badge/Licencia-por%20definir-lightgrey)
+![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
 Módulo Java **independiente** (Maven, propio jar) que emite facturación
 electrónica ante el **SRI** (Servicio de Rentas Internas del Ecuador) a
 partir de las ventas registradas en [Quinde POS](https://github.com/RiccijandroUpec/EcoPos) (antes EcoPos).
+
+> 📦 **Desde el 30/09/2026 este módulo vive dentro del repositorio de Quinde POS**, en la carpeta `facturacion-sri/`
+> (antes era el repositorio aparte `EcoPos_SRI_conector`; se trajo con todo su historial). Se compila desde la
+> carpeta principal con `ant -f build_working.xml sri` (o `mvn package` aquí mismo) y el jar va a `sri-conector/`.
+> La interfaz con el POS, `EcoPosSriBridge`, es un único archivo que compilan los dos.
 
 **Hecho en Ecuador, para Ecuador.** Cualquier negocio ecuatoriano que use
 Quinde POS puede instalar esto en su propia computadora y empezar a facturar
@@ -395,6 +400,7 @@ y el modo standalone, con `localhost`/`3306`/`ecopos`/`root`/`` por defecto.
 
 ## 🆕 Mejoras recientes
 
+- **2026-09-30 — Un solo repositorio, contrato con versión y licencia GPLv3**: el módulo pasa a `facturacion-sri/` dentro de Quinde POS (con su historial). `EcoPosSriBridge` deja de estar duplicada: Quinde POS la compila desde aquí. Nuevo `VERSION_CONTRATO` + `versionContrato()`: si el jar instalado no coincide, Quinde POS no lo carga y avisa "Facturación: actualizar módulo". Licencia GPLv3 (antes "por definir").
 - **2026-09-30 — RIDE con el formato del SRI, factura en el ticket y correo claro**: `RideGenerator` y `RideNotaCreditoGenerator` ahora arman un `ModeloRide` y lo dibuja un único `RideRenderer` con el formato habitual del SRI (logo y recuadro del emisor, recuadro con RUC/número/autorización/ambiente/emisión y código de barras vectorial con la clave debajo, comprador, detalle en tabla con salto de página, Información Adicional, forma de pago con el texto de la tabla 24 y subtotales 15 %/0 %/no objeto/exento/ICE/IRBPNR/propina). Logo opcional del negocio en `config/logo.png`, elegible desde *Facturación electrónica*. La factura lleva en `infoAdicional` la dirección, teléfono y email del cliente (validado contra el XSD oficial en los tests). Nuevo método del puente `facturaParaTicket(ticketId, reservarSiFalta)`: al cobrar reserva número y clave de acceso **antes** de imprimir (`ConectorPrincipal.prepararComprobante`), para que el ticket salga con los datos de la factura; al reimprimir solo consulta. **Corrección**: la clave de acceso ahora se guarda en el mismo INSERT que reserva el número (antes quedaba NULL hasta el primer envío y un reintento temprano podía generar otra). El correo al cliente usa `MensajeComprobante` (asunto "Factura 001-003-000142645 - Negocio", saludo, datos clave y archivos `factura-<número>.pdf/.xml`).
 - **2026-09-30 — Pantallas integradas en EcoPos**: `PanelFacturacion` (configuración completa: emisión sí/no, emisor, punto de emisión, ambiente, firma con titular y vencimiento vía `InfoCertificado`, correo, verificación y prueba de conexión) y `PanelComprobantes` (lista con resumen, filtros, detalle y acciones compartidas en `AccionesComprobante`) se muestran DENTRO de EcoPos a través del puente (`crearPanelFacturacion`, `crearPanelComprobantes`, `estadoFacturaDeTicket`, `verRideDeTicket`, `notaCreditoDeTicket`). `MensajesSri` explica los errores del SRI en palabras simples (con tests). `ConfiguracionFrame`/`HistorialFrame` quedan como ventanas que envuelven esos paneles (modo standalone); `ConfiguracionCorreoFrame` se eliminó (el correo está en la misma pantalla). El instalador ya no toca menús, botones ni permisos: EcoPos los agrega solo al abrirse.
 - **2026-09-30 — Nota de Crédito parcial**: la ventana "Anular factura" muestra los productos de la factura y permite devolver solo algunos o parte de las cantidades (`AnulacionService.anularParcial`). Recalcula base, IVA por línea y totales por tarifa (`CalculoNotaCreditoParcial`, con tests) y no deja devolver más de lo que queda: resta las notas de crédito anteriores de la misma factura (salvo las RECHAZADAS). Devolver todo de una factura intacta sigue usando los valores exactos de la factura original. **Pendiente**: emitir una parcial real contra el SRI en ambiente de pruebas.
@@ -522,6 +528,13 @@ Este módulo no requiere que ECOPos esté corriendo para compilarse ni para
 correr sus propios tests unitarios — solo necesita acceso de red a la misma
 base de datos MySQL para las pruebas de integración (lectura de `TICKETS`/
 `RECEIPTS`/`TICKETLINES`, y CRUD de `ecopos_sri_comprobantes`).
+
+## 📜 Licencia
+
+GNU GPL v3 o posterior, igual que Quinde POS (texto completo en [LICENSE](LICENSE)). Este módulo corre dentro del
+mismo programa que el POS, por eso comparten licencia. Sus dependencias tienen licencias compatibles con GPLv3:
+Apache-2.0 (CXF, PDFBox, ZXing y Santuario, que llega con xades4j), LGPL-3.0 (xades4j), EDL/BSD (JAXB), EPL-2.0 con GPL como licencia
+secundaria (jakarta.mail), MIT (SLF4J), EPL-1.0/LGPL-2.1 (Logback) y GPLv2 con excepción FOSS (conector MySQL).
 
 ## ☕ Apoya este proyecto / Contacto
 

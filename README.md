@@ -12,8 +12,8 @@
 Quinde POS (antes EcoPos) es un sistema de Punto de Venta (POS) de escritorio libre para negocios de retail y hostelería, construido en Java Swing.
 
 **Hecho en Ecuador, para negocios ecuatorianos** — con soporte de
-facturación electrónica SRI vía el módulo complementario
-[ecopos-sri-connector](https://github.com/RiccijandroUpec/EcoPos_SRI_conector).
+facturación electrónica SRI incluida: el módulo [facturacion-sri/](facturacion-sri/)
+vive en este mismo repositorio (antes era el repo aparte `EcoPos_SRI_conector`).
 
 Licenciado bajo [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html).
 
@@ -51,6 +51,8 @@ Compatible con Windows, Linux o macOS.
 | `locales/` | Traducciones de la interfaz (~90 idiomas) |
 | `reports/` | Plantillas JasperReports para tickets y reportes |
 | `build_working.xml` | Script de build Ant autocontenido (compila y empaqueta el jar) |
+| `facturacion-sri/` | Módulo de facturación electrónica SRI (Maven, Java 11): factura, nota de crédito, firma, RIDE y correo. Se compila como un jar aparte que Quinde POS carga al arrancar — ver su [README](facturacion-sri/README.md) |
+| `branding/` | Logo, íconos, tipografía y el generador de las imágenes de la marca |
 
 > 💡 Los paquetes Java internos usan el namespace `com.openbravo.*`.
 
@@ -63,7 +65,19 @@ El `build.xml` original (NetBeans + Ant) depende de metadatos `nbproject/` que n
 ant -f build_working.xml jar
 ```
 
-Esto genera `build/jar/ecopos.jar`. Si no tienes Ant a mano, el equivalente manual con solo el JDK es:
+Esto genera `build/jar/ecopos.jar`. Para compilar **también el módulo de facturación electrónica** (necesita
+[Maven](https://maven.apache.org/) y deja el jar listo en `sri-conector/`):
+
+```sh
+ant -f build_working.xml todo     # Quinde POS + facturación electrónica
+ant -f build_working.xml sri      # solo el módulo de facturación (con sus tests)
+```
+
+> 💡 La interfaz entre los dos (`EcoPosSriBridge`) es un único archivo dentro de `facturacion-sri/`; Quinde POS la
+> compila desde ahí. Si cambias esa interfaz, sube `VERSION_CONTRATO`: al arrancar, Quinde POS compara su versión con
+> la del módulo y, si no coinciden, lo avisa en la barra superior ("Facturación: actualizar módulo").
+
+Si no tienes Ant a mano, el equivalente manual con solo el JDK es:
 
 ```sh
 # Desde la raíz del proyecto
@@ -72,7 +86,7 @@ mkdir -p build/classes
 # Compilar los tres módulos fuente juntos (se referencian entre sí)
 find src-beans src-data src-pos -name "*.java" > sources.txt
 javac -encoding UTF-8 -d build/classes -cp "lib/*" \
-  -sourcepath "src-beans;src-data;src-pos" @sources.txt
+  -sourcepath "src-beans;src-data;src-pos;facturacion-sri/src/main/java" @sources.txt
 
 # Copiar recursos no-Java (íconos, .properties, etc.) al directorio de clases
 for d in src-beans src-data src-pos; do
@@ -131,6 +145,13 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 ## 🆕 Mejoras recientes
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
+
+### Fase M — Un solo repositorio para Quinde POS y la facturación electrónica (2026-09-30)
+- El módulo de facturación electrónica (antes el repositorio aparte `EcoPos_SRI_conector`) ahora está en la carpeta [facturacion-sri/](facturacion-sri/), **con todo su historial**. Sigue siendo un jar aparte: sus librerías (firma, SOAP, PDF) no se mezclan con las del POS y un negocio que no factura puede usar el POS sin él.
+- La interfaz entre el POS y el módulo es **un solo archivo** (antes había dos copias que había que mantener iguales a mano).
+- **Un solo comando** compila todo: `ant -f build_working.xml todo` (o `sri` para el módulo solo); deja el jar en `sri-conector/`.
+- **Control de versión**: si el módulo instalado es de otra versión, Quinde POS no lo usa y lo avisa en la barra superior ("Facturación: actualizar módulo") en vez de fallar a mitad de una venta.
+- El módulo ahora tiene **licencia GPLv3**, igual que el POS.
 
 ### Fase L — La factura en el ticket y un PDF con el formato del SRI (2026-09-30)
 - Con la facturación electrónica encendida, **el ticket impreso es la factura**: sale con "FACTURA No. 001-001-…", el número de autorización / clave de acceso, ambiente y emisión, datos del emisor (matriz, sucursal, obligado a llevar contabilidad), cliente con RUC/cédula, dirección y correo, subtotales por tarifa de IVA, forma de pago con el texto del SRI y si ya está autorizada o en proceso. El número y la clave se reservan al cobrar, antes de imprimir, así coinciden siempre con la factura que llega al SRI.
