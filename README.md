@@ -282,6 +282,11 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase T — Recursos con el aviso de licencia de Quinde POS (2026-10-01)
+- Los 45 recursos (plantillas de impresión, scripts, menú) y los roles ya no empiezan con el texto en inglés del programa original: ahora llevan un **aviso corto en español de Quinde POS**. Se conserva lo que la licencia GPL exige: la línea de copyright (incluido el original, 2009-2014) y que el archivo es software libre bajo la GPL v3, sin garantía.
+- El resto de cada recurso no cambia. Las bases existentes se actualizan solas al abrir la app (también lo que el negocio haya personalizado, porque solo se toca ese comentario).
+- Se quitó un script de ejemplo sin uso que tenía una conexión a la base escrita a mano.
+
 ### Fase S — Scripts de la venta modernos y corregidos (2026-09-30)
 - **Aviso de cambio** (al terminar una venta en efectivo): ahora es un recuadro con el cambio en grande y en verde, más lo recibido y el total. **Suma todos los pagos en efectivo** (también en un pago dividido), **no aparece si el pago fue exacto**, se cierra solo a los 8 segundos o con un toque, y **no le quita el foco a la venta siguiente**, así el lector de códigos sigue funcionando. Antes usaba Arial fija, salía en cada venta aunque no hubiera cambio, solo miraba el primer pago y se abría desde un hilo aparte, lo que podía dejarlo detrás o trabar la pantalla.
 - **Descuentos (toda la venta y por línea)**: si no escribiste el porcentaje, lo pregunta (antes solo hacía "bip"). Se calcula sobre el precio de lista, así que **aplicarlo dos veces no lo acumula** y 0 % lo quita. **Convive con las promociones** (2x1 y luego 10 %, sin perderse al recalcular). Ya **no cambia el nombre del producto** ("Café - 10%"), que es el que va en la factura del SRI, y no borra las notas de la línea.
