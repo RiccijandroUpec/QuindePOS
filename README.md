@@ -281,6 +281,14 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase P — Reportes con el estilo de Quinde POS (2026-09-30)
+- Los **47 reportes** (ventas, impuestos, pagos, cierres, inventario, clientes…) ahora llevan arriba el **nombre y RUC del negocio** y su **logo** (el de *Facturación electrónica*), títulos y líneas en la paleta Selva en vez del celeste anterior, hora en formato 24 h ("30/09/2026 23:05") y "Quinde POS" en el pie.
+- Gráficos **planos con los colores de la marca** (antes en 3D y azules); el gráfico de pastel y el de serie de tiempo ya no fallan (pedían una librería SVG que no venía con la app).
+- Formas de pago en español en los reportes ("Efectivo" en vez de "cash") y unas 50 etiquetas que faltaban o seguían en inglés traducidas (costo, precio, subtotal, IVA, secuencia, equipo, ganancia…). Tres reportes que no tenían traducción ahora la tienen.
+- **Reportes que no abrían, arreglados**: *Ventas Top 10* (usaba SQL que MariaDB no entiende), *Precios actualizados*, *Rendimiento* y *Registro de caja extendido* (errores de la plantilla original).
+- Un reporte **sin datos** ahora muestra su encabezado y totales en cero, en vez de una hoja en blanco que parecía un error.
+- Verificado: los 47 compilan y 53 de 56 definiciones de reportes se generan con datos (las 3 restantes son variantes viejas que no están en el menú).
+
 ### Fase O — Factura en PDF: páginas, marca de agua de pruebas y pie (2026-09-30)
 - **"Página X de Y"** en cada hoja y, en las páginas siguientes, un encabezado corto ("FACTURA No. … (continuación)", emisor y RUC).
 - En **ambiente de pruebas**, marca de agua **"SIN VALOR TRIBUTARIO – AMBIENTE DE PRUEBAS"**, para que una factura de prueba nunca se confunda con una real. En producción no aparece.
@@ -430,7 +438,8 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - 🟡 Configuración de facturación en una sola pantalla con verificación ✅; asistente de primera configuración para el resto (negocio, impresora, impuestos) pendiente
 - ✅ Ticket impreso con la marca y datos del negocio, en español
 - ✅ Cierre de caja (Z), corte parcial (X) y comanda de cocina en español, con arqueo y firmas
-- ⬜ Ticket en formato A4 y reportes JasperReports todavía con textos de la plantilla original
+- ✅ Reportes con el estilo de la marca, el negocio y el logo, en español
+- ⬜ Ticket en formato A4 todavía con textos de la plantilla original
 - ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS y crear un sitio o página del proyecto
 - ⬜ Actualizaciones automáticas

@@ -208,6 +208,13 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
         jToggleFilterActionPerformed(null);
     }
     
+    /** El ultimo reporte generado (por ejemplo, para exportarlo o revisarlo). */
+    private JasperPrint ultimoReporte;
+
+    public JasperPrint getUltimoReporte() {
+        return ultimoReporte;
+    }
+
     private void launchreport() {     
         
         m_App.waitCursorBegin();
@@ -229,9 +236,14 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
                       reportparams.put("REPORT_RESOURCE_BUNDLE", ResourceBundle.getBundle(res));
                 }                
                 reportparams.put("TAXESLOGIC", taxeslogic); 
+                // Encabezado de Quinde POS: nombre y RUC del negocio y su logo (si lo eligio).
+                com.openbravo.pos.ticket.DatosNegocio negocio = com.openbravo.pos.ticket.DatosNegocio.cargar();
+                reportparams.put("QUINDE_NEGOCIO", negocio.getEncabezadoReporte());
+                reportparams.put("QUINDE_LOGO", com.openbravo.pos.ticket.DatosNegocio.logoDelNegocio());
                 
                 JasperPrint jp = JasperFillManager.fillReport(jr, reportparams, data);    
             
+                ultimoReporte = jp;
                 reportviewer.loadJasperPrint(jp);     
                 
                 setVisibleFilter(false);
