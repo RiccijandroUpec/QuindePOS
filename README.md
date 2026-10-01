@@ -281,6 +281,11 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase O — Factura en PDF: páginas, marca de agua de pruebas y pie (2026-09-30)
+- **"Página X de Y"** en cada hoja y, en las páginas siguientes, un encabezado corto ("FACTURA No. … (continuación)", emisor y RUC).
+- En **ambiente de pruebas**, marca de agua **"SIN VALOR TRIBUTARIO – AMBIENTE DE PRUEBAS"**, para que una factura de prueba nunca se confunda con una real. En producción no aparece.
+- Pie con dónde consultar el comprobante (srienlinea.sri.gob.ec). Aplica igual a la nota de crédito.
+
 ### Fase N — Cierre de caja, corte parcial y comanda de cocina en español (2026-09-30)
 - **Cierre de caja (Z)** impreso con el logo y los datos del negocio: caja, equipo, desde/hasta, cajero y hora de impresión; resumen de ventas con **TOTAL VENDIDO**, impuestos por tarifa (base, IVA y total), formas de pago, aperturas de cajón sin venta, ventas por categoría, líneas eliminadas (si las hubo) y **el arqueo**: billetes y monedas contados, fondo + efectivo esperado = lo que debería haber, lo contado y si la caja **cuadra, sobra o falta** (con el monto en grande). Al final, líneas para la firma del cajero y del supervisor.
 - **Corte parcial (X)**: el mismo resumen con la caja abierta, más las ventas por producto.
