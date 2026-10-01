@@ -58,7 +58,10 @@ public final class Asistente extends JDialog {
         this.ctx = ctx;
         pasos.add(new PasoBienvenida(ctx));
         pasos.add(new PasoNegocio(ctx));
+        pasos.add(new PasoTipo(ctx));
+        pasos.add(new PasoCaja(ctx));
         pasos.add(new PasoUsuarios(ctx));
+        pasos.add(new PasoImpresora(ctx));
         pasos.add(new PasoListo(ctx, pasos));
         construir();
         mostrarPaso(primerPasoPendiente());

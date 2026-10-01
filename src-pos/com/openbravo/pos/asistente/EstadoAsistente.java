@@ -41,6 +41,16 @@ final class EstadoAsistente {
         guardar();
     }
 
+    /** Datos sueltos del asistente (por ejemplo, el tipo de negocio elegido). */
+    String valor(String clave) {
+        return p.getProperty("dato." + clave);
+    }
+
+    void guardarValor(String clave, String valor) {
+        p.setProperty("dato." + clave, valor);
+        guardar();
+    }
+
     boolean terminado() {
         return "si".equals(p.getProperty("terminado"));
     }
