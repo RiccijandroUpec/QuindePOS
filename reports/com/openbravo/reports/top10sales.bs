@@ -43,7 +43,7 @@ report.setSentence(
                         "AND ?(QBF_FILTER) " +
 			"GROUP BY PRODUCTS.REFERENCE, PRODUCTS.NAME,PRODUCTS.PRICEBUY,PRODUCTS.PRICESELL " +
 			"ORDER BY GROSSTOTAL DESC " +
-			"FETCH FIRST 10 ROWS ONLY");
+			"LIMIT 10");
 			
 report.addParameter("RECEIPTS.DATENEW");
 report.addParameter("RECEIPTS.DATENEW");

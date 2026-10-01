@@ -62,6 +62,31 @@ public final class DatosNegocio {
         return xml(n.isEmpty() ? valor("razonSocial") : n);
     }
 
+    /**
+     * "Nombre - RUC 1790012345001" sin escapar, para los reportes (JasperReports no usa XML de ticket).
+     * Null si el negocio no esta configurado.
+     */
+    public String getEncabezadoReporte() {
+        if (!isConfigurado()) {
+            return null;
+        }
+        String n = valor("nombreComercial").isEmpty() ? valor("razonSocial") : valor("nombreComercial");
+        return valor("ruc").isEmpty() ? n : n + "  -  RUC " + valor("ruc");
+    }
+
+    /** Logo del negocio elegido en Facturacion electronica (sri-conector/config/logo.png); null si no hay. */
+    public static java.awt.Image logoDelNegocio() {
+        File archivo = new File(new File(System.getProperty("dirname.path", "./"), "sri-conector"), "config/logo.png");
+        if (!archivo.isFile()) {
+            return null;
+        }
+        try {
+            return javax.imageio.ImageIO.read(archivo);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /** True si hay nombre comercial distinto de la razon social (entonces se imprimen los dos). */
     public boolean isMostrarRazonSocial() {
         String n = valor("nombreComercial");
