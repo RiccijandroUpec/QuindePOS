@@ -40,6 +40,7 @@ public final class ActualizacionesEcoPos {
             crearTablaArqueos(con);
             agregarResumenTributario(con);
             agregarPromociones(con);
+            agregarAsistente(con);
             integrarFacturacionElectronica(con);
             renombrarAQuinde(con);
             ticketQuinde(con);
@@ -99,6 +100,14 @@ public final class ActualizacionesEcoPos {
         agregarPanelAdministrativo(con, "com.openbravo.pos.panels.JPanelResumenTributario",
                 "/com/openbravo/images/reports.png", "Menu.ResumenTributario",
                 "\"Menu.CloseTPV\", \"com.openbravo.pos.panels.JPanelCloseMoney\");");
+    }
+
+    /** Fase U: "Asistente de configuracion" en Sistema, despues de Facturacion electronica (solo Administrador). */
+    private static void agregarAsistente(Connection con) throws SQLException {
+        agregarOpcionMenu(con, "addExecution", "com.openbravo.pos.asistente.AccionAsistente",
+                "/com/openbravo/images/configuration.png", "Menu.Asistente",
+                "\"Menu.FacturacionElectronica\", \"com.openbravo.pos.sri.JPanelFacturacionSri\");",
+                new String[]{"Administrador"});
     }
 
     /** Fase H: "Promociones" despues de "Resumen tributario", con su tabla de reglas. */
@@ -433,19 +442,28 @@ public final class ActualizacionesEcoPos {
      */
     private static void agregarPanelAdministrativo(Connection con, String clase, String icono, String clave, String ancla)
             throws SQLException {
+        agregarOpcionMenu(con, "addPanel", clase, icono, clave, ancla, new String[]{"Administrador", "Gerente"});
+    }
+
+    /**
+     * Agrega una opcion al Menu.Root despues de la linea 'ancla' (addPanel para una pantalla,
+     * addExecution para una accion) y el permiso para los roles indicados. Idempotente.
+     */
+    private static void agregarOpcionMenu(Connection con, String metodo, String clase, String icono, String clave,
+            String ancla, String[] roles) throws SQLException {
         String menu = leerRecurso(con, "Menu.Root");
         if (menu != null && !menu.contains(clase) && menu.contains(ancla)) {
             int fin = menu.indexOf(ancla) + ancla.length();
             int inicioLinea = menu.lastIndexOf('\n', fin) + 1;
             String sangria = sangriaDeLinea(menu, menu.indexOf("group.", inicioLinea));
             menu = menu.substring(0, fin) + "\n" + sangria
-                    + "group.addPanel(\"" + icono + "\", \"" + clave + "\", \"" + clase + "\");"
+                    + "group." + metodo + "(\"" + icono + "\", \"" + clave + "\", \"" + clase + "\");"
                     + menu.substring(fin);
             guardarRecurso(con, "Menu.Root", menu);
             LOG.info("Menu.Root: agregado " + clave);
         }
         String permiso = "<class name=\"" + clase + "\"/>";
-        for (String rol : new String[]{"Administrador", "Gerente"}) {
+        for (String rol : roles) {
             String permisos = leerPermisos(con, rol);
             if (permisos != null && !permisos.contains(permiso) && permisos.contains(ANCLA_PERMISO_VENTAS)) {
                 guardarPermisos(con, rol, permisos.replace(ANCLA_PERMISO_VENTAS, ANCLA_PERMISO_VENTAS + "\n    " + permiso));
