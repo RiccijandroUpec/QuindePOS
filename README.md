@@ -535,7 +535,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - 🟡 Copia de seguridad automática: diaria y local ✅; copia en la nube pendiente
 - ✅ Asistente de configuración (onboarding): negocio, tipo, IVA, usuarios, impresora con prueba, productos y facturación
 - ✅ Instalador para Windows con Java y base de datos incluidos
-- ⬜ Publicar el instalador en GitHub Releases y conectar el botón "Descargar" de la página
+- 🟡 Página actualizada con el instalador y el asistente, y su botón "Descargar para Windows" apunta a la última release; falta publicar el instalador en GitHub Releases
 - ⬜ Firma digital del instalador (para que Windows no muestre "Windows protegió su PC")
 - ⬜ Varias cajas con la base incluida: hoy MariaDB incluido solo acepta conexiones de esa computadora y la clave
   de root es aleatoria (solo queda cifrada en la configuración), así que otra caja no se puede conectar. Plan:
@@ -567,7 +567,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 ## 🔗 Enlaces importantes
 
 - 🌐 Página del proyecto: [quindepos.cyrshop.app](https://quindepos.cyrshop.app/)
-- 📦 Repositorio: [github.com/RiccijandroUpec/EcoPos](https://github.com/RiccijandroUpec/EcoPos)
+- 📦 Repositorio: [github.com/RiccijandroUpec/QuindePOS](https://github.com/RiccijandroUpec/QuindePOS)
 - 🧾 Facturación electrónica: [README del módulo](facturacion-sri/README.md) · [guía de instalación](facturacion-sri/INSTALAR.md)
 - 🏛️ SRI en línea (firma, comprobantes): [srienlinea.sri.gob.ec](https://srienlinea.sri.gob.ec/)
 - 🎨 FlatLaf: [formdev.com/flatlaf](https://www.formdev.com/flatlaf/) · Tabler Icons: [tabler.io/icons](https://tabler.io/icons) · Outfit: [fonts.google.com](https://fonts.google.com/specimen/Outfit)

@@ -17,7 +17,7 @@
         Se compila con Maven y se distribuye como jar propio que Quinde POS
         carga al arrancar (ver build_working.xml, objetivo "sri").
     </description>
-    <url>https://github.com/RiccijandroUpec/EcoPos</url>
+    <url>https://github.com/RiccijandroUpec/QuindePOS</url>
 
     <licenses>
         <license>

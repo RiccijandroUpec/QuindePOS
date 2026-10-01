@@ -13,7 +13,7 @@
 
 Módulo Java **independiente** (Maven, propio jar) que emite facturación
 electrónica ante el **SRI** (Servicio de Rentas Internas del Ecuador) a
-partir de las ventas registradas en [Quinde POS](https://github.com/RiccijandroUpec/EcoPos) (antes EcoPos).
+partir de las ventas registradas en [Quinde POS](https://github.com/RiccijandroUpec/QuindePOS) (antes EcoPos).
 
 > 📦 **Desde el 30/09/2026 este módulo vive dentro del repositorio de Quinde POS**, en la carpeta `facturacion-sri/`
 > (antes era el repositorio aparte `EcoPos_SRI_conector`; se trajo con todo su historial). Se compila desde la
