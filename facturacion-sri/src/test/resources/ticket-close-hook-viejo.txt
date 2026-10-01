@@ -1,0 +1,44 @@
+
+// --- ecopos-sri-connector hook -------------------------------------------
+// Signal that a normal sale just closed by dropping a flag file. This is a
+// DATA-ONLY change to this script resource - no ECOPos .java file is
+// modified. ecopos-sri-connector (a separate process/JVM) watches the
+// "sri-conector/pendientes" folder and, on seeing a new flag file, reads
+// the full ticket from the database itself and takes it from there. If
+// this folder doesn't exist or the write fails for any reason, the sale
+// must never be affected - so every step here is wrapped and swallows
+// its own errors.
+//
+// Whether to invoice is a GLOBAL on/off setting (not per-ticket) controlled
+// via the "Facturar SRI: SI/NO" buttons in the ticket screen
+// (script.SriInvoiceOn.txt / script.SriInvoiceOff.txt), which write directly
+// to sri-conector/facturacion-global.properties (key "activo") - it applies
+// to every sale from the moment it's pressed until someone presses the
+// other button, no per-ticket exception. Default is OFF (no invoice) if
+// that file doesn't exist yet (nobody has pressed either button since
+// install). The ticket always prints normally regardless of this setting,
+// since printing happens through a completely separate flow.
+try {
+    boolean facturarSri = false;
+    java.io.File dirname = new java.io.File(System.getProperty("dirname.path", "./"));
+    java.io.File archivoEstadoGlobal = new java.io.File(dirname, "sri-conector/facturacion-global.properties");
+    if (archivoEstadoGlobal.exists()) {
+        java.util.Properties estadoGlobal = new java.util.Properties();
+        java.io.FileReader lectorEstado = new java.io.FileReader(archivoEstadoGlobal);
+        estadoGlobal.load(lectorEstado);
+        lectorEstado.close();
+        facturarSri = "true".equals(estadoGlobal.getProperty("activo", "false"));
+    }
+    if (facturarSri && ticket.getTicketType() == com.openbravo.pos.ticket.TicketInfo.RECEIPT_NORMAL) {
+        java.io.File pendientes = new java.io.File(dirname, "sri-conector/pendientes");
+        pendientes.mkdirs();
+        java.io.File flag = new java.io.File(pendientes, ticket.getId() + ".flag");
+        java.io.FileWriter fw = new java.io.FileWriter(flag);
+        fw.write(String.valueOf(System.currentTimeMillis()));
+        fw.close();
+    }
+} catch (Exception eSri) {
+    // Never let a problem here interrupt the till - just leave no flag
+    // file, ecopos-sri-connector's own reconciliation pass can catch up
+    // later by comparing TICKETS against ecopos_sri_comprobantes.
+}
