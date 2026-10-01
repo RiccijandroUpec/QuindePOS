@@ -21,6 +21,9 @@
     <!-- read in property files -->
     <property file="build.properties" />
     <property name="src.pos" value="${basedir}/src-pos"/>
+    <!-- Modulo de facturacion electronica (Maven). De aqui solo se toma la interfaz
+         compartida com.openbravo.pos.sri.EcoPosSriBridge: un unico archivo para los dos. -->
+    <property name="src.puente" value="${basedir}/facturacion-sri/src/main/java"/>
     <property name="src.data" value="${basedir}/src-data"/>
     <property name="src.beans" value="${basedir}/src-beans"/>
     <property name="reports" value="${basedir}/reports"/>
@@ -86,7 +89,7 @@
                 </fileset>
             </classpath>
             <compilerarg value="-sourcepath"/>
-            <compilerarg path="${src.beans}${path.separator}${src.data}${path.separator}${src.pos}"/>
+            <compilerarg path="${src.beans}${path.separator}${src.data}${path.separator}${src.pos}${path.separator}${src.puente}"/>
         </javac>
         <copy todir="${dest.classes}/beans">
             <fileset dir="${src.beans}">
@@ -115,7 +118,7 @@
                 <pathelement location="${dest.classes}/beans"/>
             </classpath>
             <compilerarg value="-sourcepath"/>
-            <compilerarg path="${src.beans}${path.separator}${src.data}${path.separator}${src.pos}"/>
+            <compilerarg path="${src.beans}${path.separator}${src.data}${path.separator}${src.pos}${path.separator}${src.puente}"/>
 		</javac>
         <copy todir="${dest.classes}/data">
             <fileset dir="${src.data}">
@@ -131,6 +134,7 @@
     <target name="compilepos" depends="init.classes,compilebeans,compiledata">
         <mkdir dir="${dest.classes}/pos" />
         <javac srcdir="${src.pos}"
+               sourcepath="${src.pos}${path.separator}${src.puente}"
                destdir="${dest.classes}/pos"
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
@@ -173,14 +177,37 @@
              compress="true"
              basedir="${basedir}/build/zip">
             <manifest>
-                <attribute name="Implementation-Vendor" value="EcoPos"/>
-                <attribute name="Implementation-Title" value="EcoPos (fork of uniCenta oPOS)"/>
+                <attribute name="Implementation-Vendor" value="Quinde POS"/>
+                <attribute name="Implementation-Title" value="Quinde POS"/>
                 <attribute name="Implementation-Version" value="${version}"/>
                 <attribute name="Main-Class" value="com.openbravo.pos.forms.StartPOS" />
     	    </manifest>
         </jar>
         <delete dir="${basedir}/build/zip" />
     </target>
+
+    <!-- ================================================================= -->
+    <!-- F A C T U R A C I O N   E L E C T R O N I C A   (modulo Maven)    -->
+    <!-- ================================================================= -->
+
+    <!-- Maven: "mvn.cmd" en Windows, "mvn" en Linux/macOS; se puede cambiar con -Dmvn=/ruta/a/mvn.
+         -Dmvn.opciones="-o" compila sin internet (con las dependencias ya descargadas). -->
+    <condition property="mvn" value="mvn.cmd" else="mvn">
+        <os family="windows"/>
+    </condition>
+    <property name="mvn.opciones" value=""/>
+
+    <target name="sri" description="Compila el modulo de facturacion electronica (con sus tests) y lo deja en sri-conector/.">
+        <exec executable="${mvn}" dir="${basedir}/facturacion-sri" failonerror="true">
+            <arg line="-q ${mvn.opciones} package"/>
+        </exec>
+        <mkdir dir="${basedir}/sri-conector"/>
+        <copy file="${basedir}/facturacion-sri/target/ecopos-sri-connector.jar"
+              todir="${basedir}/sri-conector" overwrite="true"/>
+        <echo message="Modulo de facturacion listo en sri-conector/ecopos-sri-connector.jar"/>
+    </target>
+
+    <target name="todo" depends="jar,sri" description="Compila Quinde POS y el modulo de facturacion electronica."/>
 
     <!-- ================================================================= -->
     <!-- T E S T                                                           -->
