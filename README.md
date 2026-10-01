@@ -537,7 +537,18 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ✅ Instalador para Windows con Java y base de datos incluidos
 - ⬜ Publicar el instalador en GitHub Releases y conectar el botón "Descargar" de la página
 - ⬜ Firma digital del instalador (para que Windows no muestre "Windows protegió su PC")
-- ⬜ Base incluida compartida por varias cajas en red (hoy MariaDB incluido solo acepta conexiones de esa computadora)
+- ⬜ Varias cajas con la base incluida: hoy MariaDB incluido solo acepta conexiones de esa computadora y la clave
+  de root es aleatoria (solo queda cifrada en la configuración), así que otra caja no se puede conectar. Plan:
+  - En la caja principal, **Sistema → Conectar otra caja** (solo Administrador): crea un usuario `quinde_caja` con
+    permisos solo sobre la base `quindepos` y una clave que se muestra en pantalla (sin compartir root).
+  - Abre MariaDB a la red local: `bind-address` y una regla del Firewall de Windows solo para el puerto 3310 y solo
+    para la red privada (pide permisos de administrador y reinicia el servicio).
+  - Muestra los datos para la otra caja (IP, puerto, usuario, clave) con botón para copiarlos, más "Cambiar clave" y
+    "Dejar de compartir".
+  - En la otra caja: el mismo instalador con "Conectarme a un servidor que ya tengo"; el asistente no vuelve a pedir
+    el negocio ni los productos.
+  - Decidir cómo factura cada caja: la firma (.p12) y la configuración del SRI hoy viven en la carpeta del programa
+    de cada caja (copiarlas o moverlas a la base compartida).
 - ⬜ Instalador para Linux y macOS
 - ✅ Ticket impreso con la marca y datos del negocio, en español
 - ✅ Cierre de caja (Z), corte parcial (X) y comanda de cocina en español, con arqueo y firmas
