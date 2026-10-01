@@ -20,45 +20,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 // **************************************************************************
- 
- import com.openbravo.pos.forms.DataLogicSales;
- import com.openbravo.pos.forms.DataLogicSystem;
- import com.openbravo.data.loader.Session;
- import java.util.Properties;
- 
- Session session = new Session(dbURL, dbUser, dbPassword);
- DataLogicSales logicsale = new DataLogicSales();
- logicsale.init(session);
- DataLogicSystem logicsystem = new DataLogicSystem();
- logicsystem.init(session);
- Properties p = logicsystem.getResourceAsProperties(hostname + "/properties");
- String loc = p.getProperty("location");
- 
- product = line.getProductID();
- isserv = line.isProductService();
- units = logicsale.findProductStock(loc,product,null);
- multiply = 0;
- index = sales.getSelectedIndex();
- 
-  if (line.isProductService() == true) {
-	javax.swing.JOptionPane.showMessageDialog(null, "Es un servicio: no se controla el stock.");
-  } else {
-
-	 if (index != -1) {
-	     currentrow = ticket.getLine(index);
-	     multiply = multiply - currentrow.getMultiply();
-	 }
-	 for (int i= 0; i < ticket.getLinesCount(); i++) {
-	     row = ticket.getLine(i);
-	     if (row.getProductID() == product) {
-	        multiply = multiply + row.getMultiply();
-	     }
-	 }
-	 diff = units - line.getMultiply() - multiply;
-	 if (diff < 0.0) {
-	    javax.swing.JOptionPane.showMessageDialog(null, "No hay stock suficiente en el almacén " + loc + ". Registra la entrada en Inventario.", "Stock", JOptionPane.WARNING_MESSAGE);
-	    return "Cancel";
-	 } else {
-	         return null;
-	 }
- }
+// Quinde POS - Control de stock al cambiar la cantidad de una linea
+// (activalo en Ticket.Buttons con <event key="ticket.setline" code="script.StockCurrentSet"/>)
+return com.openbravo.pos.sales.ControlStock.revisar(sales.getApp(), ticket, line, sales.getSelectedIndex());

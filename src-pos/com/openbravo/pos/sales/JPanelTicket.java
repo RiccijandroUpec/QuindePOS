@@ -1900,6 +1900,11 @@ if (pickupSize!=null && (Integer.parseInt(pickupSize) >= tmpPickupId.length())){
          *
          * @return
          */
+        /** La app (sesion, almacen, propiedades), para los ayudantes de los scripts. */
+        public com.openbravo.pos.forms.AppView getApp() {
+            return m_App;
+        }
+
         public int getSelectedIndex() {
             return selectedindex;
         }

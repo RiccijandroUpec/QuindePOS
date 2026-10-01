@@ -282,6 +282,14 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase S — Scripts de la venta modernos y corregidos (2026-09-30)
+- **Aviso de cambio** (al terminar una venta en efectivo): ahora es un recuadro con el cambio en grande y en verde, más lo recibido y el total. **Suma todos los pagos en efectivo** (también en un pago dividido), **no aparece si el pago fue exacto**, se cierra solo a los 8 segundos o con un toque, y **no le quita el foco a la venta siguiente**, así el lector de códigos sigue funcionando. Antes usaba Arial fija, salía en cada venta aunque no hubiera cambio, solo miraba el primer pago y se abría desde un hilo aparte, lo que podía dejarlo detrás o trabar la pantalla.
+- **Descuentos (toda la venta y por línea)**: si no escribiste el porcentaje, lo pregunta (antes solo hacía "bip"). Se calcula sobre el precio de lista, así que **aplicarlo dos veces no lo acumula** y 0 % lo quita. **Convive con las promociones** (2x1 y luego 10 %, sin perderse al recalcular). Ya **no cambia el nombre del producto** ("Café - 10%"), que es el que va en la factura del SRI, y no borra las notas de la línea.
+- **Control de stock** (opcional): antes abría una conexión nueva a la base por cada producto y nunca la cerraba; ahora usa la de la app, compara bien los productos y dice cuánto hay disponible. No avisa por los servicios.
+- **Aviso antes de cobrar con pedidos sin enviar a cocina** (opcional): estaba roto (usaba una variable inexistente y bloqueaba siempre el cobro); corregido.
+- Nota de la línea, mesero y envío a cocina con ventanas que salen sobre la app y con su tema. Se quitó un comentario de los viejos botones "Facturar SRI".
+- Las bases existentes reciben los scripts nuevos solo si tenían una versión de fábrica (se reconoce por su huella), así nada personalizado se pisa. Nuevas pruebas automáticas del descuento con promociones.
+
 ### Fase R — Correo con diseño (2026-09-30)
 - El correo con la factura o la nota de crédito ahora tiene **diseño**: encabezado verde con el **logo y el nombre del negocio**, saludo al cliente, un recuadro con número, fecha, total y número de autorización, y un botón **"Consultar en el SRI"**. Se ve bien en el celular.
 - Lleva también la versión en **texto plano** para los programas de correo que no muestran diseño, y el PDF y el XML adjuntos como antes.
@@ -457,6 +465,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ✅ Reportes con el estilo de la marca, el negocio y el logo, en español
 - ✅ Abono a cuenta, inventario, visor de cliente, scripts de la venta y billetes en español y dólares
 - ✅ Correo al cliente con diseño, logo del negocio y botón para consultar en el SRI
+- ✅ Scripts de la venta modernos: aviso de cambio, descuentos que conviven con promociones, control de stock sin fugas de conexiones
 - ⬜ Ticket en formato A4 todavía con textos de la plantilla original
 - ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS y crear un sitio o página del proyecto

@@ -20,21 +20,16 @@
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 // **************************************************************************
+// Quinde POS - Antes de cobrar: avisa si hay productos de cocina sin enviar
+// (activalo en Ticket.Buttons con <event key="ticket.total" code="script.Event.Total"/>)
+import com.openbravo.pos.sales.Dialogos;
 
-
-for(int i= 0; i < ticket.getLinesCount(); i++){
-	line = ticket.getLine(i);
-	if ($ticketline.isProductKitchen()){
-		line.setProperty("sendstatus", "No");
-	}
-	if(line.getProperty("sendstatus").equals("No")){
-		mySent = "No";
-	}
+for (int i = 0; i < ticket.getLinesCount(); i++) {
+    line = ticket.getLine(i);
+    estado = line.getProperty("sendstatus");
+    if (line.isProductKitchen() && (estado == null || "No".equals(estado))) {
+        Dialogos.advertencia("Pedido sin enviar", "Hay productos que todavia no se enviaron a cocina.\nEnvialos antes de cobrar.");
+        return "Cancel";
+    }
 }
-
-if (mySent == "No"){
-	javax.swing.JOptionPane.showMessageDialog(null, "Antes de cobrar, envía el pedido a cocina.", "Pedido sin enviar", JOptionPane.WARNING_MESSAGE);
-	return "Cancel";
-}else{
-	return null;
-}
+return null;
