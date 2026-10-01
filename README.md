@@ -281,6 +281,12 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase N — Cierre de caja, corte parcial y comanda de cocina en español (2026-09-30)
+- **Cierre de caja (Z)** impreso con el logo y los datos del negocio: caja, equipo, desde/hasta, cajero y hora de impresión; resumen de ventas con **TOTAL VENDIDO**, impuestos por tarifa (base, IVA y total), formas de pago, aperturas de cajón sin venta, ventas por categoría, líneas eliminadas (si las hubo) y **el arqueo**: billetes y monedas contados, fondo + efectivo esperado = lo que debería haber, lo contado y si la caja **cuadra, sobra o falta** (con el monto en grande). Al final, líneas para la firma del cajero y del supervisor.
+- **Corte parcial (X)**: el mismo resumen con la caja abierta, más las ventas por producto.
+- **Comanda de cocina**: letra grande, **mesa** destacada, pedido, hora, mesero y cliente; cada plato en negrita con su cantidad y las **notas de la línea** ("sin sal…") debajo. Las notas con caracteres como "&" ya no rompen la impresión.
+- Las instalaciones existentes se actualizan solas al abrir la app, solo si esas plantillas seguían siendo las de fábrica.
+
 ### Fase M — Un solo repositorio para Quinde POS y la facturación electrónica (2026-09-30)
 - El módulo de facturación electrónica (antes el repositorio aparte `EcoPos_SRI_conector`) ahora está en la carpeta [facturacion-sri/](facturacion-sri/), **con todo su historial**. Sigue siendo un jar aparte: sus librerías (firma, SOAP, PDF) no se mezclan con las del POS y un negocio que no factura puede usar el POS sin él.
 - La interfaz entre el POS y el módulo es **un solo archivo** (antes había dos copias que había que mantener iguales a mano).
@@ -418,6 +424,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - 🟡 Copia de seguridad automática: diaria y local ✅; copia en la nube pendiente
 - 🟡 Configuración de facturación en una sola pantalla con verificación ✅; asistente de primera configuración para el resto (negocio, impresora, impuestos) pendiente
 - ✅ Ticket impreso con la marca y datos del negocio, en español
+- ✅ Cierre de caja (Z), corte parcial (X) y comanda de cocina en español, con arqueo y firmas
 - ⬜ Ticket en formato A4 y reportes JasperReports todavía con textos de la plantilla original
 - ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS y crear un sitio o página del proyecto
