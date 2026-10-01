@@ -17,3 +17,14 @@ Después de cambiar una plantilla, recompila con `ant -f build_working.xml jar`;
 reciben los cambios al abrir la app (ver `ActualizacionesEcoPos`).
 
 La imagen de la paleta y los billetes/monedas se generan desde `branding/` (`GenerarPaleta.java`, `generar_dinero.py`).
+
+## Instalador de Windows (`instalador/`)
+
+| Archivo | Qué hace |
+|---|---|
+| `instalador/quinde.iss` | Script de Inno Setup: Java incluido, base de datos MariaDB incluida o un servidor existente, accesos directos, actualización y desinstalación |
+| `instalador/jars.txt` | Jars de `lib/` que se instalan (los mismos de `start.bat`) |
+| `instalador/generar_imagenes.py` | Imágenes del instalador con la marca, en todas las escalas de Windows |
+
+Se arma con `ant -f build_working.xml instalador` (ver el README principal). La base la prepara
+`com.openbravo.pos.instalacion.ConfigurarBase`, que el instalador ejecuta con el Java incluido.
