@@ -191,12 +191,11 @@ public final class AccionesComprobante {
                     byte[] pdf = generarRide(fila);
                     ConfiguracionCorreo config = ConfiguracionCorreoLoader.cargar(rutaCorreo());
                     String xmlAutorizado = xml.get().masReciente();
+                    byte[] logo = NotificadorCorreo.logoDelNegocio();
                     com.openbravo.pos.sri.correo.MensajeComprobante mensaje = com.openbravo.pos.sri.correo.MensajeComprobante
-                            .armar(fila.tipo == TipoComprobante.NOTA_CREDITO, xmlAutorizado);
-                    new NotificadorCorreo(config).enviarComprobante(destinatario,
-                            mensaje.asunto, mensaje.cuerpo,
-                            mensaje.archivoXml, xmlAutorizado.getBytes(StandardCharsets.UTF_8),
-                            mensaje.archivoPdf, pdf);
+                            .armar(fila.tipo == TipoComprobante.NOTA_CREDITO, xmlAutorizado, logo != null);
+                    new NotificadorCorreo(config).enviarComprobante(destinatario, mensaje,
+                            xmlAutorizado.getBytes(StandardCharsets.UTF_8), pdf, logo);
                 } catch (Exception e) {
                     error = e;
                 }

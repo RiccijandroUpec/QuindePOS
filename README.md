@@ -31,9 +31,9 @@ Licenciado bajo [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html).
 | **Menú y búsqueda de productos** | **Panel del negocio** |
 | ![Menú y búsqueda](docs/capturas/menu-y-busqueda.png) | ![Panel del negocio](docs/capturas/panel-del-negocio.png) |
 
-| Ticket impreso con la factura | Factura en PDF (RIDE) que recibe el cliente |
-|---|---|
-| <img src="docs/capturas/ticket-factura.png" alt="Ticket con factura" width="300"> | <img src="docs/capturas/factura-pdf.png" alt="Factura en PDF" width="520"> |
+| Ticket impreso con la factura | Factura en PDF (RIDE) que recibe el cliente | Correo al cliente |
+|---|---|---|
+| <img src="docs/capturas/ticket-factura.png" alt="Ticket con factura" width="230"> | <img src="docs/capturas/factura-pdf.png" alt="Factura en PDF" width="400"> | <img src="docs/capturas/correo-factura.png" alt="Correo con la factura" width="300"> |
 
 > Las capturas usan un negocio y clientes **de ejemplo** (Cafetería El Quinde, María Pérez); no son datos reales.
 
@@ -282,6 +282,11 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase R — Correo con diseño (2026-09-30)
+- El correo con la factura o la nota de crédito ahora tiene **diseño**: encabezado verde con el **logo y el nombre del negocio**, saludo al cliente, un recuadro con número, fecha, total y número de autorización, y un botón **"Consultar en el SRI"**. Se ve bien en el celular.
+- Lleva también la versión en **texto plano** para los programas de correo que no muestran diseño, y el PDF y el XML adjuntos como antes.
+- El total usa la misma coma decimal que el PDF ($13,92).
+
 ### Fase Q — Todos los recursos en español y billetes en dólares (2026-09-30)
 - **Abono a cuenta** (cuando un cliente paga su deuda) con el formato nuevo: negocio, cliente con cédula/RUC, monto del abono en grande, **saldo pendiente** y forma de pago.
 - **Movimiento de inventario** impreso como "ENTRADA / SALIDA DE INVENTARIO", con fecha, motivo, almacén, productos y líneas para firma de quien entrega y quien recibe.
@@ -451,6 +456,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ✅ Cierre de caja (Z), corte parcial (X) y comanda de cocina en español, con arqueo y firmas
 - ✅ Reportes con el estilo de la marca, el negocio y el logo, en español
 - ✅ Abono a cuenta, inventario, visor de cliente, scripts de la venta y billetes en español y dólares
+- ✅ Correo al cliente con diseño, logo del negocio y botón para consultar en el SRI
 - ⬜ Ticket en formato A4 todavía con textos de la plantilla original
 - ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS y crear un sitio o página del proyecto

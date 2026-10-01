@@ -272,12 +272,11 @@ public final class ConectorPrincipal {
         try {
             byte[] pdf = RideGenerator.generar(comprobante.getXmlRespuestaSri(), comprobante.getFechaAutorizacion());
             ConfiguracionCorreo configuracionCorreo = ConfiguracionCorreoLoader.cargar(archivoCorreo);
-            com.openbravo.pos.sri.correo.MensajeComprobante mensaje =
-                    com.openbravo.pos.sri.correo.MensajeComprobante.armar(false, comprobante.getXmlRespuestaSri());
-            new NotificadorCorreo(configuracionCorreo).enviarComprobante(destinatario,
-                    mensaje.asunto, mensaje.cuerpo,
-                    mensaje.archivoXml, comprobante.getXmlRespuestaSri().getBytes(StandardCharsets.UTF_8),
-                    mensaje.archivoPdf, pdf);
+            byte[] logo = NotificadorCorreo.logoDelNegocio();
+            com.openbravo.pos.sri.correo.MensajeComprobante mensaje = com.openbravo.pos.sri.correo.MensajeComprobante
+                    .armar(false, comprobante.getXmlRespuestaSri(), logo != null);
+            new NotificadorCorreo(configuracionCorreo).enviarComprobante(destinatario, mensaje,
+                    comprobante.getXmlRespuestaSri().getBytes(StandardCharsets.UTF_8), pdf, logo);
             LOG.info("Correo enviado automaticamente a {} para el comprobante {}", destinatario, comprobante.getId());
         } catch (Exception e) {
             LOG.warn("No se pudo enviar automaticamente el correo del comprobante {} a {}", comprobante.getId(), destinatario, e);
