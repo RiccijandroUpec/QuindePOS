@@ -23,19 +23,15 @@
     <ticket>
         <image>Printer.Ticket.Logo</image>
         <line>
-            <text align="center" length="42">N.I.F. 00.000.000 X</text>
+            <text align="center" length="42">${product.printCode()}</text>
         </line>
         <line size="1">
             <text align ="center" length="42" bold="true">${product.printName()}</text>
         </line>
         <line></line>
         <line size="3">
-            <text>Eur.</text>
+            <text>$</text>
             <text align ="right" length="6">${product.printPriceEur()}</text>
-        </line>
-        <line size="2">
-            <text>Pts.</text>
-            <text align ="right" length="6">${product.printPricePts()}</text>
         </line>
         <barcode type="EAN13">${product.printCode()}</barcode>        
     </ticket>

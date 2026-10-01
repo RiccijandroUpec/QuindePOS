@@ -43,6 +43,8 @@ public final class ActualizacionesEcoPos {
             integrarFacturacionElectronica(con);
             renombrarAQuinde(con);
             ticketQuinde(con);
+            scriptsEnEspanol(con);
+            billetesEnDolares(con);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudieron aplicar las actualizaciones de EcoPos", e);
         }
@@ -177,6 +179,15 @@ public final class ActualizacionesEcoPos {
             {"Printer.CloseCash", "Close Cash Report"},
             {"Printer.PartialCash", "Partial Cash Report"},
             {"Printer.TicketKitchen", "Kitchen Order"},
+            {"Printer.CustomerPaid", "Account Balance"},
+            {"Printer.CustomerPaid2", "Total Paid"},
+            {"Printer.Inventory", "Inventory Record"},
+            {"Printer.Start", "Point Of Sale"},
+            {"Printer.TicketTotal", "Thank You"},
+            {"Printer.TicketClose", "Tendered:"},
+            {"Printer.Product", "Pts."},
+            {"Printer.TicketNew", "Please Call Again"},
+            {"Printer.FiscalTicket", "Mag card"},
         };
         for (String[] p : plantillas) {
             String actual = leerRecurso(con, p[0]);
@@ -207,6 +218,74 @@ public final class ActualizacionesEcoPos {
             } catch (java.io.IOException e) {
                 LOG.log(Level.WARNING, "No se pudo revisar el logo del ticket", e);
             }
+        }
+    }
+
+    /**
+     * Mensajes de los scripts de la venta en espanol. Solo se cambian las frases
+     * (no el script entero), asi se respeta lo que el negocio haya personalizado.
+     */
+    private static void scriptsEnEspanol(Connection con) throws SQLException {
+        String[][] frases = {
+            {"script.AddLineNote", "showInputDialog(\"Line notes\"", "showInputDialog(\"Nota para esta l\u00EDnea (por ejemplo: sin sal)\""},
+            {"script.Event.Total", "\"Before closing ticket: Please Send Order to Remote Printer\", \"Send Check\"", "\"Antes de cobrar, env\u00EDa el pedido a cocina.\", \"Pedido sin enviar\""},
+            {"script.SendOrder", "showMessageDialog(null, \"Order sent to Kitchen\")", "showMessageDialog(null, \"Pedido enviado a cocina\")"},
+            {"script.SendOrder", "\"Nothing to Send\", \"Warning\"", "\"No hay nada nuevo para enviar a cocina\", \"Cocina\""},
+            {"script.SetPerson", "showInputDialog(\"Enter Waiter\"", "showInputDialog(\"Mesero\""},
+            {"script.StockCurrentAdd", "\"This is a Service and Stock Level is not checked\", \"Stock Check\"", "\"Es un servicio: no se controla el stock.\", \"Stock\""},
+            {"script.StockCurrentAdd", "\"Not enough stock at this Location \" + loc + \" - Use Stock Diary to Add Stock to Inventory\", \"Stock Check\"", "\"No hay stock suficiente en el almac\u00E9n \" + loc + \". Registra la entrada en Inventario.\", \"Stock\""},
+            {"script.StockCurrentSet", "showMessageDialog(null, \"This is a Service and Stock Level is not checked\")", "showMessageDialog(null, \"Es un servicio: no se controla el stock.\")"},
+            {"script.StockCurrentSet", "\"Not enough stock at this Location \" + loc + \" - Please use Stock Diary to Add Stock to Inventory\", \"Stock\"", "\"No hay stock suficiente en el almac\u00E9n \" + loc + \". Registra la entrada en Inventario.\", \"Stock\""},
+            {"script.linediscount", "\"Line Discount \" + sdiscount", "\"Descuento \" + sdiscount"},
+            {"script.ServiceCharge", "\"Service @  \" + scval + \" of \" + taxline.printSubTotal()", "\"Servicio \" + scval + \" de \" + taxline.printSubTotal()"},
+        };
+        for (String[] f : frases) {
+            String actual = leerRecurso(con, f[0]);
+            if (actual != null && actual.contains(f[1])) {
+                guardarRecurso(con, f[0], actual.replace(f[1], f[2]));
+                LOG.info(f[0] + ": mensajes en espanol");
+            }
+        }
+    }
+
+    /**
+     * Imagenes de billetes y monedas del cobro (temas clasicos): las originales eran libras
+     * esterlinas. Se cambian por las de dolar solo si siguen siendo exactamente las originales.
+     */
+    private static void billetesEnDolares(Connection con) throws SQLException {
+        String[][] originales = {
+            {"note.50", "35c92c079deebe07c1a91aeb6e92bbdc5614cce1a2e58e6c0713e8b3e89799e3"},
+            {"note.20", "afb5999be9104a9dbe852ae3f2408e827f6b78db34c0480f90f56229583c45ff"},
+            {"note.10", "1c0aa7359c74b36d205291e7ce47f6586c93eb59c3ee74330ba599c98c34f8f2"},
+            {"note.5", "e3a88224282c9ec75becc5d198bb3365cf34c49a19f06b082c9f1125cf4a3c14"},
+            {"coin.1", "6202342d837bbfd38b65a446eb46fe68b4091b49a9538ca821b11fcb1afa107e"},
+            {"coin.50", "2ec2e0eac328f70cd07d7e787637252a9cd07141b75e9c3ca2ed722eb1c3b931"},
+            {"coin.20", "ecbc9700ec364b29db9b19310aac7989b0eb794a8d3ec7cd865dd76e5b529bdf"},
+            {"coin.10", "3b906152da54dbda7997f944de31fe83bad8b21e5c2e29d76336328097543a7f"},
+            {"coin.05", "fa29de2c474bb2f2ceb94c408ca1e76fa502219e979799056b6abef69ddd4105"},
+            {"coin.01", "bf3e2058501cae81aaa00c14c812b1cd6cc1b44d2b1ac5986ff047c971a35e63"},
+        };
+        for (String[] o : originales) {
+            byte[] actual = leerRecursoBytes(con, o[0]);
+            if (actual != null && o[1].equals(sha256(actual))) {
+                byte[] nuevo = leerClasspath("/com/openbravo/pos/templates/" + o[0] + ".png");
+                if (nuevo != null) {
+                    guardarRecursoBytes(con, o[0], nuevo);
+                    LOG.info(o[0] + ": imagen en dolares");
+                }
+            }
+        }
+    }
+
+    private static String sha256(byte[] datos) {
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (byte b : java.security.MessageDigest.getInstance("SHA-256").digest(datos)) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+            return "";
         }
     }
 

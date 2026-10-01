@@ -175,6 +175,7 @@ flowchart LR
 | `src-data/` | Capa de acceso a datos (`com.openbravo.data.*`) |
 | `facturacion-sri/` | Módulo de facturación electrónica SRI (Maven, Java 11): factura, nota de crédito, firma, RIDE y correo — ver su [README](facturacion-sri/README.md) y la [guía de instalación](facturacion-sri/INSTALAR.md) |
 | `branding/` | Logo (SVG, PNG, ICO), paleta, tipografía y los generadores de las imágenes de la marca |
+| `herramientas/` | Scripts que generan las plantillas del ticket, del cierre de caja y el estilo de los reportes |
 | `docs/capturas/` | Capturas de pantalla de este README |
 | `lib/` | Dependencias de terceros (`.jar`) incluidas en el repo |
 | `locales/` | Traducciones de la interfaz |
@@ -280,6 +281,16 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 ## 🆕 Mejoras recientes
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
+
+### Fase Q — Todos los recursos en español y billetes en dólares (2026-09-30)
+- **Abono a cuenta** (cuando un cliente paga su deuda) con el formato nuevo: negocio, cliente con cédula/RUC, monto del abono en grande, **saldo pendiente** y forma de pago.
+- **Movimiento de inventario** impreso como "ENTRADA / SALIDA DE INVENTARIO", con fecha, motivo, almacén, productos y líneas para firma de quien entrega y quien recibe.
+- **Visor de cliente** en español (bienvenida con "Quinde POS", total, recibido y cambio, "Gracias", "Siguiente cliente").
+- Etiqueta de producto en dólares (tenía euros y pesetas); el ticket alternativo y el fiscal traducidos.
+- **Mensajes de los botones de la venta en español**: nota de la línea ("Nota para esta línea"), enviar a cocina ("Pedido enviado a cocina" / "No hay nada nuevo para enviar"), mesero, descuento de línea, cargo por servicio y avisos de stock.
+- **Billetes y monedas de dólar** para los temas clásicos (antes eran libras esterlinas), dibujados con la tipografía de la marca.
+- Las bases existentes se actualizan solas: las plantillas se reemplazan solo si seguían siendo las de fábrica, en los scripts se cambian únicamente las frases y las imágenes solo si eran exactamente las originales.
+- Los generadores de plantillas y reportes quedan en [herramientas/](herramientas/) para volver a generarlos cuando haga falta.
 
 ### Fase P — Reportes con el estilo de Quinde POS (2026-09-30)
 - Los **47 reportes** (ventas, impuestos, pagos, cierres, inventario, clientes…) ahora llevan arriba el **nombre y RUC del negocio** y su **logo** (el de *Facturación electrónica*), títulos y líneas en la paleta Selva en vez del celeste anterior, hora en formato 24 h ("30/09/2026 23:05") y "Quinde POS" en el pie.
@@ -439,6 +450,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ✅ Ticket impreso con la marca y datos del negocio, en español
 - ✅ Cierre de caja (Z), corte parcial (X) y comanda de cocina en español, con arqueo y firmas
 - ✅ Reportes con el estilo de la marca, el negocio y el logo, en español
+- ✅ Abono a cuenta, inventario, visor de cliente, scripts de la venta y billetes en español y dólares
 - ⬜ Ticket en formato A4 todavía con textos de la plantilla original
 - ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS y crear un sitio o página del proyecto

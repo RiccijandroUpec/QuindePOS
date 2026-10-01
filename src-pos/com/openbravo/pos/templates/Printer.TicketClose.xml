@@ -22,17 +22,12 @@
     This displays amount tendered and change on customer display
 
  -->
-<output>   
-    <display>
-    #foreach ($paymentline in $ticket.payments)
-            <line>
-              <text align="left" length="10">Tendered:</text>
-              <text align ="right" length="10">${paymentline.printPaid()}</text>
-            </line>
-            <line>
-              <text align="left" length="10">Change:</text>
-              <text align ="right" length="10">${paymentline.printChange()}</text>
-            </line>
-    #end
-    </display>
+
+<output>
+<display>
+#foreach ($paymentline in $ticket.payments)
+	<line><text align="left" length="10">Recibido:</text><text align="right" length="10">${paymentline.printPaid()}</text></line>
+	<line><text align="left" length="10">Cambio:</text><text align="right" length="10">${paymentline.printChange()}</text></line>
+#end
+</display>
 </output>

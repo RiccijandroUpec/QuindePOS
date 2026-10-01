@@ -39,7 +39,7 @@ units = logicsale.findProductStock(loc,product,null);
 multiply = 0;
  
 if (line.isProductService() == true) {
-    javax.swing.JOptionPane.showMessageDialog(null, "This is a Service and Stock Level is not checked", "Stock Check", JOptionPane.WARNING_MESSAGE);
+    javax.swing.JOptionPane.showMessageDialog(null, "Es un servicio: no se controla el stock.", "Stock", JOptionPane.WARNING_MESSAGE);
 } else {
     
     for (int i= 0; i < ticket.getLinesCount(); i++) {
@@ -50,7 +50,7 @@ if (line.isProductService() == true) {
     }
     diff = units - line.getMultiply() - multiply;
         if (diff < 0.0) {
-            javax.swing.JOptionPane.showMessageDialog(null, "Not enough stock at this Location " + loc + " - Use Stock Diary to Add Stock to Inventory", "Stock Check", JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(null, "No hay stock suficiente en el almacén " + loc + ". Registra la entrada en Inventario.", "Stock", JOptionPane.WARNING_MESSAGE);
 	    return "Cancel";
 	 } else {
 	    return null;

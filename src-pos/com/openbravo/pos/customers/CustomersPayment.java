@@ -234,6 +234,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
                 script.put("ticket", ticket);
                 script.put("customer", customer);
+                script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
                 ttp.printTicket(script.eval(resource).toString());
 // JG 6 May use multicatch
             } catch (    ScriptException | TicketPrinterException e) {

@@ -37,7 +37,7 @@ if (index >= 0) {
         sdiscount = Formats.PERCENT.formatValue(discountrate);
         ticket.insertLine(index + 1,
             new TicketLineInfo(
-                    "Line Discount " + sdiscount,
+                    "Descuento " + sdiscount,
                     line.getProductTaxCategoryID(),
                     line.getMultiply(),
                     -(double)((line.getPriceTax() * discountrate * 100) / (1+line.getTaxRate()))/100,

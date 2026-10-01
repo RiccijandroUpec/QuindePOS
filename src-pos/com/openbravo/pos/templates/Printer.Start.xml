@@ -21,17 +21,9 @@
  -->
 
 <output>
-<!-- DISPLAY ANIMATION OPTIONS -->
-             <display animation="flyer">
-<!--            <display animation="scroll"> -->
-<!--            <display animation="blink"> -->
-<!--            <display animation="curtain"> -->
-<!--            <display animation="none"> -->
-        <line>
-            <text>EcoPos</text>
-        </line>
-        <line>
-            <text>Point Of Sale</text>
-        </line>
-    </display>
+<!-- Animacion del visor: flyer, scroll, blink, curtain o none -->
+<display animation="flyer">
+	<line><text align="center" length="20">Quinde POS</text></line>
+	<line><text align="center" length="20">Bienvenido</text></line>
+</display>
 </output>

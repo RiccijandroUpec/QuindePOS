@@ -19,14 +19,10 @@
     You should have received a copy of the GNU General Public License
     along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
  -->
-<output>   
-    <display>
-        <line>
-            <text align="left" length="10">Total:</text>
-            <text align="right" length="10">${ticket.printTotal()}</text>
-        </line>
-        <line>
-           <text align="center" length="20">Thank You</text>
-        </line>
-    </display>
+
+<output>
+<display>
+	<line><text align="left" length="10">Total:</text><text align="right" length="10">${ticket.printTotal()}</text></line>
+	<line><text align="center" length="20">Gracias</text></line>
+</display>
 </output>

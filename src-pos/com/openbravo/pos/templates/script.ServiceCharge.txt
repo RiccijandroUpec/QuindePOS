@@ -42,7 +42,7 @@ if (total > 0.0) {
         taxline = taxes[i]; 
         ticket.insertLine(ticket.getLinesCount(),
             new TicketLineInfo(
-                "Service @  " + scval + " of " + taxline.printSubTotal(),  
+                "Servicio " + scval + " de " + taxline.printSubTotal(),  
                 taxline.getTaxInfo().getTaxCategoryID(),         
                 1.0,
                 +taxline.getSubTotal() * scrate,

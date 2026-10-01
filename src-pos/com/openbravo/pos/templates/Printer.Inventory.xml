@@ -19,66 +19,47 @@
     You should have received a copy of the GNU General Public License
     along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
  -->
- 
+
 <output>
-    <ticket>
-        <image>Printer.Ticket.Logo</image>
-        <line></line>
-        <line>
-            <text align="center" length="42">Inventory Record</text>
-        </line>
-        <line>
-            <text align="center" length="42">You can change this template</text>
-        </line>
-        <line>
-            <text align="center" length="42">in the Resources panel</text>
-        </line>
-        <line></line>
-        <line>
-            <text>Date:     ${inventoryrecord.printDate()}</text>
-        </line>
-        <line>
-            <text>Reason:   ${inventoryrecord.printReason()}</text>
-        </line>
-        <line>
-            <text>Location: ${inventoryrecord.printLocation()}</text>
-        </line>
-        <line size="1">
-            #if ($inventoryrecord.isInput())
-            <text align ="center" length="42">In</text>
-            #else
-            <text align ="center" length="42">Out</text>
-            #end
-        </line>
-        <line></line>    
-        <line>
-            <text align ="left" length="17">Item</text>
-            <text align ="right" length="10">Price</text>
-            <text align ="right" length="5"></text>
-            <text align ="right" length="10">Value</text>
-        </line>      
-        <line>
-            <text>------------------------------------------</text>
-        </line>   
-        #foreach ($inventoryline in $inventoryrecord.getLines())
-        <line>
-            <text align ="left" length="17">${inventoryline.printName()}</text>
-            <text align ="right" length="10">${inventoryline.printPrice()}</text>
-            <text align ="right" length="5">x${inventoryline.printMultiply()}</text>
-            <text align ="right" length="10">${inventoryline.printSubValue()}</text>
-        </line> 
-        #if ($inventoryline.productAttSetInstId)
-        <line>
-	        <text align ="left" length="42">    ${inventoryline.productAttSetInstDesc}</text>
-        </line>
-        #end
-        #end
-        <line>
-            <text>------------------------------------------</text>
-        </line>   
-        <line></line>            
-        <line>
-            <text align="center" length="42">Thank You for your custom</text>
-        </line>   
-    </ticket>
+<ticket>
+	<image>Printer.Ticket.Logo</image>
+#if ($negocio && $negocio.configurado)
+	<line></line>
+	<line></line>
+	<line size="1"><text align="center" length="42" bold="true">${negocio.nombre}</text></line>
+	#if ($negocio.ruc != "")
+	<line><text align="center" length="42">RUC: ${negocio.ruc}</text></line>
+	#end
+	#if ($negocio.direccion != "")
+	<line><text align="center" length="42">${negocio.direccion}</text></line>
+	#end
+#end
+	<line></line>
+	<line></line>
+#if ($inventoryrecord.isInput())
+	<line size="1"><text align="center" length="42" bold="true">ENTRADA DE INVENTARIO</text></line>
+#else
+	<line size="1"><text align="center" length="42" bold="true">SALIDA DE INVENTARIO</text></line>
+#end
+	<line></line>
+	<line><text align="left" length="12">Fecha:</text><text>${inventoryrecord.printDate()}</text></line>
+	<line><text align="left" length="12">Motivo:</text><text>${inventoryrecord.printReason()}</text></line>
+	<line><text align="left" length="12">Almacen:</text><text>${inventoryrecord.printLocation()}</text></line>
+	<line></line>
+	<line><text align="left" length="17" bold="true">Producto</text><text align="right" length="10" bold="true">Precio</text><text align="right" length="5" bold="true">Cant</text><text align="right" length="10" bold="true">Valor</text></line>
+	<line><text align="left" length="42">------------------------------------------</text></line>
+#foreach ($inventoryline in $inventoryrecord.getLines())
+	<line><text align="left" length="17">${inventoryline.printName()}</text><text align="right" length="10">${inventoryline.printPrice()}</text><text align="right" length="5">x${inventoryline.printMultiply()}</text><text align="right" length="10">${inventoryline.printSubValue()}</text></line>
+	#if ($inventoryline.productAttSetInstId)
+	<line><text align="left" length="42">    ${inventoryline.productAttSetInstDesc}</text></line>
+	#end
+#end
+	<line><text align="left" length="42">------------------------------------------</text></line>
+	<line></line>
+	<line></line>
+	<line><text align="left" length="20">____________________</text><text align="left" length="2"></text><text align="left" length="20">____________________</text></line>
+	<line><text align="center" length="20">Entrega</text><text align="left" length="2"></text><text align="center" length="20">Recibe</text></line>
+	<line></line>
+	<line><text align="center" length="42">Quinde POS - punto de venta libre</text></line>
+</ticket>
 </output>

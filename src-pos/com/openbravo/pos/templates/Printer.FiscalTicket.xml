@@ -37,25 +37,25 @@
                  <line price="${ticketline.getValue()}" units="${ticketline.getMultiply()}" tax="${vatinfo}">${ticketline.printName()}</line>
              #end
         #end
-        <message>Items count: ${ticket.printArticlesCount()}</message>
+        <message>Articulos: ${ticket.printArticlesCount()}</message>
         #foreach ($paymentline in $ticket.payment)      
          #if ($paymentline.name == "cash")
-            <total paid="${paymentline.getPaid()}">Cash</total>
+            <total paid="${paymentline.getPaid()}">Efectivo</total>
          #end
          #if ($paymentline.name == "cashrefund")
-            <total paid="${paymentline.getTotal()}">Refund</total>  
+            <total paid="${paymentline.getTotal()}">Devolucion</total>  
          #end
          #if ($paymentline.name == "magcard")
-            <total paid="${paymentline.getTotal()}">Mag card</total>  
+            <total paid="${paymentline.getTotal()}">Tarjeta</total>  
          #end  
          #if ($paymentline.name == "magcardrefund")
-            <total paid="${paymentline.getTotal()}">Mag card refund</total>     
+            <total paid="${paymentline.getTotal()}">Devolucion tarjeta</total>     
          #end
          #if ($paymentline.name == "cheque")
             <total paid="${paymentline.getTotal()}">Cheque</total>    
          #end
          #if ($paymentline.name == "chequerefund")
-            <total paid="${paymentline.getTotal()}">Cheque refund</total>    
+            <total paid="${paymentline.getTotal()}">Devolucion cheque</total>    
          #end
         #end 
     </fiscalreceipt>
