@@ -389,6 +389,7 @@ public class StockManagement extends JPanel implements JPanelView {
             try {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
                 script.put("inventoryrecord", invrec);
+                script.put("negocio", com.openbravo.pos.ticket.DatosNegocio.cargar());
                 m_TTP.printTicket(script.eval(sresource).toString());
 // JG 16 May 2013 use multicatch
             } catch (    ScriptException | TicketPrinterException e) {

@@ -12,7 +12,7 @@ import os
 import re
 import sys
 
-CARPETA = sys.argv[1]
+CARPETA = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'reports', 'com', 'openbravo', 'reports')
 DESPLAZAMIENTO = 34
 PALETA = ['#2E9E6B', '#F2705E', '#1B5E3F', '#A8E6C1', '#10231A', '#5CC08A',
           '#F59D8F', '#3E7D5F', '#D8F3E3', '#C9573F', '#7FCBA3', '#26493A']

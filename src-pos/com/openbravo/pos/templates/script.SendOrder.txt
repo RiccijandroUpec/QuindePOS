@@ -38,9 +38,9 @@ if (kitchen) {
 	sales.printTicket("Printer.TicketKitchen");
 }
 if (kitchen){
-	javax.swing.JOptionPane.showMessageDialog(null, "Order sent to Kitchen");
+	javax.swing.JOptionPane.showMessageDialog(null, "Pedido enviado a cocina");
 } else {
-	javax.swing.JOptionPane.showMessageDialog(null, "Nothing to Send", "Warning", JOptionPane.WARNING_MESSAGE);
+	javax.swing.JOptionPane.showMessageDialog(null, "No hay nada nuevo para enviar a cocina", "Cocina", JOptionPane.WARNING_MESSAGE);
 }
 
 for(int i = ticket.getLinesCount()-1; i>= 0 ; i--){

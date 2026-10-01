@@ -41,7 +41,7 @@
  index = sales.getSelectedIndex();
  
   if (line.isProductService() == true) {
-	javax.swing.JOptionPane.showMessageDialog(null, "This is a Service and Stock Level is not checked");
+	javax.swing.JOptionPane.showMessageDialog(null, "Es un servicio: no se controla el stock.");
   } else {
 
 	 if (index != -1) {
@@ -56,7 +56,7 @@
 	 }
 	 diff = units - line.getMultiply() - multiply;
 	 if (diff < 0.0) {
-	    javax.swing.JOptionPane.showMessageDialog(null, "Not enough stock at this Location " + loc + " - Please use Stock Diary to Add Stock to Inventory", "Stock", JOptionPane.WARNING_MESSAGE);
+	    javax.swing.JOptionPane.showMessageDialog(null, "No hay stock suficiente en el almacén " + loc + ". Registra la entrada en Inventario.", "Stock", JOptionPane.WARNING_MESSAGE);
 	    return "Cancel";
 	 } else {
 	         return null;
