@@ -325,6 +325,19 @@ public class JRootApp extends JPanel implements AppView {
         aplicarEstiloModerno();
         showLogin();
 
+        // Negocio nuevo: asistente de configuracion (onboarding) antes del primer inicio de sesion.
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                com.openbravo.pos.asistente.Asistente.alIniciar(JRootApp.this, JRootApp.this, new Runnable() {
+                    @Override
+                    public void run() {
+                        listPeople();
+                    }
+                });
+            }
+        });
+
         return true;
     }
 
