@@ -9,3 +9,6 @@ ecopos_run_stderr.txt
 # the EcoPos-side hook (the .bs script + Menu/Role wiring) belongs here,
 # never the connector's jar or its local runtime data (flags, config).
 sri-conector/
+
+# Instalador de Windows (ant -f build_working.xml instalador)
+dist/

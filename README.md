@@ -136,6 +136,7 @@ pantallas con escala y la pantalla de carga) se generan con [branding/GenerarMar
 | ![MariaDB](https://img.shields.io/badge/-MariaDB%2FMySQL-4479A1?logo=mysql&logoColor=white) | Base de datos (recomendada) | [XAMPP](https://www.apachefriends.org/) · [MariaDB](https://mariadb.org/) |
 | ![Ant](https://img.shields.io/badge/-Apache%20Ant-A81C7D?logo=apacheant&logoColor=white) | Compilar Quinde POS (`build_working.xml`) | [ant.apache.org](https://ant.apache.org/) |
 | ![Maven](https://img.shields.io/badge/-Apache%20Maven-C71A36?logo=apachemaven&logoColor=white) | Compilar el módulo de facturación | [maven.apache.org](https://maven.apache.org/) |
+| ![Inno Setup](https://img.shields.io/badge/-Inno%20Setup-264B99) | Instalador de Windows (`herramientas/instalador/quinde.iss`) | [jrsoftware.org](https://jrsoftware.org/isinfo.php) |
 | ![Git](https://img.shields.io/badge/-Git-F05032?logo=git&logoColor=white) | Control de versiones | [git-scm.com](https://git-scm.com/) |
 | ![SRI](https://img.shields.io/badge/-SRI%20en%20l%C3%ADnea-1B5E3F) | Firma electrónica (.p12) y consulta de comprobantes | [srienlinea.sri.gob.ec](https://srienlinea.sri.gob.ec/) |
 
@@ -177,15 +178,38 @@ flowchart LR
 | `src-data/` | Capa de acceso a datos (`com.openbravo.data.*`) |
 | `facturacion-sri/` | Módulo de facturación electrónica SRI (Maven, Java 11): factura, nota de crédito, firma, RIDE y correo — ver su [README](facturacion-sri/README.md) y la [guía de instalación](facturacion-sri/INSTALAR.md) |
 | `branding/` | Logo (SVG, PNG, ICO), paleta, tipografía y los generadores de las imágenes de la marca |
-| `herramientas/` | Scripts que generan las plantillas del ticket, del cierre de caja y el estilo de los reportes |
+| `herramientas/` | Scripts que generan las plantillas del ticket, del cierre de caja y el estilo de los reportes; el instalador de Windows (`herramientas/instalador/`) |
 | `docs/` | Página del proyecto (GitHub Pages: `docs/index.html`) y las capturas de este README |
 | `lib/` | Dependencias de terceros (`.jar`) incluidas en el repo |
 | `locales/` | Traducciones de la interfaz |
 | `reports/` | Plantillas JasperReports |
-| `build_working.xml` | Script de compilación Ant (Quinde POS y, con `todo`, también el módulo) |
+| `build_working.xml` | Script de compilación Ant (Quinde POS; con `todo`, también el módulo; con `instalador`, el instalador de Windows) |
 
 > 💡 Los paquetes Java internos usan el namespace `com.openbravo.*` y algunos nombres técnicos siguen siendo `ecopos`
 > (archivo `ecopos.properties`, base de datos `ecopos`, `ecopos.jar`): así las instalaciones existentes se actualizan sin romperse.
+
+## ⬇️ Instalar en Windows
+
+Descarga `QuindePOS-Setup-x.y.z.exe` y ábrelo. **No hace falta instalar Java ni una base de datos aparte**: el
+instalador trae las dos cosas.
+
+1. Elige la carpeta (por defecto `C:\Program Files\Quinde POS`).
+2. Elige la base de datos:
+   - **La incluida (recomendado)**: MariaDB como servicio de Windows (`QuindePOS-DB`, puerto 3310, solo accesible
+     desde esa computadora) con una clave aleatoria que nadie tiene que recordar. Los datos quedan en
+     `C:\ProgramData\QuindePOS\datos`.
+   - **Un servidor MySQL/MariaDB que ya tengas** (por ejemplo XAMPP): servidor, puerto, usuario, clave y nombre de la
+     base. Si algo no conecta, al abrir Quinde POS aparece la pantalla para corregirlo.
+3. Al abrir Quinde POS por primera vez se crean las tablas y arranca el **asistente de configuración**. Se entra
+   como **Administrador** (sin clave; el asistente te pide ponerle una).
+
+- **Actualizar**: instala la versión nueva encima. Se conservan la configuración, los datos y la facturación.
+- **Desinstalar**: quita el programa y el servicio de la base, pero **no borra tus datos** (`C:\ProgramData\QuindePOS`);
+  si reinstalas, sigue donde quedó.
+- La configuración queda en `C:\ProgramData\QuindePOS\config\quinde.properties` (la clave de la base va cifrada).
+
+> 💡 El instalador todavía no tiene firma digital: Windows puede mostrar "Windows protegió su PC". Toca
+> **Más información → Ejecutar de todas formas**.
 
 ## 🔨 Compilación
 
@@ -203,6 +227,19 @@ Esto genera `build/jar/ecopos.jar`. Para compilar **también el módulo de factu
 ant -f build_working.xml todo     # Quinde POS + facturación electrónica
 ant -f build_working.xml sri      # solo el módulo de facturación (con sus tests)
 ```
+
+Para armar el **instalador de Windows** (`dist/QuindePOS-Setup-x.y.z.exe`, ~90 MB, con Java y MariaDB incluidos):
+
+```sh
+ant -f build_working.xml instalador
+```
+
+Necesita [Inno Setup 6.7+](https://jrsoftware.org/isdl.php), el JDK 11 (sus `jmods`, para armar con `jlink` un Java
+recortado de ~55 MB) y el **ZIP de MariaDB 10.11** de [mariadb.org](https://mariadb.org/download/) descomprimido. Las
+rutas se cambian con `-Djdk.home=…`, `-Dmariadb.dir=…` e `-Discc=…`; la versión del instalador, con
+`-Dquinde.version=…`. El script es [herramientas/instalador/quinde.iss](herramientas/instalador/quinde.iss) y las
+imágenes se generan con `python herramientas/instalador/generar_imagenes.py`. No usa `build/jar/ecopos.jar`, así que se
+puede armar con Quinde POS abierto.
 
 > 💡 La interfaz entre los dos (`EcoPosSriBridge`) es un único archivo dentro de `facturacion-sri/`; Quinde POS la
 > compila desde ahí. Si cambias esa interfaz, sube `VERSION_CONTRATO`: al arrancar, Quinde POS compara su versión con
@@ -283,6 +320,22 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 ## 🆕 Mejoras recientes
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
+
+### Fase V — Instalador para Windows (2026-10-01)
+Un solo `QuindePOS-Setup-1.0.0.exe` (~90 MB) deja Quinde POS funcionando en una computadora sin nada instalado.
+- **Java incluido**: un Java 11 recortado con `jlink` (~55 MB). El acceso directo abre Quinde POS con ese Java, con su
+  pantalla de carga y su ícono.
+- **La base de datos, a elección**: MariaDB 10.11 incluido como servicio de Windows (arranca solo con la
+  computadora, escucha solo en esa máquina, clave de root aleatoria generada con `SecureRandom` y guardada solo cifrada),
+  o un servidor MySQL/MariaDB existente. La clave nunca pasa por la línea de comandos.
+- **Primer arranque sin preguntas**: la base nueva se crea sin el diálogo "¿Crear la base de datos?" y se abre el
+  asistente de configuración (Fase U). Esto aplica solo a bases vacías, nunca a una actualización.
+- **Actualizar e instalar encima** conserva la configuración y los datos. Desinstalar quita el servicio pero deja los
+  datos. Si se reinstala, vuelve a registrar el servicio sobre los datos que ya existían.
+- Permisos de escritura para los usuarios de Windows en la configuración y en la carpeta de la facturación electrónica
+  (firma, logo, registros). Las copias de seguridad diarias usan el `mariadb-dump` incluido.
+- Instalador en español, con la marca (imágenes en todas las escalas de pantalla, de 100 % a 250 %).
+- `ant -f build_working.xml instalador` lo arma de punta a punta. Nuevas pruebas de la configuración de la base.
 
 ### Fase U — Asistente de configuración (onboarding) (2026-10-01)
 La primera vez que se abre Quinde POS en un negocio nuevo aparece un asistente que deja la caja lista en minutos. Cada paso se puede dejar "para después", el progreso se guarda en la base (se retoma en cualquier caja) y se vuelve a abrir desde **Sistema → Asistente de configuración** (solo el Administrador).
@@ -481,7 +534,11 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ✅ Estilo moderno, iconos y pantalla de venta nueva
 - 🟡 Copia de seguridad automática: diaria y local ✅; copia en la nube pendiente
 - ✅ Asistente de configuración (onboarding): negocio, tipo, IVA, usuarios, impresora con prueba, productos y facturación
-- ⬜ Instalador para Windows con Java y base de datos incluidos (en curso)
+- ✅ Instalador para Windows con Java y base de datos incluidos
+- ⬜ Publicar el instalador en GitHub Releases y conectar el botón "Descargar" de la página
+- ⬜ Firma digital del instalador (para que Windows no muestre "Windows protegió su PC")
+- ⬜ Base incluida compartida por varias cajas en red (hoy MariaDB incluido solo acepta conexiones de esa computadora)
+- ⬜ Instalador para Linux y macOS
 - ✅ Ticket impreso con la marca y datos del negocio, en español
 - ✅ Cierre de caja (Z), corte parcial (X) y comanda de cocina en español, con arqueo y firmas
 - ✅ Reportes con el estilo de la marca, el negocio y el logo, en español

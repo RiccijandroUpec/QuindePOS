@@ -184,7 +184,10 @@ public class JRootApp extends JPanel implements AppView {
                 return false;
             } else {
                 // Create or upgrade script exists.
-                if (JOptionPane.showConfirmDialog(this
+                // Recien instalado (el instalador pone db.crear.sinpreguntar=si): la base esta vacia,
+                // se crea sin preguntar. Nunca aplica a una actualizacion.
+                boolean crearSinPreguntar = sDBVersion == null && "si".equals(m_props.getProperty("db.crear.sinpreguntar"));
+                if (crearSinPreguntar || JOptionPane.showConfirmDialog(this
                         , AppLocal.getIntString(sDBVersion == null ? "message.createdatabase" : "message.updatedatabase")
                         , AppLocal.getIntString("message.title")
                         , JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {  

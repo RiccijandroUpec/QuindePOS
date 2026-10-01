@@ -210,6 +210,125 @@
     <target name="todo" depends="jar,sri" description="Compila Quinde POS y el modulo de facturacion electronica."/>
 
     <!-- ================================================================= -->
+    <!-- I N S T A L A D O R   D E   W I N D O W S   (Inno Setup)          -->
+    <!-- ================================================================= -->
+
+    <!-- Version del instalador (la de la base de datos es AppLocal.APP_VERSION, no se toca aqui). -->
+    <property name="quinde.version" value="1.0.0"/>
+    <property name="instalador.dir" value="${basedir}/build/instalador"/>
+    <property name="instalador.app" value="${instalador.dir}/app"/>
+    <!-- JDK con jmods para armar el Java que va dentro del instalador (-Djdk.home=...). -->
+    <property name="jdk.home" value="C:/Program Files/Eclipse Adoptium/jdk-11.0.29.7-hotspot"/>
+    <!-- MariaDB "ZIP file" de mariadb.org, descomprimido (-Dmariadb.dir=...). -->
+    <property name="mariadb.dir" value="${basedir}/../tools/mariadb/mariadb-10.11.19-winx64"/>
+    <property name="iscc" value="C:/Program Files (x86)/Inno Setup 6/ISCC.exe"/>
+    <property name="jlink.modulos" value="java.base,java.desktop,java.sql,java.naming,java.xml,java.xml.crypto,java.logging,java.management,java.prefs,java.scripting,java.rmi,java.compiler,java.instrument,java.security.jgss,java.security.sasl,java.net.http,java.transaction.xa,java.datatransfer,jdk.unsupported,jdk.crypto.ec,jdk.crypto.cryptoki,jdk.crypto.mscapi,jdk.charsets,jdk.localedata,jdk.zipfs,jdk.httpserver,jdk.accessibility,jdk.naming.dns"/>
+
+    <!-- Carpeta con todo lo que se instala en "C:\Program Files\Quinde POS". No usa build/jar/ecopos.jar,
+         asi se puede armar con Quinde POS abierto. -->
+    <target name="instalador.app" depends="compilebeans,compiledata,compilepos">
+        <delete dir="${instalador.app}"/>
+        <mkdir dir="${instalador.app}"/>
+        <copy todir="${instalador.app}/lib">
+            <fileset dir="${lib}" includesfile="${basedir}/herramientas/instalador/jars.txt"/>
+        </copy>
+        <copy todir="${instalador.app}/lib/Windows">
+            <fileset dir="${lib}/Windows"/>
+        </copy>
+        <copy todir="${instalador.app}/locales">
+            <fileset dir="${locales}"/>
+        </copy>
+        <copy todir="${instalador.app}/reports">
+            <fileset dir="${reports}"/>
+        </copy>
+        <copy todir="${instalador.app}">
+            <fileset dir="${basedir}" includes="quinde_splash*.png,quinde.ico,quinde.png,LICENSE"/>
+        </copy>
+        <copy file="${basedir}/sri-conector/ecopos-sri-connector.jar" todir="${instalador.app}/sri-conector"/>
+        <!-- El jar lleva su propio Class-Path: el acceso directo solo hace "javaw -jar ecopos.jar". -->
+        <path id="instalador.classpath">
+            <fileset dir="${instalador.app}/lib" includes="*.jar" excludes="mysql-connector-*.jar"/>
+            <pathelement location="${instalador.app}/locales"/>
+            <pathelement location="${instalador.app}/reports"/>
+            <dirset dir="${instalador.app}/locales" includes="*/locales,*/reports"/>
+        </path>
+        <manifestclasspath property="instalador.manifest.cp" jarfile="${instalador.app}/ecopos.jar" maxParentLevels="0">
+            <classpath refid="instalador.classpath"/>
+        </manifestclasspath>
+        <jar jarfile="${instalador.app}/ecopos.jar" compress="true">
+            <fileset dir="${dest.classes}/beans"/>
+            <fileset dir="${dest.classes}/data"/>
+            <fileset dir="${dest.classes}/pos"/>
+            <manifest>
+                <attribute name="Implementation-Vendor" value="Quinde POS"/>
+                <attribute name="Implementation-Title" value="Quinde POS"/>
+                <attribute name="Implementation-Version" value="${quinde.version}"/>
+                <attribute name="Main-Class" value="com.openbravo.pos.forms.StartPOS"/>
+                <attribute name="Class-Path" value="${instalador.manifest.cp}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Java 11 recortado con jlink (~55 MB): el cliente no necesita instalar Java. -->
+    <target name="instalador.runtime">
+        <available file="${instalador.dir}/runtime/bin/javaw.exe" property="instalador.runtime.listo"/>
+        <antcall target="instalador.jlink"/>
+    </target>
+    <target name="instalador.jlink" unless="instalador.runtime.listo">
+        <exec executable="${jdk.home}/bin/jlink" failonerror="true">
+            <arg line="--module-path &quot;${jdk.home}/jmods&quot; --add-modules ${jlink.modulos} --include-locales=en,es --strip-debug --no-header-files --no-man-pages --compress=2"/>
+            <arg value="--output"/>
+            <arg value="${instalador.dir}/runtime"/>
+        </exec>
+    </target>
+
+    <!-- Solo lo que necesita el servidor MariaDB (sin simbolos de depuracion ni herramientas de desarrollo). -->
+    <target name="instalador.mariadb">
+        <fail message="No se encontro MariaDB en ${mariadb.dir} (descarga el ZIP de mariadb.org y usa -Dmariadb.dir=...)">
+            <condition><not><available file="${mariadb.dir}/bin/mariadbd.exe"/></not></condition>
+        </fail>
+        <delete dir="${instalador.dir}/mariadb"/>
+        <copy todir="${instalador.dir}/mariadb">
+            <fileset dir="${mariadb.dir}">
+                <include name="bin/mariadbd.exe"/>
+                <!-- mariadb-install-db arranca el servidor como mysqld.exe (es el mismo programa). -->
+                <include name="bin/mysqld.exe"/>
+                <include name="bin/server.dll"/>
+                <include name="bin/mariadb-install-db.exe"/>
+                <include name="bin/mariadb.exe"/>
+                <include name="bin/mariadb-admin.exe"/>
+                <include name="bin/mariadb-dump.exe"/>
+                <include name="bin/mariadb-upgrade.exe"/>
+                <include name="bin/mariadb-upgrade-service.exe"/>
+                <include name="bin/my_print_defaults.exe"/>
+                <include name="bin/*.dll"/>
+                <include name="lib/libmariadb.dll"/>
+                <include name="lib/plugin/*.dll"/>
+                <exclude name="lib/plugin/ha_rocksdb.dll"/>
+                <exclude name="lib/plugin/ha_connect.dll"/>
+                <exclude name="lib/plugin/ha_spider.dll"/>
+                <include name="share/**"/>
+                <exclude name="share/*.jar"/>
+                <include name="COPYING"/>
+                <include name="README.md"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="instalador" depends="instalador.app,instalador.runtime,instalador.mariadb"
+            description="Arma dist/QuindePOS-Setup-x.y.z.exe (Windows) con Java y MariaDB incluidos. Necesita Inno Setup 6.">
+        <mkdir dir="${basedir}/dist"/>
+        <exec executable="${iscc}" failonerror="true">
+            <arg value="/Qp"/>
+            <arg value="/DVersion=${quinde.version}"/>
+            <arg value="/DOrigen=${instalador.dir}"/>
+            <arg value="/O${basedir}/dist"/>
+            <arg value="${basedir}/herramientas/instalador/quinde.iss"/>
+        </exec>
+        <echo message="Instalador listo en dist/QuindePOS-Setup-${quinde.version}.exe"/>
+    </target>
+
+    <!-- ================================================================= -->
     <!-- T E S T                                                           -->
     <!-- ================================================================= -->
 
