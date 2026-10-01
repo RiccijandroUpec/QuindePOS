@@ -47,6 +47,9 @@ public final class ActualizacionesEcoPos {
             billetesEnDolares(con);
             scriptsModernos(con);
             limpiarComentarioSri(con);
+            // Siempre al final: las actualizaciones de arriba reconocen los recursos de fabrica
+            // por su texto (o su huella) con el aviso de licencia original.
+            avisoDeLicenciaQuinde(con);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudieron aplicar las actualizaciones de EcoPos", e);
         }
@@ -313,6 +316,47 @@ public final class ActualizacionesEcoPos {
                     break;
                 }
             }
+        }
+    }
+
+    /**
+     * Aviso de licencia de Quinde POS (en espanol) en todos los recursos de texto y en los roles,
+     * en lugar del original en ingles. Conserva el copyright y la licencia GPL; el resto no cambia.
+     */
+    private static void avisoDeLicenciaQuinde(Connection con) throws SQLException {
+        int n = 0;
+        java.util.List<String> nombres = new java.util.ArrayList<String>();
+        try (PreparedStatement ps = con.prepareStatement("SELECT NAME FROM RESOURCES WHERE RESTYPE = 0");
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                nombres.add(rs.getString(1));
+            }
+        }
+        for (String nombre : nombres) {
+            String actual = leerRecurso(con, nombre);
+            String nuevo = EncabezadoLicencia.reemplazar(actual);
+            if (actual != null && !nuevo.equals(actual)) {
+                guardarRecurso(con, nombre, nuevo);
+                n++;
+            }
+        }
+        java.util.List<String> roles = new java.util.ArrayList<String>();
+        try (PreparedStatement ps = con.prepareStatement("SELECT NAME FROM ROLES");
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                roles.add(rs.getString(1));
+            }
+        }
+        for (String rol : roles) {
+            String actual = leerPermisos(con, rol);
+            String nuevo = EncabezadoLicencia.reemplazar(actual);
+            if (actual != null && !nuevo.equals(actual)) {
+                guardarPermisos(con, rol, nuevo);
+                n++;
+            }
+        }
+        if (n > 0) {
+            LOG.info("Aviso de licencia de Quinde POS en " + n + " recursos y roles");
         }
     }
 

@@ -1,24 +1,10 @@
 // script.AddLineNote
-//
-//    uniCenta oPOS - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2014 uniCenta
-//    http://sourceforge.net/projects/unicentaopos
-//
-//    This file is part of uniCenta oPOS.
-//
-//    uniCenta oPOS is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    uniCenta oPOS is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
-// **************************************************************************
+// Quinde POS - punto de venta libre para Ecuador
+// Copyright (c) 2009-2014 uniCenta, 2026 Quinde POS
+// Este archivo es software libre: puede redistribuirlo y/o modificarlo bajo los
+// términos de la Licencia Pública General GNU (GPL), versión 3 o posterior.
+// Se distribuye SIN NINGUNA GARANTÍA. Vea <https://www.gnu.org/licenses/>.
+// ****************************************************************************
 // Quinde POS - Nota para la linea seleccionada (sale en la comanda de cocina)
 import com.openbravo.pos.sales.Dialogos;
 
