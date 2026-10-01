@@ -1,60 +1,188 @@
 <p align="center"><img src="branding/quinde-logo-820.png" alt="Quinde POS" width="410"></p>
 
-# 🐦 Quinde POS
+<h1 align="center">🐦 Quinde POS</h1>
 
-![Java](https://img.shields.io/badge/Java-11-ED8B00?logo=openjdk&logoColor=white)
-![Swing](https://img.shields.io/badge/UI-Java%20Swing-red)
-![MySQL](https://img.shields.io/badge/MySQL%2FMariaDB-4479A1?logo=mysql&logoColor=white)
-![JasperReports](https://img.shields.io/badge/Reports-JasperReports-orange)
-![Ant](https://img.shields.io/badge/Build-Apache%20Ant-A81C7D?logo=apacheant&logoColor=white)
-![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
+<p align="center"><b>Punto de venta libre para Ecuador</b> — con facturación electrónica del SRI incluida.</p>
 
-Quinde POS (antes EcoPos) es un sistema de Punto de Venta (POS) de escritorio libre para negocios de retail y hostelería, construido en Java Swing.
+<p align="center">
+<img src="https://img.shields.io/badge/Java-11-ED8B00?logo=openjdk&logoColor=white" alt="Java 11">
+<img src="https://img.shields.io/badge/UI-Swing%20%2B%20FlatLaf-2E9E6B" alt="Swing + FlatLaf">
+<img src="https://img.shields.io/badge/MySQL%2FMariaDB-4479A1?logo=mysql&logoColor=white" alt="MySQL/MariaDB">
+<img src="https://img.shields.io/badge/SRI-Facturaci%C3%B3n%20electr%C3%B3nica-1B5E3F" alt="SRI">
+<img src="https://img.shields.io/badge/Build-Ant%20%2B%20Maven-A81C7D?logo=apacheant&logoColor=white" alt="Ant + Maven">
+<img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GPLv3">
+<img src="https://img.shields.io/badge/Hecho%20en-Ecuador%20%F0%9F%87%AA%F0%9F%87%A8-F2705E" alt="Hecho en Ecuador">
+</p>
 
-**Hecho en Ecuador, para negocios ecuatorianos** — con soporte de
-facturación electrónica SRI incluida: el módulo [facturacion-sri/](facturacion-sri/)
-vive en este mismo repositorio (antes era el repo aparte `EcoPos_SRI_conector`).
+**Quinde POS** (antes EcoPos) es un sistema de punto de venta de escritorio, **libre y gratuito**, para tiendas,
+cafeterías, restaurantes y negocios de retail del Ecuador. Funciona en Windows, Linux y macOS, se usa con pantalla
+táctil o con mouse y teclado, y **emite facturas electrónicas ante el SRI** sin programas aparte: el módulo
+[facturacion-sri/](facturacion-sri/) vive en este mismo repositorio.
+
+*Quinde* es como se le dice al colibrí en el Ecuador: pequeño, rápido y de aquí.
 
 Licenciado bajo [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html).
 
+## 📸 Capturas
+
+| Inicio de sesión | Pantalla de venta |
+|---|---|
+| ![Inicio de sesión](docs/capturas/inicio-sesion.png) | ![Pantalla de venta](docs/capturas/pantalla-de-venta.png) |
+| **Menú y búsqueda de productos** | **Panel del negocio** |
+| ![Menú y búsqueda](docs/capturas/menu-y-busqueda.png) | ![Panel del negocio](docs/capturas/panel-del-negocio.png) |
+
+| Ticket impreso con la factura | Factura en PDF (RIDE) que recibe el cliente |
+|---|---|
+| <img src="docs/capturas/ticket-factura.png" alt="Ticket con factura" width="300"> | <img src="docs/capturas/factura-pdf.png" alt="Factura en PDF" width="520"> |
+
+> Las capturas usan un negocio y clientes **de ejemplo** (Cafetería El Quinde, María Pérez); no son datos reales.
+
 ## ✨ Características
 
-- 🖱️ Pantalla de venta táctil y moderna: buscador de productos (F2), categorías en pestañas, tarjetas de producto con foto o iniciales, total destacado y cobro con F12
-- 🎨 Tema moderno "Quinde Claro/Oscuro" (FlatLaf) con iconos vectoriales en toda la aplicación
-- 🧾 Facturación electrónica SRI integrada (factura y nota de crédito) con indicador de estado en la barra superior
-- 🇪🇨 Cobro pensado para Ecuador: "Consumidor final / Factura con datos" con validación de cédula y RUC, billetes y monedas en dólares, Transferencia y DeUna
-- 👥 Roles multiusuario (Administrador, Gerente, Empleado, Invitado) con permisos
-- 🧾 Impresión de tickets/recibos con plantillas personalizables (JasperReports)
-- 📦 Gestión de inventario, clientes, proveedores e impuestos
-- 🗄️ Compatible con MySQL/MariaDB, PostgreSQL, Oracle y bases de datos embebidas Derby/HSQLDB
-- 📠 Integración con lector de código de barras, cajón de dinero e impresora de tickets (JavaPOS)
+**Venta**
+- 🖱️ Pantalla de venta táctil y moderna: buscador de productos (F2), categorías en pestañas, tarjetas con foto o iniciales, total destacado y cobro con **F12**
+- 💵 Cobro en dólares: billetes y monedas rápidos, botón **Exacto**, cambio en grande, pago dividido, Transferencia y DeUna
+- 🏷️ Promociones automáticas: 2x1, 3x2, % por producto o categoría y *happy hour*
+- 👤 Historial del cliente al atenderlo (compras, gasto total, última visita)
 
-## ⚙️ Requisitos
+**Ecuador y SRI**
+- 🧾 **Facturación electrónica integrada**: factura y nota de crédito (total o parcial), firma XAdES-BES, envío y autorización del SRI, reintentos automáticos
+- 🇪🇨 "Consumidor final / Factura con datos" con validación de cédula y RUC
+- 🖨️ El ticket impreso **es la factura**: número, clave de acceso, cliente, subtotales por tarifa de IVA y forma de pago con el texto del SRI
+- 📄 PDF (RIDE) con el formato del SRI y el logo del negocio, enviado por correo al cliente
+- 📊 Resumen tributario mensual por tarifa de IVA (base del formulario 104), exportable a CSV
+- 💡 Los errores del SRI se explican en palabras simples, con qué hacer
+
+**Negocio y caja**
+- 📈 Panel del negocio: ventas de hoy contra ayer, ticket promedio, ventas por hora, más vendidos y stock bajo
+- 🔐 Autorización de supervisor (con registro) para borrar, descontar, devolver o abrir el cajón
+- 🧮 Arqueo de caja con cierre ciego por billetes y monedas
+- 💾 Copia de seguridad automática diaria de la base de datos
+- 👥 Roles: Administrador, Gerente, Empleado e Invitado, con permisos
+
+**Técnico**
+- 🎨 Tema **Quinde Claro / Oscuro** con íconos vectoriales, nítido en pantallas con escala (125 %, 150 %…)
+- 🗄️ MySQL/MariaDB (recomendado), PostgreSQL, Oracle, Derby y HSQLDB
+- 📠 Lector de código de barras, cajón de dinero, impresoras térmicas y visor de cliente (JavaPOS / ESC/POS)
+- 🔄 Las bases de datos existentes se actualizan solas al abrir una versión nueva
+
+## 🎨 Identidad visual
+
+### Logo
+
+| Logo principal | Ícono de la app | Barra superior | Ticket impreso (blanco y negro) |
+|---|---|---|---|
+| <img src="branding/quinde-logo-820.png" alt="Logo principal" width="220"> | <img src="branding/quinde-icono-512.png" alt="Ícono" width="96"> | <img src="src-beans/com/openbravo/images/quinde-cabecera@2x.png" alt="Barra superior" width="200"> | <img src="src-pos/com/openbravo/pos/templates/printer.ticket.logo.png" alt="Logo del ticket" width="220"> |
+
+El quinde es un colibrí geométrico hecho de facetas (polígonos), con el pico en coral. El original vectorial está en
+[branding/quinde-icono.svg](branding/quinde-icono.svg); todas las versiones en PNG e ICO (incluidas las de 2x y 3x para
+pantallas con escala y la pantalla de carga) se generan con [branding/GenerarMarca.java](branding/GenerarMarca.java).
+
+### Paleta "Selva"
+
+![Paleta Selva](branding/paleta-selva.png)
+
+| Nombre | Hex | Uso |
+|---|---|---|
+| Quinde | `#2E9E6B` | Color principal: estados "al día", gráficos, acentos |
+| Selva | `#1B5E3F` | Botones principales (Cobrar), títulos, total |
+| Brote | `#A8E6C1` | Fondos suaves, barras secundarias de gráficos |
+| Coral | `#F2705E` | Acento puntual (el pico del quinde); nunca para errores |
+| Tinta | `#10231A` | Texto y fondo del tema oscuro / pantalla de carga |
+
+### Tipografía e íconos
+
+- **Tipografía de la marca:** [Outfit](https://fonts.google.com/specimen/Outfit) (ExtraBold para "Quinde", Regular para textos), licencia SIL OFL 1.1, incluida en [branding/fuentes/](branding/fuentes/).
+- **Íconos de la app:** [Tabler Icons](https://tabler.io/icons) (licencia MIT), en SVG, en `src-pos/com/openbravo/images/svg/`.
+
+## 🧰 Tecnologías
+
+**Quinde POS (la aplicación)**
+
+| Tecnología | Versión | Para qué se usa |
+|---|---|---|
+| ![Java](https://img.shields.io/badge/-Java-ED8B00?logo=openjdk&logoColor=white) Java (Swing) | 11 | Aplicación de escritorio |
+| [FlatLaf](https://www.formdev.com/flatlaf/) (+ extras, SwingX) | 3.5.4 | Tema moderno Quinde Claro / Oscuro |
+| [JSVG](https://github.com/weisJ/jsvg) | 1.4.0 | Dibujo de los íconos SVG |
+| [Apache Velocity](https://velocity.apache.org/) | 1.7 | Plantillas del ticket impreso |
+| [JasperReports](https://community.jaspersoft.com/) | 4.5.1 | Reportes |
+| [BeanShell](https://beanshell.github.io/) | 2.1b5 | Scripts configurables (botones, eventos de la venta) |
+| JDBC: MySQL Connector/J, PostgreSQL, Derby, HSQLDB | 5.1.49 / 9.2 / … | Bases de datos |
+| [JavaPOS](https://github.com/JavaPOSWorkingGroup) y RXTX | 1.13 | Periféricos: impresora, cajón, lector, visor |
+| JUnit | 4.8.2 | Pruebas |
+
+**Módulo de facturación electrónica** ([facturacion-sri/](facturacion-sri/))
+
+| Tecnología | Versión | Para qué se usa |
+|---|---|---|
+| Java | 11 | Módulo independiente (jar propio) |
+| [Apache CXF](https://cxf.apache.org/) (JAX-WS) | 3.6.4 | Servicios web SOAP del SRI (recepción y autorización) |
+| JAXB | 2.3 / 4.0 | XML de factura y nota de crédito generado desde los XSD oficiales del SRI |
+| [xades4j](https://github.com/luisgoncalves/xades4j) | 2.4.0 | Firma electrónica XAdES-BES con el certificado .p12 |
+| [Apache PDFBox](https://pdfbox.apache.org/) | 2.0.31 | PDF de la factura (RIDE) |
+| [ZXing](https://github.com/zxing/zxing) | 3.5.3 | Código de barras de la clave de acceso |
+| [Jakarta Mail](https://eclipse-ee4j.github.io/mail/) | 2.0.1 | Envío del PDF y el XML al cliente |
+| MySQL Connector/J | 8.0.33 | Base de datos (la misma de Quinde POS) |
+| SLF4J + Logback | 2.0 / 1.5 | Registro de eventos |
+| JUnit | 5.10 | Pruebas (42) |
+
+## 🛠️ Herramientas
 
 | Herramienta | Uso | Enlace |
 |---|---|---|
-| ![Java](https://img.shields.io/badge/-Java%2011-ED8B00?logo=openjdk&logoColor=white) | Ejecutar y compilar la app | [Adoptium Temurin 11](https://adoptium.net/temurin/releases/?version=11) |
+| ![Java](https://img.shields.io/badge/-JDK%2011-ED8B00?logo=openjdk&logoColor=white) | Ejecutar y compilar | [Adoptium Temurin 11](https://adoptium.net/temurin/releases/?version=11) |
 | ![MariaDB](https://img.shields.io/badge/-MariaDB%2FMySQL-4479A1?logo=mysql&logoColor=white) | Base de datos (recomendada) | [XAMPP](https://www.apachefriends.org/) · [MariaDB](https://mariadb.org/) |
-| ![Ant](https://img.shields.io/badge/-Apache%20Ant-A81C7D?logo=apacheant&logoColor=white) | Build original del proyecto | [ant.apache.org](https://ant.apache.org/) |
-| ![JasperReports](https://img.shields.io/badge/-JasperReports-F28E1C) | Motor de tickets/reportes | [community.jaspersoft.com](https://community.jaspersoft.com/) |
+| ![Ant](https://img.shields.io/badge/-Apache%20Ant-A81C7D?logo=apacheant&logoColor=white) | Compilar Quinde POS (`build_working.xml`) | [ant.apache.org](https://ant.apache.org/) |
+| ![Maven](https://img.shields.io/badge/-Apache%20Maven-C71A36?logo=apachemaven&logoColor=white) | Compilar el módulo de facturación | [maven.apache.org](https://maven.apache.org/) |
+| ![Git](https://img.shields.io/badge/-Git-F05032?logo=git&logoColor=white) | Control de versiones | [git-scm.com](https://git-scm.com/) |
+| ![SRI](https://img.shields.io/badge/-SRI%20en%20l%C3%ADnea-1B5E3F) | Firma electrónica (.p12) y consulta de comprobantes | [srienlinea.sri.gob.ec](https://srienlinea.sri.gob.ec/) |
 
 Compatible con Windows, Linux o macOS.
+
+## 🏗️ Arquitectura
+
+```mermaid
+flowchart LR
+    subgraph POS["Quinde POS (Swing, Java 11)"]
+        V[Pantalla de venta] --> C[Cobro]
+        C --> T[Ticket impreso]
+        P[Pantallas de facturación]
+    end
+    subgraph SRI_MOD["facturacion-sri (jar aparte)"]
+        X[XML del comprobante] --> F[Firma XAdES-BES]
+        F --> S[Envío y autorización]
+        S --> R[PDF RIDE + correo]
+    end
+    DB[(MySQL / MariaDB)]
+    C -- "EcoPosSriBridge" --> X
+    P -- "EcoPosSriBridge" --> SRI_MOD
+    POS --- DB
+    SRI_MOD --- DB
+    S <--> SRIWS[[Servicios web del SRI]]
+    R --> CLI([Cliente])
+```
+
+- El módulo de facturación es un **jar aparte** que Quinde POS carga al arrancar, con sus propias librerías aisladas (así no chocan con las del POS). Si no está instalado, el POS funciona igual, sin facturación.
+- Los dos se hablan por una sola interfaz, `EcoPosSriBridge`, con **número de versión**: si el módulo instalado es de otra versión, el POS lo avisa en vez de fallar.
+- Al cobrar, el número de factura y la clave de acceso se reservan **antes de imprimir**, así el ticket siempre coincide con lo que se envía al SRI. El envío sigue en segundo plano y el cajero ve el resultado en un aviso.
 
 ## 📁 Estructura del proyecto
 
 | Ruta | Contenido |
 |---|---|
 | `src-pos/` | Código fuente principal de la aplicación (`com.openbravo.pos.*`) |
-| `src-beans/` | Componentes Swing reutilizables |
+| `src-beans/` | Componentes Swing reutilizables e imágenes |
 | `src-data/` | Capa de acceso a datos (`com.openbravo.data.*`) |
+| `facturacion-sri/` | Módulo de facturación electrónica SRI (Maven, Java 11): factura, nota de crédito, firma, RIDE y correo — ver su [README](facturacion-sri/README.md) y la [guía de instalación](facturacion-sri/INSTALAR.md) |
+| `branding/` | Logo (SVG, PNG, ICO), paleta, tipografía y los generadores de las imágenes de la marca |
+| `docs/capturas/` | Capturas de pantalla de este README |
 | `lib/` | Dependencias de terceros (`.jar`) incluidas en el repo |
-| `locales/` | Traducciones de la interfaz (~90 idiomas) |
-| `reports/` | Plantillas JasperReports para tickets y reportes |
-| `build_working.xml` | Script de build Ant autocontenido (compila y empaqueta el jar) |
-| `facturacion-sri/` | Módulo de facturación electrónica SRI (Maven, Java 11): factura, nota de crédito, firma, RIDE y correo. Se compila como un jar aparte que Quinde POS carga al arrancar — ver su [README](facturacion-sri/README.md) |
-| `branding/` | Logo, íconos, tipografía y el generador de las imágenes de la marca |
+| `locales/` | Traducciones de la interfaz |
+| `reports/` | Plantillas JasperReports |
+| `build_working.xml` | Script de compilación Ant (Quinde POS y, con `todo`, también el módulo) |
 
-> 💡 Los paquetes Java internos usan el namespace `com.openbravo.*`.
+> 💡 Los paquetes Java internos usan el namespace `com.openbravo.*` y algunos nombres técnicos siguen siendo `ecopos`
+> (archivo `ecopos.properties`, base de datos `ecopos`, `ecopos.jar`): así las instalaciones existentes se actualizan sin romperse.
 
 ## 🔨 Compilación
 
@@ -118,7 +246,7 @@ O más simple, usa el script ya armado con el classpath completo (todos los idio
 start.bat         # Windows
 ```
 
-Al primer arranque, EcoPos escribe su configuración en `~/ecopos.properties`. Por defecto apunta a una base de datos Derby embebida; edita ese archivo (o usa la pantalla **Configuración → Base de datos** dentro de la app) para apuntar a MySQL/MariaDB, PostgreSQL, etc. Si apunta a un esquema vacío, EcoPos crea automáticamente todas las tablas y datos iniciales (roles, categoría/producto/impuestos por defecto) en el siguiente arranque.
+Al primer arranque, Quinde POS escribe su configuración en `~/ecopos.properties`. Por defecto apunta a una base de datos Derby embebida; edita ese archivo (o usa la pantalla **Configuración → Base de datos** dentro de la app) para apuntar a MySQL/MariaDB, PostgreSQL, etc. Si apunta a un esquema vacío, Quinde POS crea automáticamente todas las tablas y datos iniciales (roles, categoría/producto/impuestos por defecto) en el siguiente arranque.
 
 > 💡 `ResourceBundle` solo busca archivos de traducción en la raíz del classpath, no en subcarpetas — por eso `start.bat`/`start.sh` agregan explícitamente `locales/<Idioma>/locales/` y `locales/<Idioma>/reports/` de los 15 idiomas incluidos. Si armas tu propio classpath a mano (como el comando de arriba), sin esas rutas la app cae siempre a inglés sin importar `user.language`.
 
@@ -128,6 +256,13 @@ Tests JUnit para las clases de lógica pura (sin GUI ni base de datos): `AltEncr
 
 ```sh
 ant -f build_working.xml test
+```
+
+El módulo de facturación tiene sus propias **42 pruebas** (XML validado contra el XSD oficial del SRI, clave de acceso,
+cálculo de notas de crédito parciales, PDF, correo, mensajes de error, etc.), que corren al compilarlo:
+
+```sh
+ant -f build_working.xml sri      # o, dentro de facturacion-sri/:  mvn test
 ```
 
 ## 🗄️ Datos por defecto
@@ -152,6 +287,7 @@ Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes /
 - **Un solo comando** compila todo: `ant -f build_working.xml todo` (o `sri` para el módulo solo); deja el jar en `sri-conector/`.
 - **Control de versión**: si el módulo instalado es de otra versión, Quinde POS no lo usa y lo avisa en la barra superior ("Facturación: actualizar módulo") en vez de fallar a mitad de una venta.
 - El módulo ahora tiene **licencia GPLv3**, igual que el POS.
+- README renovado: capturas de pantalla, identidad visual (logo, paleta "Selva", tipografía e íconos), tecnologías con versiones, herramientas, diagrama de la arquitectura y licencias de terceros.
 
 ### Fase L — La factura en el ticket y un PDF con el formato del SRI (2026-09-30)
 - Con la facturación electrónica encendida, **el ticket impreso es la factura**: sale con "FACTURA No. 001-001-…", el número de autorización / clave de acceso, ambiente y emisión, datos del emisor (matriz, sucursal, obligado a llevar contabilidad), cliente con RUC/cédula, dirección y correo, subtotales por tarifa de IVA, forma de pago con el texto del SRI y si ya está autorizada o en proceso. El número y la clave se reservan al cobrar, antes de imprimir, así coinciden siempre con la factura que llega al SRI.
@@ -283,6 +419,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - 🟡 Configuración de facturación en una sola pantalla con verificación ✅; asistente de primera configuración para el resto (negocio, impresora, impuestos) pendiente
 - ✅ Ticket impreso con la marca y datos del negocio, en español
 - ⬜ Ticket en formato A4 y reportes JasperReports todavía con textos de la plantilla original
+- ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS y crear un sitio o página del proyecto
 - ⬜ Actualizaciones automáticas
 - ⬜ Versión para tablet / Android
@@ -291,6 +428,9 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 ## 🔗 Enlaces importantes
 
 - 📦 Repositorio: [github.com/RiccijandroUpec/EcoPos](https://github.com/RiccijandroUpec/EcoPos)
+- 🧾 Facturación electrónica: [README del módulo](facturacion-sri/README.md) · [guía de instalación](facturacion-sri/INSTALAR.md)
+- 🏛️ SRI en línea (firma, comprobantes): [srienlinea.sri.gob.ec](https://srienlinea.sri.gob.ec/)
+- 🎨 FlatLaf: [formdev.com/flatlaf](https://www.formdev.com/flatlaf/) · Tabler Icons: [tabler.io/icons](https://tabler.io/icons) · Outfit: [fonts.google.com](https://fonts.google.com/specimen/Outfit)
 - 📜 Licencia GPL v3: [gnu.org/licenses/gpl-3.0](https://www.gnu.org/licenses/gpl-3.0.html)
 - ☕ Java 11 (Temurin): [adoptium.net](https://adoptium.net/temurin/releases/?version=11)
 - 🐘 XAMPP (MariaDB/MySQL local): [apachefriends.org](https://www.apachefriends.org/)
@@ -298,9 +438,18 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 
 ## 📜 Licencia
 
-GNU GPL v3 — ver las cabeceras de licencia en los archivos fuente individuales.
+GNU GPL v3 ([LICENSE](LICENSE)) — Quinde POS y el módulo de facturación electrónica. Ver también las cabeceras de licencia en los archivos fuente.
 
-El logo y los archivos de [branding/](branding/) son parte del proyecto; la tipografía Outfit se distribuye bajo SIL Open Font License 1.1 ([branding/fuentes/OFL.txt](branding/fuentes/OFL.txt)).
+El logo, la paleta y los archivos de [branding/](branding/) son parte del proyecto. Componentes de terceros incluidos:
+
+| Componente | Licencia |
+|---|---|
+| Tipografía Outfit | SIL Open Font License 1.1 ([branding/fuentes/OFL.txt](branding/fuentes/OFL.txt)) |
+| Tabler Icons | MIT |
+| FlatLaf | Apache 2.0 |
+| JSVG | MIT |
+| Librerías del módulo de facturación | Compatibles con GPLv3 — detalle en su [README](facturacion-sri/README.md#-licencia) |
+| Demás librerías en `lib/` | Ver [licensing/](licensing/) |
 
 ## ☕ Apoya este proyecto / Contacto
 
