@@ -62,6 +62,8 @@ public final class Asistente extends JDialog {
         pasos.add(new PasoCaja(ctx));
         pasos.add(new PasoUsuarios(ctx));
         pasos.add(new PasoImpresora(ctx));
+        pasos.add(new PasoProductos(ctx));
+        pasos.add(new PasoFacturacion(ctx));
         pasos.add(new PasoListo(ctx, pasos));
         construir();
         mostrarPaso(primerPasoPendiente());
@@ -83,6 +85,29 @@ public final class Asistente extends JDialog {
             abrir(padre, ctx, alTerminar);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "No se pudo abrir el asistente de configuracion", e);
+        }
+    }
+
+    /**
+     * Avance para el aviso del Panel del negocio: {pasos hechos, pasos en total}, o null si el
+     * asistente ya se termino (o no se puede leer).
+     */
+    public static int[] avance(AppView app) {
+        try {
+            ContextoAsistente ctx = new ContextoAsistente(app);
+            if (ctx.estado.terminado()) {
+                return null;
+            }
+            String[] ids = {"negocio", "tipo", "caja", "usuarios", "impresora", "productos", "facturacion"};
+            int hechos = 0;
+            for (String id : ids) {
+                if (ctx.estado.hecho(id)) {
+                    hechos++;
+                }
+            }
+            return new int[]{hechos, ids.length};
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -248,7 +273,7 @@ public final class Asistente extends JDialog {
         raiz.add(izquierda, BorderLayout.WEST);
         raiz.add(derecha, BorderLayout.CENTER);
         setContentPane(raiz);
-        setSize(980, 680);
+        setSize(1080, 720);
         setMinimumSize(new Dimension(820, 560));
         setLocationRelativeTo(getOwner());
     }
