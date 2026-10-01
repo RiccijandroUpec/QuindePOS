@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ec.ecopos</groupId>
+    <artifactId>ecopos-sri-connector</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>ECOPos SRI Connector</name>
+    <description>
+        Modulo independiente que integra ECOPos (POS Java/Swing) con los
+        servicios de facturacion electronica del SRI (Servicio de Rentas
+        Internas, Ecuador). Se distribuye como jar propio; ECOPos solo lo
+        referencia a traves de un hook minimo, sin depender de su build.
+    </description>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <jaxb.version>2.3.9</jaxb.version>
+        <xades4j.version>2.4.0</xades4j.version>
+        <cxf.version>3.6.4</cxf.version>
+        <mysql.version>8.0.33</mysql.version>
+        <slf4j.version>2.0.13</slf4j.version>
+        <logback.version>1.5.6</logback.version>
+        <junit.version>5.10.2</junit.version>
+    </properties>
+
+    <dependencies>
+        <!-- JAXB: las clases del comprobante XML se GENERAN a partir del/los
+             .xsd oficiales del SRI (ver src/main/resources/xsd) via el plugin
+             jaxb2-maven-plugin configurado abajo. No se escriben a mano. -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <!-- Runtime JAXB para el namespace javax (CXF / clases generadas del
+             XSD): se usa com.sun.xml.bind:jaxb-impl en vez de
+             org.glassfish.jaxb:jaxb-runtime a proposito, para dejar libre
+             ese groupId:artifactId para la version jakarta que xades4j
+             necesita (ver mas abajo) - ambas versiones de
+             org.glassfish.jaxb:jaxb-runtime no pueden convivir en el mismo
+             classpath. -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
+
+        <!-- Firma electronica XAdES-BES sobre el XML del comprobante.
+             xades4j 2.4.0 usa internamente jakarta.xml.bind (no javax,
+             el namespace que usan CXF/jaxb2-maven-plugin en este proyecto -
+             ver notas del README). Son paquetes distintos que coexisten sin
+             chocar; hace falta declarar API + runtime jakarta por separado. -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>4.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.xades4j</groupId>
+            <artifactId>xades4j</artifactId>
+            <version>${xades4j.version}</version>
+        </dependency>
+
+        <!-- Cliente SOAP para RecepcionComprobantesOffline / AutorizacionComprobantesOffline.
+             Los stubs se generan del WSDL con cxf-codegen-plugin (ver plugins). -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+
+        <!-- Acceso a MySQL: solo para leer TICKETS/RECEIPTS de ECOPos (lectura)
+             y para el CRUD propio de ecopos_sri_comprobantes -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
+        <!-- RIDE (representacion impresa del comprobante, Anexo 2 de la ficha
+             tecnica) - PDFBox (Apache 2.0) para el PDF, ZXing (Apache 2.0)
+             para el codigo de barras GS1-128 de la clave de acceso que la
+             ficha tecnica recomienda (seccion 8.20/8.21). -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.31</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+
+        <!-- Envio del XML/RIDE por correo al comprador (obligatorio si lo pide,
+             Resolucion NAC-DGERCGC12-00105) - jakarta.mail trae API + runtime
+             SMTP en un solo jar, sin depender de un JDK con javax.mail
+             incluido (removido desde Java 11). -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>ecopos-sri-connector</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+
+            <!-- Genera las clases de dominio XML (Factura, InfoTributaria, etc.)
+                 a partir del factura_V2.1.0.xsd real del SRI (ver README de
+                 src/main/resources/xsd). -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>generar-clases-comprobante</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/factura_V2.1.0.xsd</source>
+                            </sources>
+                            <packageName>com.openbravo.pos.sri.xml.generado</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+                    <!-- Nota de Credito: paquete propio porque el XSD de la ficha
+                         tecnica define tipos con el MISMO nombre que factura_V2.1.0.xsd
+                         (infoTributaria, impuesto, codigo...) pero con forma distinta -
+                         generarlos en el mismo paquete chocaria (dos clases InfoTributaria
+                         incompatibles). -->
+                    <execution>
+                        <id>generar-clases-nota-credito</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/notaCredito_V1.1.0.xsd</source>
+                            </sources>
+                            <packageName>com.openbravo.pos.sri.xml.generado.notacredito</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Genera los stubs del cliente SOAP a partir del WSDL real del
+                 SRI (descargado el 2026-07-06 desde el ambiente de pruebas
+                 celcer.sri.gob.ec, confirmado como oficial por la ficha
+                 tecnica v2.32). -->
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>${cxf.version}</version>
+                <executions>
+                    <execution>
+                        <id>generar-clientes-soap</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>src/main/resources/wsdl/RecepcionComprobantesOffline.wsdl</wsdl>
+                                    <packagenames>
+                                        <packagename>com.openbravo.pos.sri.soap.recepcion</packagename>
+                                    </packagenames>
+                                </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>src/main/resources/wsdl/AutorizacionComprobantesOffline.wsdl</wsdl>
+                                    <packagenames>
+                                        <packagename>com.openbravo.pos.sri.soap.autorizacion</packagename>
+                                    </packagenames>
+                                </wsdlOption>
+                            </wsdlOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Empaqueta un jar unico con todas las dependencias, para poder
+                 dejarlo caer en el classpath de ECOPos sin gestionar 15 jars
+                 sueltos -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sin esto, el jar sombreado no arranca en absoluto:
+                                 varias dependencias vienen firmadas, y al fusionar
+                                 todas las clases en un solo jar sus firmas (.SF/.DSA/.RSA)
+                                 ya no coinciden con el manifiesto resultante, lo que
+                                 produce "SecurityException: Invalid signature file
+                                 digest for Manifest main attributes" al lanzarlo -
+                                 confirmado con una ejecucion real. -->
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <!-- Requerido por CXF al empaquetarlo en un uber-jar: varios
+                                 jars de CXF (cxf-core, cxf-rt-wsdl, cxf-rt-frontend-jaxws...)
+                                 declaran su PROPIO META-INF/cxf/bus-extensions.txt, y sin
+                                 fusionarlos el shade se queda solo con el de UN jar -
+                                 confirmado con una ejecucion real: cxf-rt-wsdl-3.6.4.jar
+                                 registra "WSDLManagerImpl:WSDLManager:true" en su copia de
+                                 ese archivo, pero el jar sombreado (antes de este fix) no
+                                 lo tenia en absoluto, asi que Bus.getExtension(WSDLManager.class)
+                                 devolvia null y WSDLServiceFactory lanzaba un
+                                 NullPointerException sin mensaje al construir SoapClient
+                                 (solo pasaba corriendo el jar ya empaquetado, no por el
+                                 classpath de test de Maven). ServicesResourceTransformer
+                                 fusiona META-INF/services/* (formato ServiceLoader estandar);
+                                 AppendingTransformer fusiona bus-extensions.txt (formato
+                                 propio de CXF, no cubierto por el anterior). -->
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/cxf/bus-extensions.txt</resource>
+                                </transformer>
+                            </transformers>
+                            <!-- EcoPos (el POS que carga este jar en el mismo proceso/JVM
+                                 desde 2026-07-17) trae su propia version vieja de slf4j
+                                 (1.5.8) + un binding a log4j1/reload4j en su classpath. Sin
+                                 esto, un URLClassLoader parent-first resolveria org.slf4j.*
+                                 contra la version 1.5.8 de EcoPos en vez de la 2.0.13 que
+                                 este jar realmente trae, dejando el logging del conector
+                                 enganchado (silenciosamente) al sink de log4j de EcoPos en
+                                 vez de a su propio logback. Reubicar el paquete elimina esa
+                                 colision de identidad de clase por completo. -->
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>com.openbravo.pos.sri.shaded.slf4j</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>ch.qos.logback</pattern>
+                                    <shadedPattern>com.openbravo.pos.sri.shaded.logback</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
