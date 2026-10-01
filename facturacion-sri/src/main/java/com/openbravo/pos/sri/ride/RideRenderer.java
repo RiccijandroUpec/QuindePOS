@@ -69,6 +69,7 @@ final class RideRenderer {
             detalle();
             pie();
             cs.close();
+            marcasDePagina();
             ByteArrayOutputStream salida = new ByteArrayOutputStream();
             doc.save(salida);
             return salida.toByteArray();
@@ -84,6 +85,63 @@ final class RideRenderer {
         cs = new PDPageContentStream(doc, pagina);
         cs.setLineWidth(0.6f);
         y = ALTO - M;
+        if (doc.getNumberOfPages() > 1) {
+            // Paginas siguientes: encabezado corto para saber de que comprobante son.
+            texto(negrita, 9, M, y - 10, r.tipo + " No. " + vacio(r.numero) + "  (continuación)");
+            textoDerecha(normal, 8, ANCHO - M, y - 10, vacio(r.razonSocial) + " - RUC " + vacio(r.ruc));
+            cs.moveTo(M, y - 16);
+            cs.lineTo(ANCHO - M, y - 16);
+            cs.stroke();
+            y -= 26;
+        }
+    }
+
+    /**
+     * Despues de dibujar todo (cuando ya se sabe cuantas paginas hay): pie con
+     * "Pagina X de Y" y donde consultar el comprobante, y en ambiente de pruebas
+     * una marca de agua para que nadie lo confunda con un comprobante valido.
+     */
+    private void marcasDePagina() throws IOException {
+        int total = doc.getNumberOfPages();
+        boolean pruebas = "PRUEBAS".equalsIgnoreCase(vacio(r.ambiente));
+        for (int i = 0; i < total; i++) {
+            PDPage pagina = doc.getPage(i);
+            try (PDPageContentStream p = new PDPageContentStream(doc, pagina, PDPageContentStream.AppendMode.APPEND, true, true)) {
+                PDPageContentStream anterior = cs;
+                cs = p;
+                if (pruebas) {
+                    org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState transparente =
+                            new org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState();
+                    transparente.setNonStrokingAlphaConstant(0.10f);
+                    cs.saveGraphicsState();
+                    cs.setGraphicsStateParameters(transparente);
+                    cs.setNonStrokingColor(new Color(0xC6, 0x28, 0x28));
+                    marcaCentrada("SIN VALOR TRIBUTARIO", 44, 0);
+                    marcaCentrada("AMBIENTE DE PRUEBAS", 26, -58);
+                    cs.restoreGraphicsState();
+                }
+                cs.setNonStrokingColor(new Color(0x55, 0x5F, 0x66));
+                texto(normal, 7, M, 14, "Consulte este comprobante en https://srienlinea.sri.gob.ec");
+                textoDerecha(normal, 7, ANCHO - M, 14, "Página " + (i + 1) + " de " + total);
+                cs.setNonStrokingColor(Color.BLACK);
+                cs = anterior;
+            }
+        }
+    }
+
+    /** Texto girado 35 grados y centrado en la pagina; 'desplazamiento' lo mueve en perpendicular. */
+    private void marcaCentrada(String texto, float tam, float desplazamiento) throws IOException {
+        double angulo = Math.toRadians(35);
+        float w = negrita.getStringWidth(texto) / 1000f * tam;
+        double cx = ANCHO / 2 + desplazamiento * Math.sin(angulo) * -1;
+        double cy = ALTO / 2 + desplazamiento * Math.cos(angulo);
+        float x0 = (float) (cx - w / 2 * Math.cos(angulo));
+        float y0 = (float) (cy - w / 2 * Math.sin(angulo));
+        cs.beginText();
+        cs.setFont(negrita, tam);
+        cs.setTextMatrix(org.apache.pdfbox.util.Matrix.getRotateInstance(angulo, x0, y0));
+        cs.showText(texto);
+        cs.endText();
     }
 
     // ------------------------------------------------------------------ encabezado

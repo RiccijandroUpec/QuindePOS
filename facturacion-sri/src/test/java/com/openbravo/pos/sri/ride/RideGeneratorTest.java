@@ -25,9 +25,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class RideGeneratorTest {
 
     private static String facturaAutorizada(int lineas) {
+        return facturaAutorizada(lineas, Ambiente.PRODUCCION);
+    }
+
+    private static String facturaAutorizada(int lineas, Ambiente ambiente) {
         DatosEmisor emisor = new DatosEmisor("1790012345001", "COMERCIAL DE PRUEBA CIA. LTDA.", "HELADERIA LA ESQUINA",
                 "AV. PRINCIPAL 1-23 Y CALLE B", "AV. PRINCIPAL 1-23 Y CALLE B", null, false, "001", "003",
-                Ambiente.PRODUCCION, null, null);
+                ambiente, null, null);
         Cliente cliente = new Cliente("05", "1710034065", "JUAN PEREZ", "CENTRO QUITO", "cliente@correo.ec", null);
         List<DetalleFactura> detalles = new ArrayList<>();
         BigDecimal precio = new BigDecimal("3.75");
@@ -36,7 +40,7 @@ class RideGeneratorTest {
                     List.of(ImpuestoDetalle.iva(BigDecimal.ZERO, precio, BigDecimal.ZERO))));
         }
         BigDecimal total = precio.multiply(BigDecimal.valueOf(lineas));
-        Comprobante c = new Comprobante("t", TipoComprobante.FACTURA, Ambiente.PRODUCCION, LocalDateTime.of(2026, 8, 19, 15, 55),
+        Comprobante c = new Comprobante("t", TipoComprobante.FACTURA, ambiente, LocalDateTime.of(2026, 8, 19, 15, 55),
                 emisor, cliente, detalles, List.of(ImpuestoDetalle.iva(BigDecimal.ZERO, total, BigDecimal.ZERO)),
                 List.of(new Pago(FormaPago.SIN_SISTEMA_FINANCIERO, total)), total, BigDecimal.ZERO, total, "000142645");
         c.setClaveAcceso("1908202601179001234500120010030001426450014264512");
@@ -70,6 +74,17 @@ class RideGeneratorTest {
         assertTrue(t.contains("Información Adicional"));
         assertTrue(t.contains("cliente@correo.ec"));
         assertTrue(t.contains("7,50"), "valores con coma decimal");
+        assertTrue(t.contains("Página 1 de 1"));
+        assertTrue(t.contains("srienlinea.sri.gob.ec"));
+        assertFalse(t.contains("SIN VALOR TRIBUTARIO"), "en produccion no lleva marca de agua");
+    }
+
+    @Test
+    void enPruebasLlevaMarcaDeAguaSinValorTributario() throws Exception {
+        byte[] pdf = RideGenerator.generar(facturaAutorizada(2, Ambiente.PRUEBAS), null);
+        String t = texto(pdf, new int[1]);
+        assertTrue(t.contains("SIN VALOR TRIBUTARIO"));
+        assertTrue(t.contains("AMBIENTE DE PRUEBAS"));
     }
 
     @Test
@@ -82,5 +97,7 @@ class RideGeneratorTest {
         assertTrue(t.contains("BANANA SPLIT 1\n") || t.contains("BANANA SPLIT 1 "));
         assertTrue(t.contains("BANANA SPLIT 60"));
         assertTrue(t.contains("VALOR TOTAL"));
+        assertTrue(t.contains("Página 2 de " + paginas[0]));
+        assertTrue(t.contains("(continuación)"), "encabezado corto en las paginas siguientes");
     }
 }
