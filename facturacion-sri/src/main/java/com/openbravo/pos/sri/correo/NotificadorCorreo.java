@@ -33,28 +33,85 @@ public final class NotificadorCorreo {
     public void enviarComprobante(String destinatario, String asunto, String cuerpo,
                                    String nombreArchivoXml, byte[] xml,
                                    String nombreArchivoPdf, byte[] pdf) throws MessagingException {
-        Session sesion = crearSesion();
+        Transport.send(armar(crearSesion(), configuracion.getRemitente(), destinatario, asunto, cuerpo, null, null,
+                nombreArchivoXml, xml, nombreArchivoPdf, pdf));
+    }
 
+    /**
+     * Envia el comprobante con el mensaje con diseno (HTML) y su version en texto plano.
+     *
+     * @param logoPng logo del negocio para el encabezado del correo, o null
+     */
+    public void enviarComprobante(String destinatario, MensajeComprobante mensaje, byte[] xml, byte[] pdf,
+                                  byte[] logoPng) throws MessagingException {
+        Transport.send(armar(crearSesion(), configuracion.getRemitente(), destinatario, mensaje.asunto, mensaje.cuerpo,
+                mensaje.html, logoPng, mensaje.archivoXml, xml, mensaje.archivoPdf, pdf));
+    }
+
+    /**
+     * Arma el correo (sin enviarlo). Estructura:
+     * multipart/mixed = [cuerpo, adjunto XML, adjunto PDF], donde el cuerpo es el texto
+     * plano o, si hay HTML, un multipart/alternative [texto, HTML]; con logo, el HTML va
+     * dentro de un multipart/related junto a la imagen (cid:logo-negocio).
+     */
+    static MimeMessage armar(Session sesion, String remitente, String destinatario, String asunto, String texto,
+                             String html, byte[] logoPng, String nombreArchivoXml, byte[] xml,
+                             String nombreArchivoPdf, byte[] pdf) throws MessagingException {
         MimeMessage mensaje = new MimeMessage(sesion);
-        mensaje.setFrom(new InternetAddress(configuracion.getRemitente()));
+        mensaje.setFrom(new InternetAddress(remitente));
         mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
         mensaje.setSubject(asunto, "UTF-8");
 
-        MimeMultipart multiparte = new MimeMultipart();
+        MimeMultipart mixto = new MimeMultipart("mixed");
+        MimeBodyPart cuerpo = new MimeBodyPart();
+        if (html == null) {
+            cuerpo.setText(texto, "UTF-8");
+        } else {
+            MimeMultipart alternativas = new MimeMultipart("alternative");
+            MimeBodyPart parteTexto = new MimeBodyPart();
+            parteTexto.setText(texto, "UTF-8");
+            alternativas.addBodyPart(parteTexto);
 
-        MimeBodyPart parteTexto = new MimeBodyPart();
-        parteTexto.setText(cuerpo, "UTF-8");
-        multiparte.addBodyPart(parteTexto);
+            MimeBodyPart parteHtml = new MimeBodyPart();
+            parteHtml.setContent(html, "text/html; charset=UTF-8");
+            if (logoPng != null) {
+                MimeMultipart relacionado = new MimeMultipart("related");
+                relacionado.addBodyPart(parteHtml);
+                MimeBodyPart logo = new MimeBodyPart();
+                logo.setDataHandler(new DataHandler(new ByteArrayDataSource(logoPng, "image/png")));
+                logo.setContentID("<" + MensajeComprobante.LOGO_CID + ">");
+                logo.setDisposition(MimeBodyPart.INLINE);
+                logo.setFileName("logo.png");
+                relacionado.addBodyPart(logo);
+                MimeBodyPart contenedor = new MimeBodyPart();
+                contenedor.setContent(relacionado);
+                alternativas.addBodyPart(contenedor);
+            } else {
+                alternativas.addBodyPart(parteHtml);
+            }
+            cuerpo.setContent(alternativas);
+        }
+        mixto.addBodyPart(cuerpo);
 
         if (xml != null) {
-            multiparte.addBodyPart(adjunto(nombreArchivoXml, "application/xml", xml));
+            mixto.addBodyPart(adjunto(nombreArchivoXml, "application/xml", xml));
         }
         if (pdf != null) {
-            multiparte.addBodyPart(adjunto(nombreArchivoPdf, "application/pdf", pdf));
+            mixto.addBodyPart(adjunto(nombreArchivoPdf, "application/pdf", pdf));
         }
+        mensaje.setContent(mixto);
+        mensaje.saveChanges();
+        return mensaje;
+    }
 
-        mensaje.setContent(multiparte);
-        Transport.send(mensaje);
+    /** Logo del negocio (config/logo.png, elegido en Facturacion electronica) o null si no hay. */
+    public static byte[] logoDelNegocio() {
+        try {
+            java.nio.file.Path ruta = com.openbravo.pos.sri.config.RutasConector.resolver("config/logo.png");
+            return java.nio.file.Files.isRegularFile(ruta) ? java.nio.file.Files.readAllBytes(ruta) : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static MimeBodyPart adjunto(String nombreArchivo, String tipoContenido, byte[] contenido) throws MessagingException {

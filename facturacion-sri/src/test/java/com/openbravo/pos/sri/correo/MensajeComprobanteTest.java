@@ -22,7 +22,7 @@ class MensajeComprobanteTest {
         assertEquals("factura-001-003-000142645.xml", m.archivoXml);
         assertTrue(m.cuerpo.startsWith("Estimado(a) JUAN PEREZ:"));
         assertTrue(m.cuerpo.contains("RUC 1790012345001"));
-        assertTrue(m.cuerpo.contains("Valor total: $7.50"));
+        assertTrue(m.cuerpo.contains("Valor total: $7,50"));
         assertTrue(m.cuerpo.contains("1908202601179001234500120010030001426450014264512"));
     }
 
@@ -33,6 +33,6 @@ class MensajeComprobanteTest {
 
         assertTrue(m.asunto.startsWith("Nota de crédito 001-003-000142645"));
         assertEquals("nota-credito-001-003-000142645.pdf", m.archivoPdf);
-        assertTrue(m.cuerpo.contains("Valor acreditado: $3.75"));
+        assertTrue(m.cuerpo.contains("Valor acreditado: $3,75"));
     }
 }
