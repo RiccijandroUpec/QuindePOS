@@ -4,7 +4,7 @@
 
 <p align="center"><b>Punto de venta libre para Ecuador</b> — con facturación electrónica del SRI incluida.</p>
 
-<p align="center">🌐 <a href="https://riccijandroupec.github.io/EcoPos/"><b>riccijandroupec.github.io/EcoPos</b></a></p>
+<p align="center">🌐 <a href="https://quindepos.cyrshop.app/"><b>quindepos.cyrshop.app</b></a></p>
 
 <p align="center">
 <img src="https://img.shields.io/badge/Java-11-ED8B00?logo=openjdk&logoColor=white" alt="Java 11">
@@ -483,7 +483,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 
 ## 🔗 Enlaces importantes
 
-- 🌐 Página del proyecto: [riccijandroupec.github.io/EcoPos](https://riccijandroupec.github.io/EcoPos/)
+- 🌐 Página del proyecto: [quindepos.cyrshop.app](https://quindepos.cyrshop.app/)
 - 📦 Repositorio: [github.com/RiccijandroUpec/EcoPos](https://github.com/RiccijandroUpec/EcoPos)
 - 🧾 Facturación electrónica: [README del módulo](facturacion-sri/README.md) · [guía de instalación](facturacion-sri/INSTALAR.md)
 - 🏛️ SRI en línea (firma, comprobantes): [srienlinea.sri.gob.ec](https://srienlinea.sri.gob.ec/)
