@@ -36,6 +36,7 @@
     <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
     <symbol id="i-ecuador" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
     <symbol id="i-descarga" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+    <symbol id="i-android" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></symbol>
     <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7c-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></symbol>
     <symbol id="i-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
     <symbol id="i-linkedin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0"/></symbol>
@@ -54,6 +55,7 @@
       <a href="#sri">Facturación SRI</a>
       <a href="#capturas">Capturas</a>
       <a href="#empezar">Cómo empezar</a>
+      <a href="#android">Android</a>
       <a class="boton chico" href="https://github.com/RiccijandroUpec/QuindePOS">
         <svg aria-hidden="true"><use href="#i-github"/></svg> GitHub
       </a>
@@ -73,7 +75,9 @@
           <a class="boton" href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">
             <svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar para Windows
           </a>
-          <a class="boton secundario" href="#empezar">Cómo empezar</a>
+          <a class="boton secundario" href="#android">
+            <svg aria-hidden="true"><use href="#i-android"/></svg> App para Android
+          </a>
         </div>
         <p class="nota-portada">Instalador para Windows 10 y 11 con Java y base de datos incluidos · Código abierto GPL v3</p>
       </div>
@@ -227,6 +231,41 @@
         <span class="chip">👕 Ropa y calzado</span>
         <span class="chip">🔧 Ferreterías</span>
         <span class="chip">📚 Papelerías</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="android" class="suave" aria-labelledby="t-android">
+    <div class="contenedor android">
+      <div>
+        <span class="etiqueta">Nuevo · Android 7 o superior</span>
+        <h2 id="t-android">Quinde POS en tu celular</h2>
+        <p class="bajada">La misma idea, ahora en el teléfono o la tablet: vendes, cobras y la <b>factura del SRI se firma y se autoriza desde el mismo celular</b>, sin computadora ni servidores.</p>
+        <ul class="lista">
+          <li><svg aria-hidden="true"><use href="#i-factura"/></svg><div><b>Factura electrónica en segundos</b><span>RIDE en PDF, envío al correo del cliente y ticket por impresora Bluetooth.</span></div></li>
+          <li><svg aria-hidden="true"><use href="#i-sinred"/></svg><div><b>Vende sin internet</b><span>Las facturas se envían solas al SRI cuando vuelve la señal.</span></div></li>
+          <li><svg aria-hidden="true"><use href="#i-usuarios"/></svg><div><b>Caja, cajeros con PIN y reportes</b><span>Cierre de caja, panel de ventas e IVA del mes para Excel.</span></div></li>
+        </ul>
+        <div class="acciones" style="margin-top:28px">
+          <a class="boton" href="descargas/QuindePOS-Android.apk" download>
+            <svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar APK para Android
+          </a>
+          <a class="boton secundario" href="https://wa.me/593983185069?text=Hola%20Richard%2C%20quiero%20Quinde%20POS%20para%20Android.">Pedir instalación por WhatsApp</a>
+        </div>
+        <p class="nota-portada">Versión 1.0.0 · ¿Celular antiguo de 32 bits? <a href="descargas/QuindePOS-Android-32bits.apk" download>Descarga esta versión</a>.</p>
+        <div class="instalar-apk">
+          <b>Cómo instalarla</b>
+          <ol>
+            <li>Descarga el archivo .apk desde el celular.</li>
+            <li>Ábrelo y, si Android lo pide, permite <i>instalar apps de esta fuente</i>.</li>
+            <li>Toca <b>Instalar</b>. Si Play Protect avisa, elige <i>Instalar de todas formas</i>.</li>
+          </ol>
+        </div>
+        <p class="licencia-android">Gratis para aprender en el ambiente de <b>pruebas</b> del SRI. Para emitir facturas reales se activa una <b>licencia para el RUC de tu negocio</b>: escríbeme al <b>098 318 5069</b>. La app de Android no es software libre.</p>
+      </div>
+      <div class="telefonos" aria-label="Capturas de la app de Android">
+        <img src="capturas/android-venta.png" alt="Pantalla de venta en el celular con productos y sus fotos" width="540" height="1169" loading="lazy">
+        <img src="capturas/android-factura.png" alt="Venta registrada con el cambio y la factura" width="540" height="1169" loading="lazy">
       </div>
     </div>
   </section>
