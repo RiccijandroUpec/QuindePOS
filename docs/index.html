@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quinde POS · Punto de venta libre para Ecuador</title>
-  <meta name="description" content="Quinde POS es un punto de venta libre y gratuito para negocios del Ecuador, con facturación electrónica del SRI incluida: ventas táctiles, caja, inventario, promociones, reportes y más.">
+  <title>Sistema de facturación electrónica gratis para Ecuador · Quinde POS</title>
+  <meta name="description" content="Sistema de facturación electrónica gratuito para Ecuador, autorizado con el SRI: punto de venta, caja, inventario y reportes para tu negocio. Descárgalo gratis para Windows o Android.">
   <meta name="theme-color" content="#1B5E3F">
-  <meta property="og:title" content="Quinde POS · Punto de venta libre para Ecuador">
-  <meta property="og:description" content="Ventas, caja, inventario y facturación electrónica del SRI. Libre y gratuito.">
+  <meta property="og:title" content="Sistema de facturación electrónica gratis para Ecuador · Quinde POS">
+  <meta property="og:description" content="Sistema de facturación electrónica gratuito para Ecuador: ventas, caja, inventario y factura del SRI.">
   <meta property="og:image" content="https://quindepos.cyrshop.app/assets/logo.png">
   <meta property="og:url" content="https://quindepos.cyrshop.app/">
   <link rel="canonical" href="https://quindepos.cyrshop.app/">
   <meta property="og:type" content="website">
   <meta name="robots" content="index, follow">
-  <meta name="keywords" content="punto de venta Ecuador, POS gratis, facturación electrónica SRI, sistema de facturación, inventario, caja, software libre, Quinde POS">
+  <meta name="keywords" content="sistema de facturación gratuito Ecuador, facturación electrónica gratis SRI, programa de facturación gratis, punto de venta gratis Ecuador, sistema POS Ecuador, software de facturación SRI, inventario y caja">
   <meta property="og:locale" content="es_EC">
   <meta property="og:site_name" content="Quinde POS">
   <meta name="twitter:card" content="summary_large_image">
@@ -34,13 +34,80 @@
         "url": "https://quindepos.cyrshop.app/",
         "image": "https://quindepos.cyrshop.app/assets/logo.png",
         "screenshot": "https://quindepos.cyrshop.app/capturas/pantalla-de-venta.png",
-        "description": "Punto de venta para negocios del Ecuador con facturación electrónica del SRI: ventas táctiles, caja, inventario, promociones y reportes.",
+        "description": "Sistema de facturación electrónica gratuito para Ecuador, autorizado con el SRI: punto de venta, caja, inventario y reportes para tu negocio. Descárgalo gratis para Windows o Android.",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Windows, Android 7+",
         "inLanguage": "es",
-        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-        "areaServed": { "@type": "Country", "name": "Ecuador" },
-        "author": { "@type": "Person", "name": "Riccijandro", "sameAs": ["https://instagram.com/riccijandro", "https://github.com/RiccijandroUpec"] }
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "areaServed": {
+          "@type": "Country",
+          "name": "Ecuador"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Riccijandro",
+          "sameAs": [
+            "https://instagram.com/riccijandro",
+            "https://github.com/RiccijandroUpec"
+          ]
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "¿Quinde POS es un sistema de facturación gratuito?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sí. La versión para Windows es software libre (GPL v3): la descargas, la instalas y facturas sin pagar licencias, mensualidades ni costo por comprobante."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Sirve para la facturación electrónica del SRI en Ecuador?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sí. Genera el XML con los esquemas oficiales del SRI, lo firma con tu firma electrónica, lo envía y consulta la autorización. Imprime el ticket con la clave de acceso y manda el PDF (RIDE) y el XML al correo del cliente."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Qué necesito para emitir facturas electrónicas?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tu RUC habilitado para facturación electrónica en el SRI y una firma electrónica en archivo .p12, que se obtiene con una entidad certificadora autorizada. Puedes practicar primero en el ambiente de pruebas del SRI."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Funciona sin internet?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sí. Puedes vender y emitir comprobantes sin conexión; las facturas se envían solas al SRI cuando vuelve el internet."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Hay versión para celular?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sí, hay una app para Android 7 o superior. Es gratis en el ambiente de pruebas del SRI; para emitir facturas reales desde el celular se activa una licencia para el RUC de tu negocio."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Para qué negocios sirve?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Para tiendas, minimarkets, ferreterías, restaurantes, panaderías, farmacias y cualquier negocio del Ecuador que venda en mostrador y necesite caja, inventario y facturación."
+            }
+          }
+        ]
       }
     ]
   }
@@ -102,8 +169,8 @@
     <div class="contenedor">
       <div>
         <span class="etiqueta">Libre y gratuito · Hecho en Ecuador</span>
-        <h1 id="titulo">El punto de venta <span class="resalte">para tu negocio</span> en Ecuador</h1>
-        <p class="bajada">Vende rápido, cuadra tu caja y emite la <b>factura electrónica del SRI</b> sin pagar licencias ni programas aparte. Quinde POS funciona en tu computadora, con o sin pantalla táctil.</p>
+        <h1 id="titulo">Sistema de facturación <span class="resalte">gratuito</span> para tu negocio en Ecuador</h1>
+        <p class="bajada">Quinde POS es un punto de venta con <b>facturación electrónica del SRI</b> incluida: vende rápido, cuadra tu caja y emite facturas sin pagar licencias ni programas aparte. Funciona en tu computadora, con o sin pantalla táctil.</p>
         <div class="acciones">
           <a class="boton" href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">
             <svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar para Windows
@@ -356,6 +423,39 @@ ant -f build_working.xml instalador   <span class="c"># arma el instalador de Wi
         <h2>Identidad visual</h2>
         <p class="bajada" style="margin-bottom:0"><i>Quinde</i> es el colibrí en el Ecuador: pequeño, rápido y de aquí. La paleta "Selva" y la tipografía Outfit son parte del proyecto.</p>
         <img class="paleta" src="assets/paleta.png" alt="Paleta Selva: Quinde #2E9E6B, Selva #1B5E3F, Brote #A8E6C1, Coral #F2705E y Tinta #10231A" width="2008" height="496" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section id="preguntas" aria-labelledby="t-preguntas">
+    <div class="contenedor">
+      <span class="etiqueta">Preguntas frecuentes</span>
+      <h2 id="t-preguntas">Sistema de facturación gratis para Ecuador: lo que debes saber</h2>
+      <div class="preguntas">
+        <details class="pregunta">
+          <summary>¿Quinde POS es un sistema de facturación gratuito?</summary>
+          <p>Sí. La versión para Windows es software libre (GPL v3): la descargas, la instalas y facturas sin pagar licencias, mensualidades ni costo por comprobante.</p>
+        </details>
+        <details class="pregunta">
+          <summary>¿Sirve para la facturación electrónica del SRI en Ecuador?</summary>
+          <p>Sí. Genera el XML con los esquemas oficiales del SRI, lo firma con tu firma electrónica, lo envía y consulta la autorización. Imprime el ticket con la clave de acceso y manda el PDF (RIDE) y el XML al correo del cliente.</p>
+        </details>
+        <details class="pregunta">
+          <summary>¿Qué necesito para emitir facturas electrónicas?</summary>
+          <p>Tu RUC habilitado para facturación electrónica en el SRI y una firma electrónica en archivo .p12, que se obtiene con una entidad certificadora autorizada. Puedes practicar primero en el ambiente de pruebas del SRI.</p>
+        </details>
+        <details class="pregunta">
+          <summary>¿Funciona sin internet?</summary>
+          <p>Sí. Puedes vender y emitir comprobantes sin conexión; las facturas se envían solas al SRI cuando vuelve el internet.</p>
+        </details>
+        <details class="pregunta">
+          <summary>¿Hay versión para celular?</summary>
+          <p>Sí, hay una app para Android 7 o superior. Es gratis en el ambiente de pruebas del SRI; para emitir facturas reales desde el celular se activa una licencia para el RUC de tu negocio.</p>
+        </details>
+        <details class="pregunta">
+          <summary>¿Para qué negocios sirve?</summary>
+          <p>Para tiendas, minimarkets, ferreterías, restaurantes, panaderías, farmacias y cualquier negocio del Ecuador que venda en mostrador y necesite caja, inventario y facturación.</p>
+        </details>
       </div>
     </div>
   </section>

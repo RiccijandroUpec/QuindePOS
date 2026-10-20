@@ -450,3 +450,25 @@ footer a { color: var(--texto-suave); }
   .android { grid-template-columns: 1fr; }
   .telefonos { max-width: 320px; margin: 0 auto; }
 }
+
+/* Preguntas frecuentes */
+.preguntas { display: grid; gap: 12px; max-width: 820px; margin-top: 28px; }
+.pregunta {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 16px 20px;
+}
+.pregunta summary {
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 18px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.pregunta summary::-webkit-details-marker { display: none; }
+.pregunta summary::after { content: "+"; color: var(--quinde); font-size: 22px; line-height: 1; }
+.pregunta[open] summary::after { content: "−"; }
+.pregunta p { margin: 12px 0 0; color: var(--texto-suave); }
