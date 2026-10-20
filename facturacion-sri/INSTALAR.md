@@ -142,4 +142,5 @@ archivos que ya no se usan: `ecopos-sri-connector-service.exe`,
   electrónicos; al lado se explica el motivo en palabras simples (por
   ejemplo, una cédula mal escrita o una firma vencida). Corrígelo y presiona
   **Reintentar**. Las que fallan por falta de internet se reintentan solas
-  cada 15 minutos mientras EcoPos esté abierto.
+  cada 5 minutos mientras EcoPos esté abierto (el SRI exige transmitir cada
+  factura al momento de emitirla, así que conviene tener internet estable).

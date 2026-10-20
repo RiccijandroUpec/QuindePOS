@@ -95,7 +95,7 @@ ayudar:
   compartida es la interfaz `EcoPosSriBridge` (copiada byte a byte en ambos
   repos, siempre cargada desde ECOPos).
 - **Un solo hilo de trabajo** para todo lo que toca la BD o el SRI (ventas
-  nuevas y reintentos periódicos cada 15 min): nunca hay dos hilos usando
+  nuevas y reintentos periódicos cada 5 min): nunca hay dos hilos usando
   la misma conexión ni pidiendo secuencial a la vez. La conexión (con las
   mismas credenciales de ECOPos, driver MySQL 8 propio del conector) y los
   datos del emisor se abren perezosamente y se reabren solos si MySQL cerró

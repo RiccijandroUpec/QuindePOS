@@ -70,8 +70,13 @@ public final class ConectorPrincipal {
         return RutasConector.resolver("config/correo.properties");
     }
 
-    private static final int MAX_INTENTOS_REINTENTO = 5;
-    private static final long INTERVALO_REINTENTOS_MINUTOS = 15;
+    // Desde el 01-01-2026 el SRI exige transmitir cada comprobante al momento de
+    // emitirlo (Res. NAC-DGERCGC25-00000014 quito el plazo de cuatro dias): un fallo
+    // de red se reintenta seguido y no se abandona tras unos pocos intentos.
+    // ERROR solo es fallo tecnico (los rechazos del SRI quedan en RECHAZADO).
+    // 2000 intentos cada 5 minutos = cerca de una semana.
+    private static final int MAX_INTENTOS_REINTENTO = 2000;
+    private static final long INTERVALO_REINTENTOS_MINUTOS = 5;
 
     private final DatosEmisor emisor;
     private final TicketReader ticketReader;

@@ -103,10 +103,10 @@
           },
           {
             "@type": "Question",
-            "name": "¿Funciona sin internet?",
+            "name": "¿Qué pasa si se cae el internet?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Sí. Puedes vender y emitir comprobantes sin conexión; las facturas se envían solas al SRI cuando vuelve el internet."
+              "text": "La venta no se pierde: queda registrada y Quinde POS reintenta enviar la factura al SRI automáticamente apenas vuelve la conexión. Desde 2026 el SRI exige transmitir cada factura en el momento de emitirla, así que conviene tener internet estable en la caja."
             }
           },
           {
@@ -216,7 +216,7 @@
       <ul>
         <li><svg aria-hidden="true"><use href="#i-libre"/></svg><div>100 % gratis<span>Sin licencias ni mensualidades</span></div></li>
         <li><svg aria-hidden="true"><use href="#i-factura"/></svg><div>Factura electrónica<span>Integrada con el SRI</span></div></li>
-        <li><svg aria-hidden="true"><use href="#i-sinred"/></svg><div>Vende sin internet<span>Las facturas se envían después</span></div></li>
+        <li><svg aria-hidden="true"><use href="#i-sinred"/></svg><div>Si se cae el internet<span>No pierdes la venta</span></div></li>
         <li><svg aria-hidden="true"><use href="#i-ecuador"/></svg><div>Pensado para Ecuador<span>Dólares, IVA, cédula y RUC</span></div></li>
       </ul>
     </div>
@@ -288,7 +288,7 @@
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>El ticket es la factura</b><span>Sale impreso con el número, la clave de acceso y los datos del cliente.</span></div></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>PDF con el formato del SRI</b><span>Con tu logo, enviado por correo junto al XML.</span></div></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>Errores explicados en palabras simples</b><span>Y reintentos automáticos si no hay internet.</span></div></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>Notas de crédito totales o parciales</b><span>Devuelve solo los productos que hagan falta.</span></div></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>Notas de crédito totales o parciales</b><span>Devuelve solo los productos que hagan falta (el SRI no las admite en facturas a consumidor final).</span></div></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>Resumen tributario mensual</b><span>Ventas por tarifa de IVA, listo para el formulario 104.</span></div></li>
         </ul>
       </div>
@@ -366,7 +366,7 @@
         <p class="bajada">La misma idea, ahora en el teléfono o la tablet: vendes, cobras y la <b>factura del SRI se firma y se autoriza desde el mismo celular</b>, sin computadora ni servidores.</p>
         <ul class="lista">
           <li><svg aria-hidden="true"><use href="#i-factura"/></svg><div><b>Factura electrónica en segundos</b><span>RIDE en PDF, envío al correo del cliente y ticket por impresora Bluetooth.</span></div></li>
-          <li><svg aria-hidden="true"><use href="#i-sinred"/></svg><div><b>Vende sin internet</b><span>Las facturas se envían solas al SRI cuando vuelve la señal.</span></div></li>
+          <li><svg aria-hidden="true"><use href="#i-sinred"/></svg><div><b>Si se cae el internet, no pierdes la venta</b><span>Queda guardada y la factura se reintenta sola apenas vuelve la conexión.</span></div></li>
           <li><svg aria-hidden="true"><use href="#i-usuarios"/></svg><div><b>Caja, cajeros con PIN y reportes</b><span>Cierre de caja, panel de ventas e IVA del mes para Excel.</span></div></li>
         </ul>
         <div class="acciones" style="margin-top:28px">
@@ -480,8 +480,8 @@ ant -f build_working.xml instalador   <span class="c"># arma el instalador de Wi
           <p>Tu RUC habilitado para facturación electrónica en el SRI y una firma electrónica en archivo .p12, que se obtiene con una entidad certificadora autorizada. Puedes practicar primero en el ambiente de pruebas del SRI.</p>
         </details>
         <details class="pregunta">
-          <summary>¿Funciona sin internet?</summary>
-          <p>Sí. Puedes vender y emitir comprobantes sin conexión; las facturas se envían solas al SRI cuando vuelve el internet.</p>
+          <summary>¿Qué pasa si se cae el internet?</summary>
+          <p>La venta no se pierde: queda registrada y Quinde POS reintenta enviar la factura al SRI automáticamente apenas vuelve la conexión. Desde 2026 el SRI exige transmitir cada factura en el momento de emitirla, así que conviene tener internet estable en la caja.</p>
         </details>
         <details class="pregunta">
           <summary>¿Hay versión para celular?</summary>

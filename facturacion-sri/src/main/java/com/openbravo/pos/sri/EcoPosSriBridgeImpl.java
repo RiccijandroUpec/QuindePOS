@@ -50,7 +50,8 @@ public final class EcoPosSriBridgeImpl implements EcoPosSriBridge {
     private static final Logger LOG = LoggerFactory.getLogger(EcoPosSriBridgeImpl.class);
 
     private static final long RETRASO_PRIMER_REINTENTO_MINUTOS = 2;
-    private static final long INTERVALO_REINTENTOS_MINUTOS = 15;
+    /** Cada 5 minutos: el SRI exige transmitir al momento (ver ConectorPrincipal). */
+    private static final long INTERVALO_REINTENTOS_MINUTOS = 5;
     private static final int SEGUNDOS_VALIDAR_CONEXION = 5;
 
     private final DataSource dataSource;

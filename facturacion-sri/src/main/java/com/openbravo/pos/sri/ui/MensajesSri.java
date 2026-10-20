@@ -43,7 +43,7 @@ public final class MensajesSri {
         if (m.contains("TIMED OUT") || m.contains("TIMEOUT") || m.contains("UNKNOWNHOST") || m.contains("CONNECT")
                 || m.contains("SOCKET") || m.contains("UNREACHABLE") || m.contains("CONEXI")) {
             return "No hubo conexión con el SRI (sin internet o el SRI no respondió). Quinde POS lo reintenta solo cada "
-                    + "15 minutos; también puedes presionar Reintentar.";
+                    + "5 minutos, pero el SRI exige enviar cada factura al momento: revisa el internet y presiona Reintentar.";
         }
         if (m.contains("EN PROCESO") || m.contains("PPR")) {
             return "El SRI todavía está procesando el comprobante. Quinde POS vuelve a consultar solo.";
