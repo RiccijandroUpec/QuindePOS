@@ -11,4 +11,28 @@
     <image:image><image:loc>https://quindepos.cyrshop.app/capturas/android-venta.png</image:loc></image:image>
     <image:image><image:loc>https://quindepos.cyrshop.app/assets/icono.png</image:loc></image:image>
   </url>
+  <url>
+    <loc>https://quindepos.cyrshop.app/guias/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://quindepos.cyrshop.app/guias/facturacion-electronica-gratis-ecuador/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://quindepos.cyrshop.app/guias/requisitos-facturacion-electronica-sri/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://quindepos.cyrshop.app/guias/facturador-sri-o-punto-de-venta/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
