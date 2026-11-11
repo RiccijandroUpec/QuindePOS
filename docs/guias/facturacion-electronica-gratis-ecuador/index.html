@@ -22,7 +22,8 @@
   <link rel="icon" type="image/svg+xml" href="/assets/icono.svg">
   <link rel="apple-touch-icon" href="/assets/icono.png">
   <link rel="stylesheet" href="/assets/estilo.css">
-  <link rel="stylesheet" href="/assets/guias.css">
+  <link rel="stylesheet" href="/assets/guias.css?v=2">
+  <script src="/assets/guias.js?v=2" defer></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -93,13 +94,41 @@
   </div>
 </header>
 <main>
-<article class="contenedor articulo">
-<nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> › <a href="/guias/">Guías</a> › Facturar gratis, paso a paso</nav>
-<h1>Cómo emitir facturas electrónicas gratis en Ecuador (paso a paso)</h1>
-
-<p class="entrada">Sí se puede facturar electrónicamente en Ecuador sin pagar mensualidades ni un valor por cada factura. Lo único que sí tiene costo es la <b>firma electrónica</b>, que necesitas con cualquier sistema. En esta guía te explicamos las dos opciones gratuitas y cómo empezar con Quinde POS.</p>
-
-<h2>Lo que necesitas antes de empezar</h2>
+<div class="progreso" aria-hidden="true"></div>
+<article class="guia">
+<header class="guia-cabecera">
+  <div class="contenedor guia-cabecera__in">
+    <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> › <a href="/guias/">Guías</a> › Facturar gratis, paso a paso</nav>
+    <h1>Cómo emitir facturas electrónicas gratis en Ecuador (paso a paso)</h1>
+    <p class="entrada">Sí se puede facturar electrónicamente en Ecuador sin pagar mensualidades ni un valor por cada factura. Lo único que sí tiene costo es la <b>firma electrónica</b>, que necesitas con cualquier sistema. En esta guía te explicamos las dos opciones gratuitas y cómo empezar con Quinde POS.</p>
+    <ul class="guia-meta">
+      <li>⏱ 4 min de lectura</li>
+      <li>Actualizada en noviembre de 2026</li>
+      <li class="oficial">✓ Basada en fuentes oficiales del SRI</li>
+    </ul>
+  </div>
+</header>
+<div class="contenedor guia-cuerpo">
+  <aside class="indice">
+    <div class="indice__caja">
+    <details>
+      <summary>En esta guía</summary>
+      <ol>
+        <li><a href="#lo-que-necesitas-antes-de-empezar">Lo que necesitas antes de empezar</a></li>
+        <li><a href="#las-dos-opciones-gratuitas">Las dos opciones gratuitas</a></li>
+        <li><a href="#paso-a-paso-con-quinde-pos">Paso a paso con Quinde POS</a></li>
+        <li><a href="#errores-comunes-y-como-evitarlos">Errores comunes y cómo evitarlos</a></li>
+      </ol>
+    </details>
+    <div class="indice__cta">
+      <b>Factura gratis con Quinde POS</b>
+      <p>Punto de venta con factura del SRI, sin mensualidades.</p>
+      <a class="boton chico" href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">Descargar gratis</a>
+    </div>
+    </div>
+  </aside>
+  <div class="articulo">
+<h2 id="lo-que-necesitas-antes-de-empezar">Lo que necesitas antes de empezar</h2>
 <ul>
   <li><b>RUC activo</b>, con tu establecimiento registrado en el SRI.</li>
   <li><b>Clave de SRI en Línea</b>.</li>
@@ -108,12 +137,12 @@
 </ul>
 <p>Si te falta algo, revisa la guía de <a href="/guias/requisitos-facturacion-electronica-sri/">requisitos para la facturación electrónica del SRI</a>.</p>
 
-<h2>Las dos opciones gratuitas</h2>
+<h2 id="las-dos-opciones-gratuitas">Las dos opciones gratuitas</h2>
 <p><b>1. El Facturador del SRI.</b> Es la herramienta gratuita y en línea del propio SRI. Entras con tu usuario y clave de SRI en Línea y llenas cada factura en la página web. Sirve si emites pocas facturas al mes.</p>
 <p><b>2. Un punto de venta gratuito como Quinde POS.</b> Es software libre: lo instalas en tu computadora y la factura sale sola cada vez que cobras, junto con la caja, el inventario y el ticket impreso. Conviene si vendes todos los días en mostrador.</p>
 <p>¿No sabes cuál elegir? Mira la comparación <a href="/guias/facturador-sri-o-punto-de-venta/">Facturador del SRI o punto de venta gratis</a>.</p>
 
-<h2>Paso a paso con Quinde POS</h2>
+<h2 id="paso-a-paso-con-quinde-pos">Paso a paso con Quinde POS</h2>
 <ol class="lista-pasos">
   <li><b>Descarga el instalador.</b> Entra a <a href="/">quindepos.cyrshop.app</a> y toca <i>Descargar para Windows</i> (Windows 10 u 11). Trae Java y la base de datos incluidos: no instalas nada más.</li>
   <li><b>Instálalo.</b> Cuando pregunte por la base de datos, deja la opción recomendada (<i>la base de datos incluida</i>).</li>
@@ -123,7 +152,7 @@
   <li><b>Pasa a Producción.</b> Cuando todo funcione, cambia el ambiente a <b>Producción</b>. Antes, confirma en SRI en Línea que tu RUC está habilitado para emitir comprobantes electrónicos en producción; si tienes dudas, consúltalo con tu contador.</li>
 </ol>
 
-<h2>Errores comunes y cómo evitarlos</h2>
+<h2 id="errores-comunes-y-como-evitarlos">Errores comunes y cómo evitarlos</h2>
 <ul>
   <li><b>Firma vencida o contraseña incorrecta:</b> la firma tiene fecha de vencimiento. Renuévala con tiempo; Quinde POS te avisa 30 días antes.</li>
   <li><b>Establecimiento o punto de emisión que no coinciden con el SRI:</b> usa exactamente los códigos registrados en tu RUC.</li>
@@ -142,6 +171,8 @@
 </section>
 
 <section class="relacionadas"><h2>Otras guías</h2><ul><li><a href="/guias/requisitos-facturacion-electronica-sri/">Requisitos para la facturación electrónica del SRI en Ecuador</a></li><li><a href="/guias/facturador-sri-o-punto-de-venta/">Facturador del SRI o punto de venta gratis: ¿cuál te conviene?</a></li><li><a href="/guias/como-obtener-firma-electronica-ecuador/">Cómo obtener la firma electrónica en Ecuador para facturar</a></li><li><a href="/guias/facturacion-electronica-rimpe-emprendedores-negocios-populares/">Facturación electrónica para RIMPE: emprendedores y negocios populares</a></li><li><a href="/guias/que-es-el-ride-factura-electronica-sri/">Qué es el RIDE de la factura electrónica y cómo se entrega al cliente</a></li><li><a href="/guias/como-anular-factura-electronica-sri/">Cómo anular una factura electrónica en el SRI (plazo y pasos)</a></li></ul></section>
+  </div>
+</div>
 </article>
 </main>
 <footer>

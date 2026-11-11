@@ -22,7 +22,8 @@
   <link rel="icon" type="image/svg+xml" href="/assets/icono.svg">
   <link rel="apple-touch-icon" href="/assets/icono.png">
   <link rel="stylesheet" href="/assets/estilo.css">
-  <link rel="stylesheet" href="/assets/guias.css">
+  <link rel="stylesheet" href="/assets/guias.css?v=2">
+  <script src="/assets/guias.js?v=2" defer></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -93,19 +94,49 @@
   </div>
 </header>
 <main>
-<article class="contenedor articulo">
-<nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> › <a href="/guias/">Guías</a> › Firma electrónica</nav>
-<h1>Cómo obtener la firma electrónica en Ecuador para facturar</h1>
-
-<p class="entrada">Sin firma electrónica no puedes emitir facturas electrónicas en Ecuador, con ningún sistema. Es lo único que tiene costo en el proceso. Aquí te explicamos quién la emite, cuánto cuesta aproximadamente y cómo sacarla paso a paso.</p>
-
-<h2>¿Para qué sirve la firma electrónica al facturar?</h2>
+<div class="progreso" aria-hidden="true"></div>
+<article class="guia">
+<header class="guia-cabecera">
+  <div class="contenedor guia-cabecera__in">
+    <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> › <a href="/guias/">Guías</a> › Firma electrónica</nav>
+    <h1>Cómo obtener la firma electrónica en Ecuador para facturar</h1>
+    <p class="entrada">Sin firma electrónica no puedes emitir facturas electrónicas en Ecuador, con ningún sistema. Es lo único que tiene costo en el proceso. Aquí te explicamos quién la emite, cuánto cuesta aproximadamente y cómo sacarla paso a paso.</p>
+    <ul class="guia-meta">
+      <li>⏱ 5 min de lectura</li>
+      <li>Actualizada en noviembre de 2026</li>
+      <li class="oficial">✓ Basada en fuentes oficiales del SRI</li>
+    </ul>
+  </div>
+</header>
+<div class="contenedor guia-cuerpo">
+  <aside class="indice">
+    <div class="indice__caja">
+    <details>
+      <summary>En esta guía</summary>
+      <ol>
+        <li><a href="#para-que-sirve-la-firma-electronica-al-facturar">¿Para qué sirve la firma electrónica al facturar?</a></li>
+        <li><a href="#quien-emite-la-firma-electronica">¿Quién emite la firma electrónica?</a></li>
+        <li><a href="#cuanto-cuesta">¿Cuánto cuesta?</a></li>
+        <li><a href="#como-sacarla-paso-a-paso">Cómo sacarla, paso a paso</a></li>
+        <li><a href="#como-usarla-con-quinde-pos">Cómo usarla con Quinde POS</a></li>
+        <li><a href="#lista-rapida">Lista rápida</a></li>
+      </ol>
+    </details>
+    <div class="indice__cta">
+      <b>Factura gratis con Quinde POS</b>
+      <p>Punto de venta con factura del SRI, sin mensualidades.</p>
+      <a class="boton chico" href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">Descargar gratis</a>
+    </div>
+    </div>
+  </aside>
+  <div class="articulo">
+<h2 id="para-que-sirve-la-firma-electronica-al-facturar">¿Para qué sirve la firma electrónica al facturar?</h2>
 <p>Cada factura electrónica lleva la firma del emisor dentro del archivo. Según el SRI, esa firma garantiza que la factura viene de quien dice venir y que su contenido no fue alterado. Por eso el SRI la pide como requisito para emitir comprobantes electrónicos, junto con un sistema de facturación, conexión a internet y tu clave de SRI en Línea.</p>
 <p>Para facturar necesitas la firma en formato <b>archivo</b> (<code>.p12</code>). El propio Facturador del SRI pide un certificado «tipo archivo» válido y vigente, y Quinde POS también trabaja con ese archivo. El <i>token</i> (una memoria USB que guarda el certificado) se usa sobre todo para otros trámites; para facturar con un punto de venta lo normal es el archivo.</p>
 
-<h2>¿Quién emite la firma electrónica?</h2>
+<h2 id="quien-emite-la-firma-electronica">¿Quién emite la firma electrónica?</h2>
 <p>Solo las <b>entidades de certificación</b> autorizadas en el país. En su página de facturación electrónica, el SRI publica la lista de entidades cuyos certificados se pueden usar para firmar comprobantes:</p>
-<ul>
+<ul class="lista-chips">
   <li>Banco Central del Ecuador</li>
   <li>Consejo de la Judicatura</li>
   <li>Security Data</li>
@@ -120,7 +151,7 @@
 </ul>
 <p>La lista puede cambiar. Antes de pagar, revisa la <a href="https://www.sri.gob.ec/facturacion-electronica" rel="noopener">lista vigente en el sitio del SRI</a>, donde cada entidad tiene su enlace con requisitos y procedimiento.</p>
 
-<h2>¿Cuánto cuesta?</h2>
+<h2 id="cuanto-cuesta">¿Cuánto cuesta?</h2>
 <p>El precio lo fija cada entidad y depende del formato y del tiempo de vigencia. Como referencia, el <b>Banco Central del Ecuador</b> publica estas tarifas para un certificado en archivo de persona natural, con vigencia de 2 años:</p>
 <ul>
   <li><b>USD 22 + IVA</b> si lo solicitas en línea.</li>
@@ -128,7 +159,7 @@
 </ul>
 <p>El Banco Central también ofrece vigencias más cortas (1 año y 1 mes) para persona natural en archivo. Las entidades privadas definen sus propios precios, así que conviene comparar dos o tres. Estos valores son los publicados al escribir esta guía y pueden cambiar: confirma el precio final en la página de la entidad que elijas. Recuerda que la firma tiene fecha de vencimiento y hay que <b>renovarla</b>, normalmente cada 1 o 2 años según lo que contrates.</p>
 
-<h2>Cómo sacarla, paso a paso</h2>
+<h2 id="como-sacarla-paso-a-paso">Cómo sacarla, paso a paso</h2>
 <ol class="lista-pasos">
   <li><b>Elige la entidad</b> de la lista del SRI y entra a su página de solicitud en línea.</li>
   <li><b>Escoge el formato «archivo» (<code>.p12</code>)</b> y si es para persona natural (tú con tu RUC) o jurídica (una empresa).</li>
@@ -138,10 +169,10 @@
   <li><b>Cárgala en tu sistema de facturación</b> y haz una factura de prueba en el ambiente de <b>Pruebas</b> del SRI antes de emitir en Producción.</li>
 </ol>
 
-<h2>Cómo usarla con Quinde POS</h2>
+<h2 id="como-usarla-con-quinde-pos">Cómo usarla con Quinde POS</h2>
 <p>En Quinde POS cargas el archivo <code>.p12</code> y su contraseña en la configuración de <i>Facturación electrónica</i>. El programa te muestra de quién es la firma y hasta cuándo vale, y te avisa 30 días antes de que venza. Los pasos completos están en la guía <a href="/guias/facturacion-electronica-gratis-ecuador/">Cómo emitir facturas electrónicas gratis en Ecuador</a>.</p>
 
-<h2>Lista rápida</h2>
+<h2 id="lista-rapida">Lista rápida</h2>
 <ul class="lista-check">
   <li>Entidad elegida de la lista vigente del SRI</li>
   <li>Certificado en formato archivo (<code>.p12</code>), no solo token</li>
@@ -150,6 +181,7 @@
   <li>Fecha de vencimiento anotada para renovar a tiempo</li>
 </ul>
 
+<section class="fuentes">
 <h2>Fuentes oficiales</h2>
 <ul>
   <li><a href="https://www.sri.gob.ec/facturacion-electronica" rel="noopener">SRI: Facturación electrónica</a> (qué es, requisitos y entidades para adquirir la firma)</li>
@@ -157,6 +189,7 @@
   <li><a href="https://www.eci.bce.ec/tarifas" rel="noopener">Banco Central del Ecuador: tarifas de certificados digitales</a></li>
   <li><a href="https://www.gob.ec/cj/tramites/emision-certificado-firma-electronica-persona-natural-contenedor-token-archivo-pkcs12-remoto-hsm-parte-entidad-certificacion-consejo-judicatura-icert-ec" rel="noopener">gob.ec: Certificado de firma electrónica del Consejo de la Judicatura</a></li>
 </ul>
+</section>
 <p class="nota">Esta guía es informativa y no reemplaza la normativa del SRI ni la asesoría de un contador. Las tarifas y requisitos cambian: confirma siempre en <a href="https://www.sri.gob.ec" rel="nofollow">sri.gob.ec</a> y en la entidad de certificación. Información revisada en noviembre de 2026.</p>
 
 <section class="cta">
@@ -169,6 +202,8 @@
 </section>
 
 <section class="relacionadas"><h2>Otras guías</h2><ul><li><a href="/guias/facturacion-electronica-gratis-ecuador/">Cómo emitir facturas electrónicas gratis en Ecuador (paso a paso)</a></li><li><a href="/guias/requisitos-facturacion-electronica-sri/">Requisitos para la facturación electrónica del SRI en Ecuador</a></li><li><a href="/guias/facturador-sri-o-punto-de-venta/">Facturador del SRI o punto de venta gratis: ¿cuál te conviene?</a></li><li><a href="/guias/facturacion-electronica-rimpe-emprendedores-negocios-populares/">Facturación electrónica para RIMPE: emprendedores y negocios populares</a></li><li><a href="/guias/que-es-el-ride-factura-electronica-sri/">Qué es el RIDE de la factura electrónica y cómo se entrega al cliente</a></li><li><a href="/guias/como-anular-factura-electronica-sri/">Cómo anular una factura electrónica en el SRI (plazo y pasos)</a></li></ul></section>
+  </div>
+</div>
 </article>
 </main>
 <footer>

@@ -22,7 +22,8 @@
   <link rel="icon" type="image/svg+xml" href="/assets/icono.svg">
   <link rel="apple-touch-icon" href="/assets/icono.png">
   <link rel="stylesheet" href="/assets/estilo.css">
-  <link rel="stylesheet" href="/assets/guias.css">
+  <link rel="stylesheet" href="/assets/guias.css?v=2">
+  <script src="/assets/guias.js?v=2" defer></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -93,17 +94,46 @@
   </div>
 </header>
 <main>
-<article class="contenedor articulo">
-<nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> › <a href="/guias/">Guías</a> › Requisitos del SRI</nav>
-<h1>Requisitos para la facturación electrónica del SRI en Ecuador</h1>
-
-<p class="entrada">La factura electrónica es hoy la forma normal de facturar en Ecuador. Estos son los requisitos, explicados en palabras simples, para que sepas qué tener listo antes de emitir tu primera factura.</p>
-
-<h2>¿Quién debe emitir facturas electrónicas?</h2>
+<div class="progreso" aria-hidden="true"></div>
+<article class="guia">
+<header class="guia-cabecera">
+  <div class="contenedor guia-cabecera__in">
+    <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> › <a href="/guias/">Guías</a> › Requisitos del SRI</nav>
+    <h1>Requisitos para la facturación electrónica del SRI en Ecuador</h1>
+    <p class="entrada">La factura electrónica es hoy la forma normal de facturar en Ecuador. Estos son los requisitos, explicados en palabras simples, para que sepas qué tener listo antes de emitir tu primera factura.</p>
+    <ul class="guia-meta">
+      <li>⏱ 3 min de lectura</li>
+      <li>Actualizada en noviembre de 2026</li>
+      <li class="oficial">✓ Basada en fuentes oficiales del SRI</li>
+    </ul>
+  </div>
+</header>
+<div class="contenedor guia-cuerpo">
+  <aside class="indice">
+    <div class="indice__caja">
+    <details>
+      <summary>En esta guía</summary>
+      <ol>
+        <li><a href="#quien-debe-emitir-facturas-electronicas">¿Quién debe emitir facturas electrónicas?</a></li>
+        <li><a href="#los-5-requisitos">Los 5 requisitos</a></li>
+        <li><a href="#ambiente-de-pruebas-y-produccion">Ambiente de pruebas y producción</a></li>
+        <li><a href="#que-recibe-tu-cliente">¿Qué recibe tu cliente?</a></li>
+        <li><a href="#lista-rapida">Lista rápida</a></li>
+      </ol>
+    </details>
+    <div class="indice__cta">
+      <b>Factura gratis con Quinde POS</b>
+      <p>Punto de venta con factura del SRI, sin mensualidades.</p>
+      <a class="boton chico" href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">Descargar gratis</a>
+    </div>
+    </div>
+  </aside>
+  <div class="articulo">
+<h2 id="quien-debe-emitir-facturas-electronicas">¿Quién debe emitir facturas electrónicas?</h2>
 <p>La gran mayoría de contribuyentes con RUC que emiten facturas deben hacerlo de forma electrónica. Los contribuyentes del <b>RIMPE emprendedor</b> también emiten comprobantes electrónicos, con la leyenda <i>Contribuyente Régimen RIMPE</i>.</p>
 <p>Los <b>negocios populares del RIMPE</b> tienen reglas especiales (por ejemplo, las notas de venta) que han cambiado en los últimos años. Si es tu caso, confirma en SRI en Línea o con tu contador qué comprobante te corresponde.</p>
 
-<h2>Los 5 requisitos</h2>
+<h2 id="los-5-requisitos">Los 5 requisitos</h2>
 <ol class="lista-pasos">
   <li><b>RUC activo</b>, con el establecimiento desde el que vas a facturar registrado. Cada factura lleva un código de establecimiento y de punto de emisión (por ejemplo <code>001-001</code>).</li>
   <li><b>Clave de SRI en Línea.</b> Con ella entras a los servicios del SRI, revisas tus comprobantes y usas el facturador gratuito.</li>
@@ -112,13 +142,13 @@
   <li><b>Internet.</b> Desde 2026 el comprobante debe transmitirse al SRI en el mismo momento de su emisión. Ya no existe el plazo de varios días que había antes.</li>
 </ol>
 
-<h2>Ambiente de pruebas y producción</h2>
+<h2 id="ambiente-de-pruebas-y-produccion">Ambiente de pruebas y producción</h2>
 <p>El SRI tiene dos ambientes: <b>Pruebas</b>, donde las facturas no tienen validez tributaria y sirven para practicar, y <b>Producción</b>, donde las facturas son reales. Empieza siempre en Pruebas: así revisas tus datos, tu firma y tu impresora sin riesgo.</p>
 
-<h2>¿Qué recibe tu cliente?</h2>
+<h2 id="que-recibe-tu-cliente">¿Qué recibe tu cliente?</h2>
 <p>Cuando el SRI autoriza la factura, tu cliente puede recibir el <b>RIDE</b> (la representación impresa de la factura, normalmente en PDF) y el archivo <b>XML</b>, que es la factura electrónica en sí. Con Quinde POS se envían solos a su correo, y el ticket impreso lleva el número de autorización.</p>
 
-<h2>Lista rápida</h2>
+<h2 id="lista-rapida">Lista rápida</h2>
 <ul class="lista-check">
   <li>RUC activo y establecimiento registrado</li>
   <li>Clave de SRI en Línea</li>
@@ -140,6 +170,8 @@
 </section>
 
 <section class="relacionadas"><h2>Otras guías</h2><ul><li><a href="/guias/facturacion-electronica-gratis-ecuador/">Cómo emitir facturas electrónicas gratis en Ecuador (paso a paso)</a></li><li><a href="/guias/facturador-sri-o-punto-de-venta/">Facturador del SRI o punto de venta gratis: ¿cuál te conviene?</a></li><li><a href="/guias/como-obtener-firma-electronica-ecuador/">Cómo obtener la firma electrónica en Ecuador para facturar</a></li><li><a href="/guias/facturacion-electronica-rimpe-emprendedores-negocios-populares/">Facturación electrónica para RIMPE: emprendedores y negocios populares</a></li><li><a href="/guias/que-es-el-ride-factura-electronica-sri/">Qué es el RIDE de la factura electrónica y cómo se entrega al cliente</a></li><li><a href="/guias/como-anular-factura-electronica-sri/">Cómo anular una factura electrónica en el SRI (plazo y pasos)</a></li></ul></section>
+  </div>
+</div>
 </article>
 </main>
 <footer>
