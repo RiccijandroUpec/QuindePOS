@@ -6,13 +6,6 @@
   --linea: #CFE3D7;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --suave-verde: #133224;
-    --linea: #2A4A39;
-  }
-}
-
 /* ---------- Barra de progreso de lectura ---------- */
 
 .progreso {
@@ -42,7 +35,7 @@
 .guia-cabecera h1 {
   font-size: clamp(30px, 4.4vw, 46px);
   line-height: 1.12;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.005em;
   margin: 0 0 18px;
   text-wrap: balance;
 }
@@ -200,7 +193,7 @@
 .articulo h2 {
   font-size: clamp(24px, 2.6vw, 30px);
   line-height: 1.2;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.005em;
   margin: 52px 0 16px;
   padding-top: 4px;
   scroll-margin-top: 90px;
@@ -430,7 +423,7 @@
 /* ---------- Índice de guías (guias/index.html) ---------- */
 
 .pagina-guias { max-width: 980px; padding-top: 48px; padding-bottom: 72px; }
-.pagina-guias h1 { font-size: clamp(32px, 4.6vw, 48px); letter-spacing: -0.02em; margin-bottom: 12px; }
+.pagina-guias h1 { font-size: clamp(32px, 4.6vw, 48px); letter-spacing: -0.005em; margin-bottom: 12px; }
 .pagina-guias .entrada { font-family: var(--lectura); font-size: 19px; color: var(--texto-suave); margin-bottom: 32px; }
 
 .tarjetas-guias {

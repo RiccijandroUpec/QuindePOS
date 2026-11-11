@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sistema de facturación electrónica gratis para Ecuador · Quinde POS</title>
   <meta name="description" content="Sistema de facturación electrónica gratuito para Ecuador, autorizado con el SRI: punto de venta, caja, inventario y reportes para tu negocio. Descárgalo gratis para Windows o Android.">
-  <meta name="theme-color" content="#1B5E3F">
+  <meta name="theme-color" content="#FAFAF7">
   <meta property="og:title" content="Sistema de facturación electrónica gratis para Ecuador · Quinde POS">
   <meta property="og:description" content="Sistema de facturación electrónica gratuito para Ecuador: ventas, caja, inventario y factura del SRI.">
   <meta property="og:image" content="https://quindepos.cyrshop.app/assets/compartir.png">
@@ -136,51 +136,63 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/svg+xml" href="assets/icono.svg">
   <link rel="apple-touch-icon" href="assets/icono.png">
-  <link rel="stylesheet" href="assets/estilo.css">
-  <link rel="stylesheet" href="assets/guias.css?v=2">
+  <link rel="preload" as="font" type="font/ttf" href="assets/fuentes/Outfit-ExtraBold.ttf" crossorigin>
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="assets/estilo.css?v=3">
+  <link rel="stylesheet" href="assets/guias.css?v=3">
 </head>
 <body>
+<a class="saltar" href="#inicio">Saltar al contenido</a>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></symbol>
-    <symbol id="i-carrito" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 8H6.2"/></symbol>
-    <symbol id="i-factura" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14l-2.5-1.5L14 21l-2-1.5L10 21l-2.5-1.5L6 21z"/><path d="M9 9h6M9 13h6M9 17h3"/></symbol>
-    <symbol id="i-dinero" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/></symbol>
-    <symbol id="i-grafico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><rect x="6" y="11" width="3" height="6" rx="1"/><rect x="11" y="7" width="3" height="10" rx="1"/><rect x="16" y="13" width="3" height="4" rx="1"/></symbol>
-    <symbol id="i-escudo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
-    <symbol id="i-regalo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
-    <symbol id="i-caja" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></symbol>
-    <symbol id="i-impresora" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V4h10v5"/><rect x="4" y="9" width="16" height="7" rx="2"/><path d="M7 14h10v6H7z"/></symbol>
-    <symbol id="i-usuarios" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.2 0 4 1.8 4 4"/></symbol>
-    <symbol id="i-sinred" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18h.01M9.2 15.2a4 4 0 0 1 5.6 0M5.5 11.5a9 9 0 0 1 4-2.2M18.5 11.5a9 9 0 0 0-2.7-1.8M2 8a14 14 0 0 1 4-2.6M22 8a14 14 0 0 0-9-3.9M3 3l18 18"/></symbol>
-    <symbol id="i-libre" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13.5 6l-3 12"/></symbol>
-    <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
-    <symbol id="i-ecuador" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
-    <symbol id="i-descarga" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
-    <symbol id="i-android" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></symbol>
-    <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7c-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></symbol>
-    <symbol id="i-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
-    <symbol id="i-linkedin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0"/></symbol>
-    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M20 4L4 20"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-carrito" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 8H6.2"/></symbol>
+    <symbol id="i-factura" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14l-2.5-1.5L14 21l-2-1.5L10 21l-2.5-1.5L6 21z"/><path d="M9 9h6M9 13h6M9 17h3"/></symbol>
+    <symbol id="i-dinero" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/></symbol>
+    <symbol id="i-grafico" viewBox="0 0 24 24"><path d="M4 20h16"/><rect x="6" y="11" width="3" height="6" rx="1"/><rect x="11" y="7" width="3" height="10" rx="1"/><rect x="16" y="13" width="3" height="4" rx="1"/></symbol>
+    <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-regalo" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
+    <symbol id="i-caja" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></symbol>
+    <symbol id="i-impresora" viewBox="0 0 24 24"><path d="M7 9V4h10v5"/><rect x="4" y="9" width="16" height="7" rx="2"/><path d="M7 14h10v6H7z"/></symbol>
+    <symbol id="i-usuarios" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.2 0 4 1.8 4 4"/></symbol>
+    <symbol id="i-sinred" viewBox="0 0 24 24"><path d="M12 18h.01M9.2 15.2a4 4 0 0 1 5.6 0M5.5 11.5a9 9 0 0 1 4-2.2M18.5 11.5a9 9 0 0 0-2.7-1.8M2 8a14 14 0 0 1 4-2.6M22 8a14 14 0 0 0-9-3.9M3 3l18 18"/></symbol>
+    <symbol id="i-libre" viewBox="0 0 24 24"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13.5 6l-3 12"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+    <symbol id="i-ecuador" viewBox="0 0 24 24"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-descarga" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+    <symbol id="i-celular" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.2 3.1z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.5 4.5 0 0 1-2.2-2.2l.8-1-1-2z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></symbol>
+    <symbol id="i-dolar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2A2.6 2.6 0 0 0 12.4 8h-1a2.2 2.2 0 0 0 0 4.4h1.2a2.2 2.2 0 0 1 0 4.4h-1.1a2.7 2.7 0 0 1-2.4-1.3M12 6.5V8M12 16.8v1.5"/></symbol>
+    <symbol id="i-taza" viewBox="0 0 24 24"><path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16M8 3.5v2M12 3.5v2"/></symbol>
+    <symbol id="i-cubiertos" viewBox="0 0 24 24"><path d="M7 3v7a2 2 0 0 0 4 0V3M9 12v9M17 21V3c-2 1-3.5 3.5-3.5 7v3H17"/></symbol>
+    <symbol id="i-helado" viewBox="0 0 24 24"><path d="M7 10a5 5 0 0 1 10 0z"/><path d="m7.5 10 4.5 11 4.5-11"/></symbol>
+    <symbol id="i-farmacia" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8M8 12h8"/></symbol>
+    <symbol id="i-ropa" viewBox="0 0 24 24"><path d="M9 3.5 4 6l1.5 4.5L7 10v10.5h10V10l1.5.5L20 6l-5-2.5a3 3 0 0 1-6 0z"/></symbol>
+    <symbol id="i-llave" viewBox="0 0 24 24"><path d="M14.5 4.5a4.5 4.5 0 0 0-4.3 5.9L3.5 17.1V20.5h3.4l6.7-6.7a4.5 4.5 0 0 0 5.9-4.3l-2.6 2.6-2.8-.7-.7-2.8z"/></symbol>
+    <symbol id="i-lapiz" viewBox="0 0 24 24"><path d="M4 20l1-4.5L15.5 5a2.1 2.1 0 0 1 3 3L8 18.5zM13.5 7l3 3"/></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7c-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
+    <symbol id="i-linkedin" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></symbol>
   </defs>
 </svg>
 
 <header class="barra">
   <div class="contenedor">
     <a class="marca" href="#inicio" aria-label="Quinde POS, inicio">
-      <img src="assets/icono.png" alt="" width="34" height="34">
+      <img src="assets/icono.png" alt="" width="36" height="36">
       <span>Quinde<span class="pos">POS</span></span>
     </a>
     <nav class="menu" aria-label="Secciones">
+      <a href="#versiones">Versiones</a>
       <a href="#funciones">Funciones</a>
       <a href="#sri">Facturación SRI</a>
-      <a href="#capturas">Capturas</a>
       <a href="#empezar">Cómo empezar</a>
-      <a href="#android">Android</a>
       <a href="guias/">Guías</a>
-      <a class="boton chico" href="https://github.com/RiccijandroUpec/QuindePOS">
-        <svg aria-hidden="true"><use href="#i-github"/></svg> GitHub
+      <a class="boton chico secundario whatsapp" href="https://wa.me/593983185069?text=Hola%20Richard%2C%20quiero%20saber%20m%C3%A1s%20de%20Quinde%20POS.">
+        <svg aria-hidden="true"><use href="#i-whatsapp"/></svg> WhatsApp
       </a>
     </nav>
   </div>
@@ -191,22 +203,31 @@
   <section class="portada" aria-labelledby="titulo">
     <div class="contenedor">
       <div>
-        <span class="etiqueta">Libre y gratuito · Hecho en Ecuador</span>
+        <span class="etiqueta">Facturación electrónica del SRI incluida · Hecho en Ecuador</span>
         <h1 id="titulo">Sistema de facturación <span class="resalte">gratuito</span> para tu negocio en Ecuador</h1>
-        <p class="bajada">Quinde POS es un punto de venta con <b>facturación electrónica del SRI</b> incluida: vende rápido, cuadra tu caja y emite facturas sin pagar licencias ni programas aparte. Funciona en tu computadora, con o sin pantalla táctil.</p>
+        <p class="bajada">Quinde POS es un punto de venta con <b>factura electrónica del SRI</b>: vendes rápido, cuadras tu caja y facturas <b>sin mensualidades ni costo por factura</b>. Gratis en tu computadora con Windows, y también disponible para Android.</p>
         <div class="acciones">
           <a class="boton" href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">
-            <svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar para Windows
+            <svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar gratis para Windows
           </a>
-          <a class="boton secundario" href="#android">
-            <svg aria-hidden="true"><use href="#i-android"/></svg> App para Android
+          <a class="boton secundario whatsapp" href="https://wa.me/593983185069?text=Hola%20Richard%2C%20quiero%20una%20demo%20de%20Quinde%20POS%20para%20mi%20negocio.">
+            <svg aria-hidden="true"><use href="#i-whatsapp"/></svg> Pide tu demo por WhatsApp
           </a>
         </div>
-        <p class="nota-portada">Instalador para Windows 10 y 11 con Java y base de datos incluidos · Código abierto GPL v3</p>
+        <ul class="puntos-portada">
+          <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Windows 10 y 11</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Java y base de datos incluidos</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Software libre GPL v3</li>
+        </ul>
       </div>
-      <div class="marco">
-        <div class="puntos" aria-hidden="true"><span></span><span></span><span></span></div>
-        <img src="capturas/pantalla-de-venta.png" alt="Pantalla de venta de Quinde POS con productos en tarjetas, el carrito y el total" width="1366" height="737">
+      <div class="escena">
+        <div class="pantalla">
+          <div class="barra-ventana" aria-hidden="true"><span></span><span></span><span></span></div>
+          <img src="capturas/pantalla-de-venta.png" alt="Pantalla de venta de Quinde POS para Windows con el carrito, el total y los productos" width="1366" height="737" fetchpriority="high">
+        </div>
+        <div class="celular">
+          <img src="capturas/android-venta.png" alt="Quinde POS en un celular Android con los productos y el botón Cobrar" width="540" height="1169">
+        </div>
       </div>
     </div>
   </section>
@@ -214,74 +235,86 @@
   <div class="franja">
     <div class="contenedor">
       <ul>
-        <li><svg aria-hidden="true"><use href="#i-libre"/></svg><div>100 % gratis<span>Sin licencias ni mensualidades</span></div></li>
-        <li><svg aria-hidden="true"><use href="#i-factura"/></svg><div>Factura electrónica<span>Integrada con el SRI</span></div></li>
-        <li><svg aria-hidden="true"><use href="#i-sinred"/></svg><div>Si se cae el internet<span>No pierdes la venta</span></div></li>
-        <li><svg aria-hidden="true"><use href="#i-ecuador"/></svg><div>Pensado para Ecuador<span>Dólares, IVA, cédula y RUC</span></div></li>
+        <li><svg aria-hidden="true"><use href="#i-dolar"/></svg><div><b>$0 por factura</b><span>Sin mensualidades en Windows</span></div></li>
+        <li><svg aria-hidden="true"><use href="#i-factura"/></svg><div><b>Factura y nota de crédito</b><span>Firmadas y autorizadas por el SRI</span></div></li>
+        <li><svg aria-hidden="true"><use href="#i-sinred"/></svg><div><b>Si se cae el internet</b><span>No pierdes la venta</span></div></li>
+        <li><svg aria-hidden="true"><use href="#i-ecuador"/></svg><div><b>Pensado para Ecuador</b><span>Dólares, IVA, cédula y RUC</span></div></li>
       </ul>
     </div>
   </div>
 
-  <section id="funciones" aria-labelledby="t-funciones">
+  <section id="versiones" aria-labelledby="t-versiones">
     <div class="contenedor">
-      <div class="encabezado">
-        <h2 id="t-funciones">Todo lo que tu caja necesita</h2>
-        <p>Desde la primera venta del día hasta el cierre de caja y la declaración del IVA.</p>
+      <div class="encabezado aparece">
+        <span class="antetitulo">Elige tu versión</span>
+        <h2 id="t-versiones">En la computadora o en el celular</h2>
+        <p>Las dos emiten la factura electrónica del SRI. Elige según dónde cobras.</p>
       </div>
-      <div class="rejilla">
-        <article class="tarjeta">
-          <div class="icono"><svg aria-hidden="true"><use href="#i-carrito"/></svg></div>
-          <h3>Venta rápida y táctil</h3>
-          <p>Busca por nombre o código de barras, toca las tarjetas de producto y cobra con F12. Categorías, fotos y cantidades en un toque.</p>
+      <div class="versiones">
+        <article class="version destacada aparece">
+          <span class="insignia">Gratis para siempre</span>
+          <div class="cabeza">
+            <span class="icono"><svg aria-hidden="true"><use href="#i-monitor"/></svg></span>
+            <div><h3>Windows</h3><div class="precio"><b>$0</b> · software libre</div></div>
+          </div>
+          <p>El punto de venta completo para la caja de tu negocio, con o sin pantalla táctil.</p>
+          <ul class="lista">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Facturas ilimitadas, sin licencia ni mensualidad</span></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Impresora de tickets, cajón de dinero y lector de códigos</span></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Varios usuarios, inventario, promociones y reportes</span></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Instalador con todo incluido para Windows 10 y 11</span></li>
+          </ul>
+          <div class="acciones">
+            <a class="boton" href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest"><svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar para Windows</a>
+          </div>
         </article>
-        <article class="tarjeta">
-          <div class="icono"><svg aria-hidden="true"><use href="#i-dinero"/></svg></div>
-          <h3>Cobro en dólares</h3>
-          <p>Billetes y monedas rápidos, botón Exacto, cambio en grande, pago dividido, tarjeta, transferencia y DeUna.</p>
-        </article>
-        <article class="tarjeta">
-          <div class="icono"><svg aria-hidden="true"><use href="#i-factura"/></svg></div>
-          <h3>Facturación electrónica</h3>
-          <p>Factura y nota de crédito firmadas y autorizadas por el SRI, con el PDF enviado por correo al cliente.</p>
-        </article>
-        <article class="tarjeta">
-          <div class="icono"><svg aria-hidden="true"><use href="#i-grafico"/></svg></div>
-          <h3>Panel del negocio</h3>
-          <p>Ventas de hoy contra ayer, ticket promedio, ventas por hora, lo más vendido y productos por agotarse.</p>
-        </article>
-        <article class="tarjeta">
-          <div class="icono coral"><svg aria-hidden="true"><use href="#i-regalo"/></svg></div>
-          <h3>Promociones automáticas</h3>
-          <p>2x1, 3x2, descuentos por producto o categoría y happy hour, aplicados solos al vender.</p>
-        </article>
-        <article class="tarjeta">
-          <div class="icono"><svg aria-hidden="true"><use href="#i-escudo"/></svg></div>
-          <h3>Caja segura</h3>
-          <p>Cierre de caja con arqueo a ciegas, clave de supervisor para anular o descontar y registro de cada autorización.</p>
-        </article>
-        <article class="tarjeta">
-          <div class="icono"><svg aria-hidden="true"><use href="#i-caja"/></svg></div>
-          <h3>Inventario y clientes</h3>
-          <p>Stock por almacén con alertas, historial de cada cliente, cuentas por cobrar y abonos.</p>
-        </article>
-        <article class="tarjeta">
-          <div class="icono"><svg aria-hidden="true"><use href="#i-impresora"/></svg></div>
-          <h3>Impresoras y periféricos</h3>
-          <p>Tickets térmicos, comanda de cocina, cajón de dinero, lector de códigos y visor de cliente.</p>
-        </article>
-        <article class="tarjeta">
-          <div class="icono"><svg aria-hidden="true"><use href="#i-usuarios"/></svg></div>
-          <h3>Varios usuarios</h3>
-          <p>Administrador, gerente, cajero e invitado, cada uno con sus permisos. Copia de seguridad automática diaria.</p>
+        <article id="android" class="version aparece">
+          <div class="cabeza">
+            <span class="icono"><svg aria-hidden="true"><use href="#i-celular"/></svg></span>
+            <div><h3>Android</h3><div class="precio"><b>Prueba gratis</b> · licencia por RUC</div></div>
+          </div>
+          <p>Vende y factura desde el celular o la tablet: la factura se firma y se autoriza en el mismo teléfono, sin computadora.</p>
+          <ul class="lista">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Gratis en el ambiente de pruebas del SRI, sin límite de tiempo</span></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>RIDE en PDF al correo del cliente y ticket por impresora Bluetooth</span></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Escáner de códigos con la cámara, caja y cajeros con PIN</span></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Para facturas reales se activa una licencia para tu RUC</span></li>
+          </ul>
+          <div class="acciones">
+            <a class="boton" href="https://github.com/RiccijandroUpec/QuindePOS/releases/download/android-v1.0.1/QuindePOS-Android.apk"><svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar APK</a>
+            <a class="boton secundario whatsapp" href="https://wa.me/593983185069?text=Hola%20Richard%2C%20quiero%20el%20precio%20de%20la%20licencia%20de%20Quinde%20POS%20para%20Android."><svg aria-hidden="true"><use href="#i-whatsapp"/></svg> Consulta el precio</a>
+          </div>
+          <p class="letra">Versión 1.0.1 · Android 7 o superior · ¿Celular antiguo de 32 bits? <a href="https://github.com/RiccijandroUpec/QuindePOS/releases/download/android-v1.0.1/QuindePOS-Android-32bits.apk">Descarga esta versión</a>. Al instalar, si Android lo pide, permite <i>instalar apps de esta fuente</i>.</p>
         </article>
       </div>
     </div>
   </section>
 
-  <section id="sri" class="suave" aria-labelledby="t-sri">
+  <section id="funciones" class="suave" aria-labelledby="t-funciones">
+    <div class="contenedor">
+      <div class="encabezado aparece">
+        <span class="antetitulo">Funciones</span>
+        <h2 id="t-funciones">Todo lo que tu caja necesita</h2>
+        <p>Desde la primera venta del día hasta el cierre de caja y la declaración del IVA.</p>
+      </div>
+      <div class="rejilla">
+        <article class="tarjeta aparece"><span class="icono"><svg aria-hidden="true"><use href="#i-carrito"/></svg></span><h3>Venta rápida y táctil</h3><p>Busca por nombre o código de barras, toca las tarjetas de producto y cobra con F12. Categorías, fotos y cantidades en un toque.</p></article>
+        <article class="tarjeta aparece"><span class="icono"><svg aria-hidden="true"><use href="#i-dinero"/></svg></span><h3>Cobro en dólares</h3><p>Billetes y monedas rápidos, botón Exacto, cambio en grande, pago dividido, tarjeta, transferencia y DeUna.</p></article>
+        <article class="tarjeta aparece"><span class="icono"><svg aria-hidden="true"><use href="#i-factura"/></svg></span><h3>Facturación electrónica</h3><p>Factura y nota de crédito firmadas y autorizadas por el SRI, con el PDF enviado por correo al cliente.</p></article>
+        <article class="tarjeta aparece"><span class="icono"><svg aria-hidden="true"><use href="#i-grafico"/></svg></span><h3>Panel del negocio</h3><p>Ventas de hoy contra ayer, ticket promedio, ventas por hora, lo más vendido y productos por agotarse.</p></article>
+        <article class="tarjeta aparece"><span class="icono coral"><svg aria-hidden="true"><use href="#i-regalo"/></svg></span><h3>Promociones automáticas</h3><p>2x1, 3x2, descuentos por producto o categoría y happy hour, aplicados solos al vender.</p></article>
+        <article class="tarjeta aparece"><span class="icono"><svg aria-hidden="true"><use href="#i-escudo"/></svg></span><h3>Caja segura</h3><p>Cierre de caja con arqueo a ciegas, clave de supervisor para anular o descontar y registro de cada autorización.</p></article>
+        <article class="tarjeta aparece"><span class="icono"><svg aria-hidden="true"><use href="#i-caja"/></svg></span><h3>Inventario y clientes</h3><p>Stock por almacén con alertas, historial de cada cliente, cuentas por cobrar y abonos.</p></article>
+        <article class="tarjeta aparece"><span class="icono"><svg aria-hidden="true"><use href="#i-impresora"/></svg></span><h3>Impresoras y periféricos</h3><p>Tickets térmicos, comanda de cocina, cajón de dinero, lector de códigos y visor de cliente.</p></article>
+        <article class="tarjeta aparece"><span class="icono"><svg aria-hidden="true"><use href="#i-usuarios"/></svg></span><h3>Varios usuarios</h3><p>Administrador, gerente, cajero e invitado, cada uno con sus permisos. Copia de seguridad automática diaria.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="sri" aria-labelledby="t-sri">
     <div class="contenedor sri">
-      <div>
-        <span class="etiqueta">Facturación electrónica incluida</span>
+      <div class="aparece">
+        <span class="antetitulo">Facturación electrónica incluida</span>
         <h2 id="t-sri">Cobras y la factura ya está en camino al SRI</h2>
         <p class="bajada">No necesitas otro programa ni pagar por comprobante: Quinde POS firma, envía y consulta la autorización por ti.</p>
         <ul class="lista">
@@ -292,7 +325,7 @@
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>Resumen tributario mensual</b><span>Ventas por tarifa de IVA, listo para el formulario 104.</span></div></li>
         </ul>
       </div>
-      <div class="documentos">
+      <div class="documentos aparece">
         <figure>
           <div class="marco"><img src="capturas/ticket-factura.png" alt="Ticket impreso con los datos de la factura electrónica" width="328" height="1023" loading="lazy"></div>
           <figcaption>Ticket impreso</figcaption>
@@ -311,26 +344,27 @@
     </div>
   </section>
 
-  <section id="capturas" aria-labelledby="t-capturas">
+  <section id="capturas" class="suave" aria-labelledby="t-capturas">
     <div class="contenedor">
-      <div class="encabezado">
+      <div class="encabezado aparece">
+        <span class="antetitulo">Capturas</span>
         <h2 id="t-capturas">Moderno, claro y fácil de aprender</h2>
-        <p>Tema claro y oscuro, íconos nítidos en cualquier pantalla y todo en español.</p>
+        <p>Íconos nítidos en cualquier pantalla y todo en español.</p>
       </div>
       <div class="galeria">
-        <figure>
+        <figure class="aparece">
           <div class="marco"><img src="capturas/inicio-sesion.png" alt="Pantalla de inicio de sesión con los usuarios" width="1366" height="737" loading="lazy"></div>
           <figcaption>Inicio de sesión<span>Cada cajero toca su nombre para empezar.</span></figcaption>
         </figure>
-        <figure>
+        <figure class="aparece">
           <div class="marco"><img src="capturas/menu-y-busqueda.png" alt="Menú lateral y búsqueda de productos" width="1366" height="737" loading="lazy"></div>
           <figcaption>Menú y búsqueda<span>Encuentra cualquier producto en segundos.</span></figcaption>
         </figure>
-        <figure>
+        <figure class="aparece">
           <div class="marco"><img src="capturas/pantalla-de-venta.png" alt="Pantalla de venta con carrito y total" width="1366" height="737" loading="lazy"></div>
           <figcaption>Pantalla de venta<span>El total siempre a la vista y cobro con un toque.</span></figcaption>
         </figure>
-        <figure>
+        <figure class="aparece">
           <div class="marco"><img src="capturas/panel-del-negocio.png" alt="Panel del negocio con ventas del día y gráfico por hora" width="1366" height="737" loading="lazy"></div>
           <figcaption>Panel del negocio<span>Cómo va tu día, de un vistazo.</span></figcaption>
         </figure>
@@ -339,122 +373,55 @@
     </div>
   </section>
 
-  <section class="suave" aria-labelledby="t-quien">
+  <section aria-labelledby="t-quien">
     <div class="contenedor">
-      <div class="encabezado">
+      <div class="encabezado aparece">
+        <span class="antetitulo">Para quién es</span>
         <h2 id="t-quien">Hecho para negocios como el tuyo</h2>
         <p>Tiendas de barrio, cafeterías y restaurantes que quieren vender ordenado y facturar sin complicaciones.</p>
       </div>
-      <div class="chips">
-        <span class="chip">🛒 Tiendas y minimarkets</span>
-        <span class="chip">☕ Cafeterías y panaderías</span>
-        <span class="chip">🍽️ Restaurantes</span>
-        <span class="chip">🍦 Heladerías</span>
-        <span class="chip">💊 Farmacias</span>
-        <span class="chip">👕 Ropa y calzado</span>
-        <span class="chip">🔧 Ferreterías</span>
-        <span class="chip">📚 Papelerías</span>
-      </div>
+      <ul class="negocios aparece">
+        <li><span class="icono"><svg aria-hidden="true"><use href="#i-carrito"/></svg></span>Tiendas y minimarkets</li>
+        <li><span class="icono"><svg aria-hidden="true"><use href="#i-taza"/></svg></span>Cafeterías y panaderías</li>
+        <li><span class="icono"><svg aria-hidden="true"><use href="#i-cubiertos"/></svg></span>Restaurantes</li>
+        <li><span class="icono"><svg aria-hidden="true"><use href="#i-helado"/></svg></span>Heladerías</li>
+        <li><span class="icono"><svg aria-hidden="true"><use href="#i-farmacia"/></svg></span>Farmacias</li>
+        <li><span class="icono"><svg aria-hidden="true"><use href="#i-ropa"/></svg></span>Ropa y calzado</li>
+        <li><span class="icono"><svg aria-hidden="true"><use href="#i-llave"/></svg></span>Ferreterías</li>
+        <li><span class="icono"><svg aria-hidden="true"><use href="#i-lapiz"/></svg></span>Papelerías</li>
+      </ul>
     </div>
   </section>
 
-  <section id="android" class="suave" aria-labelledby="t-android">
-    <div class="contenedor android">
-      <div>
-        <span class="etiqueta">Nuevo · Android 7 o superior</span>
-        <h2 id="t-android">Quinde POS en tu celular</h2>
-        <p class="bajada">La misma idea, ahora en el teléfono o la tablet: vendes, cobras y la <b>factura del SRI se firma y se autoriza desde el mismo celular</b>, sin computadora ni servidores.</p>
-        <ul class="lista">
-          <li><svg aria-hidden="true"><use href="#i-factura"/></svg><div><b>Factura electrónica en segundos</b><span>RIDE en PDF, envío al correo del cliente y ticket por impresora Bluetooth.</span></div></li>
-          <li><svg aria-hidden="true"><use href="#i-sinred"/></svg><div><b>Si se cae el internet, no pierdes la venta</b><span>Queda guardada y la factura se reintenta sola apenas vuelve la conexión.</span></div></li>
-          <li><svg aria-hidden="true"><use href="#i-usuarios"/></svg><div><b>Caja, cajeros con PIN y reportes</b><span>Cierre de caja, panel de ventas e IVA del mes para Excel.</span></div></li>
-        </ul>
-        <div class="acciones" style="margin-top:28px">
-          <a class="boton" href="descargas/QuindePOS-Android.apk" download>
-            <svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar APK para Android
-          </a>
-          <a class="boton secundario" href="https://wa.me/593983185069?text=Hola%20Richard%2C%20quiero%20Quinde%20POS%20para%20Android.">Pedir instalación por WhatsApp</a>
-        </div>
-        <p class="nota-portada">Versión 1.0.0 · ¿Celular antiguo de 32 bits? <a href="descargas/QuindePOS-Android-32bits.apk" download>Descarga esta versión</a>.</p>
-        <div class="instalar-apk">
-          <b>Cómo instalarla</b>
-          <ol>
-            <li>Descarga el archivo .apk desde el celular.</li>
-            <li>Ábrelo y, si Android lo pide, permite <i>instalar apps de esta fuente</i>.</li>
-            <li>Toca <b>Instalar</b>. Si Play Protect avisa, elige <i>Instalar de todas formas</i>.</li>
-          </ol>
-        </div>
-        <p class="licencia-android">Gratis para aprender en el ambiente de <b>pruebas</b> del SRI. Para emitir facturas reales se activa una <b>licencia para el RUC de tu negocio</b>: escríbeme al <b>098 318 5069</b>. La app de Android no es software libre.</p>
-      </div>
-      <div class="telefonos" aria-label="Capturas de la app de Android">
-        <img src="capturas/android-venta.png" alt="Pantalla de venta en el celular con productos y sus fotos" width="540" height="1169" loading="lazy">
-        <img src="capturas/android-factura.png" alt="Venta registrada con el cambio y la factura" width="540" height="1169" loading="lazy">
-      </div>
-    </div>
-  </section>
-
-  <section id="empezar" aria-labelledby="t-empezar">
+  <section id="empezar" class="suave" aria-labelledby="t-empezar">
     <div class="contenedor">
-      <div class="encabezado">
-        <h2 id="t-empezar">Cómo empezar</h2>
-        <p>Un solo instalador y un asistente que te guía: en minutos estás vendiendo.</p>
+      <div class="encabezado aparece">
+        <span class="antetitulo">Cómo empezar</span>
+        <h2 id="t-empezar">Vendiendo en minutos</h2>
+        <p>Un solo instalador y un asistente que te guía paso a paso.</p>
       </div>
-      <div class="pasos">
-        <div class="paso">
-          <h3>Descarga el instalador</h3>
-          <p><a href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">QuindePOS-Setup.exe</a> para Windows 10 y 11. Trae Java y la base de datos: no instalas nada más.</p>
-        </div>
-        <div class="paso">
-          <h3>Instálalo</h3>
-          <p>Deja la base de datos incluida (recomendado) o conéctalo a tu servidor MySQL/MariaDB.</p>
-        </div>
-        <div class="paso">
-          <h3>Sigue el asistente</h3>
-          <p>Tu negocio y logo, tipo de negocio, IVA, usuarios, impresora con ticket de prueba y productos (también desde Excel).</p>
-        </div>
-        <div class="paso">
-          <h3>Activa la facturación</h3>
-          <p>Con tu firma electrónica (.p12), en el mismo asistente o siguiendo la <a href="https://github.com/RiccijandroUpec/QuindePOS/blob/main/facturacion-sri/INSTALAR.md">guía paso a paso</a>.</p>
-        </div>
-      </div>
-      <p class="aviso-instalador">El instalador aún no tiene firma digital: si Windows muestra «Windows protegió su PC», toca <b>Más información → Ejecutar de todas formas</b>.</p>
-      <figure class="asistente">
+      <ol class="pasos">
+        <li class="paso aparece"><h3>Descarga el instalador</h3><p><a href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest">QuindePOS-Setup.exe</a> para Windows 10 y 11. Trae Java y la base de datos: no instalas nada más.</p></li>
+        <li class="paso aparece"><h3>Instálalo</h3><p>Deja la base de datos incluida (recomendado) o conéctalo a tu servidor MySQL/MariaDB.</p></li>
+        <li class="paso aparece"><h3>Sigue el asistente</h3><p>Tu negocio y logo, tipo de negocio, IVA, usuarios, impresora con ticket de prueba y productos (también desde Excel).</p></li>
+        <li class="paso aparece"><h3>Activa la facturación</h3><p>Con tu firma electrónica (.p12), en el mismo asistente o siguiendo la <a href="https://github.com/RiccijandroUpec/QuindePOS/blob/main/facturacion-sri/INSTALAR.md">guía paso a paso</a>.</p></li>
+      </ol>
+      <p class="aviso"><svg aria-hidden="true"><use href="#i-info"/></svg><span>El instalador aún no tiene firma digital: si Windows muestra <b>«Windows protegió su PC»</b>, toca <b>Más información → Ejecutar de todas formas</b>.</span></p>
+      <figure class="asistente aparece">
         <div class="marco"><img src="capturas/asistente.png" alt="Asistente de configuración de Quinde POS con los pasos: bienvenida, tu negocio, tipo de negocio, caja e impuestos, usuarios, impresora, productos y facturación SRI" width="1080" height="720" loading="lazy"></div>
         <figcaption>Asistente de configuración<span>Se abre solo la primera vez. Cada paso se puede dejar para después y retomarlo desde Sistema → Asistente.</span></figcaption>
       </figure>
-<pre><code><span class="c"># Linux, macOS o para compilarlo desde el código (Java 11 + MySQL/MariaDB)</span>
-git clone https://github.com/RiccijandroUpec/QuindePOS.git
-cd QuindePOS
-ant -f build_working.xml todo         <span class="c"># Quinde POS + facturación electrónica</span>
-start.bat                             <span class="c"># en Linux o macOS: ./start.sh</span>
-ant -f build_working.xml instalador   <span class="c"># arma el instalador de Windows (Inno Setup)</span></code></pre>
     </div>
   </section>
 
-  <section class="suave" aria-labelledby="t-tec">
-    <div class="contenedor dos-columnas">
-      <div>
-        <h2 id="t-tec">Tecnología abierta y probada</h2>
-        <p class="bajada" style="margin-bottom:0">Java y Swing con un tema moderno, una base de datos MySQL/MariaDB y un módulo de facturación construido sobre los XSD oficiales del SRI, con pruebas automáticas.</p>
-        <div class="tecnologias" aria-label="Tecnologías">
-          <span>Java 11</span><span>Swing + FlatLaf</span><span>MySQL / MariaDB</span><span>PostgreSQL</span>
-          <span>JasperReports</span><span>Apache CXF (SOAP)</span><span>JAXB</span><span>Firma XAdES-BES</span>
-          <span>Apache PDFBox</span><span>ZXing</span><span>Jakarta Mail</span><span>Ant + Maven</span><span>JUnit</span>
-        </div>
-      </div>
-      <div>
-        <h2>Identidad visual</h2>
-        <p class="bajada" style="margin-bottom:0"><i>Quinde</i> es el colibrí en el Ecuador: pequeño, rápido y de aquí. La paleta "Selva" y la tipografía Outfit son parte del proyecto.</p>
-        <img class="paleta" src="assets/paleta.png" alt="Paleta Selva: Quinde #2E9E6B, Selva #1B5E3F, Brote #A8E6C1, Coral #F2705E y Tinta #10231A" width="2008" height="496" loading="lazy">
-      </div>
-    </div>
-  </section>
-
-  <section id="guias" class="suave" aria-labelledby="t-guias">
+  <section id="guias" aria-labelledby="t-guias">
     <div class="contenedor">
-      <span class="etiqueta">Guías gratuitas</span>
-      <h2 id="t-guias">Aprende a facturar electrónicamente</h2>
-      <ul class="tarjetas-guias" style="margin-top:28px">
+      <div class="encabezado aparece">
+        <span class="antetitulo">Guías gratuitas</span>
+        <h2 id="t-guias">Aprende a facturar electrónicamente</h2>
+        <p>Explicadas en palabras simples y basadas en fuentes oficiales del SRI.</p>
+      </div>
+      <ul class="tarjetas-guias">
         <li><a href="guias/facturacion-electronica-gratis-ecuador/"><b>Cómo emitir facturas electrónicas gratis en Ecuador (paso a paso)</b><span>Paso a paso: qué necesitas, las opciones gratuitas y cómo configurar Quinde POS.</span></a></li>
         <li><a href="guias/requisitos-facturacion-electronica-sri/"><b>Requisitos para la facturación electrónica del SRI en Ecuador</b><span>RUC, clave de SRI en Línea, firma electrónica .p12, sistema e internet, en palabras simples.</span></a></li>
         <li><a href="guias/facturador-sri-o-punto-de-venta/"><b>Facturador del SRI o punto de venta gratis: ¿cuál te conviene?</b><span>Comparación para saber cuál conviene a tu negocio.</span></a></li>
@@ -466,10 +433,12 @@ ant -f build_working.xml instalador   <span class="c"># arma el instalador de Wi
     </div>
   </section>
 
-  <section id="preguntas" aria-labelledby="t-preguntas">
+  <section id="preguntas" class="suave" aria-labelledby="t-preguntas">
     <div class="contenedor">
-      <span class="etiqueta">Preguntas frecuentes</span>
-      <h2 id="t-preguntas">Sistema de facturación gratis para Ecuador: lo que debes saber</h2>
+      <div class="encabezado aparece">
+        <span class="antetitulo">Preguntas frecuentes</span>
+        <h2 id="t-preguntas">Sistema de facturación gratis para Ecuador: lo que debes saber</h2>
+      </div>
       <div class="preguntas">
         <details class="pregunta">
           <summary>¿Quinde POS es un sistema de facturación gratuito?</summary>
@@ -499,23 +468,30 @@ ant -f build_working.xml instalador   <span class="c"># arma el instalador de Wi
     </div>
   </section>
 
-  <section aria-labelledby="t-libre">
+  <section class="final" aria-labelledby="t-final" style="padding-top:92px">
     <div class="contenedor">
-      <div class="libre">
+      <div class="banda aparece">
         <div>
-          <h2 id="t-libre">Libre, para siempre</h2>
-          <p>Quinde POS es software libre con licencia GPL v3: puedes usarlo, estudiarlo, modificarlo y compartirlo sin pagar nada.</p>
-          <p>Las ideas, reportes de errores y aportes de código son bienvenidos desde cualquier parte del Ecuador y del mundo.</p>
-          <div class="acciones" style="margin-top:20px">
-            <a class="boton" href="https://github.com/RiccijandroUpec/QuindePOS">
-              <svg aria-hidden="true"><use href="#i-github"/></svg> Ver el código
-            </a>
-            <a class="boton secundario" href="https://github.com/RiccijandroUpec/QuindePOS/issues">Reportar un problema</a>
+          <h2 id="t-final">¿Te ayudo a empezar?</h2>
+          <p>Te muestro cómo funciona con los productos de tu negocio y te ayudo a instalarlo y a activar la factura electrónica. Escríbeme sin compromiso.</p>
+        </div>
+        <div class="acciones">
+          <a class="boton whatsapp" href="https://wa.me/593983185069?text=Hola%20Richard%2C%20quiero%20una%20demo%20de%20Quinde%20POS%20para%20mi%20negocio."><svg aria-hidden="true"><use href="#i-whatsapp"/></svg> Escríbeme por WhatsApp</a>
+          <a class="boton secundario" href="https://github.com/RiccijandroUpec/QuindePOS/releases/latest"><svg aria-hidden="true"><use href="#i-descarga"/></svg> Descargar para Windows</a>
+        </div>
+      </div>
+
+      <div class="libre aparece" style="margin-top:28px">
+        <div>
+          <h2>Libre, para siempre</h2>
+          <p>La versión para Windows es software libre con licencia GPL v3: puedes usarla, estudiarla, modificarla y compartirla sin pagar nada. Las ideas, reportes de errores y aportes de código son bienvenidos.</p>
+          <div class="acciones" style="margin-top:18px">
+            <a class="boton chico secundario" href="https://github.com/RiccijandroUpec/QuindePOS"><svg aria-hidden="true"><use href="#i-github"/></svg> Ver el código</a>
+            <a class="boton chico secundario" href="https://github.com/RiccijandroUpec/QuindePOS/issues">Reportar un problema</a>
           </div>
         </div>
-        <ul class="redes" aria-label="Contacto">
+        <ul class="redes" aria-label="Redes sociales">
           <li><a href="https://instagram.com/riccijandro"><svg aria-hidden="true"><use href="#i-instagram"/></svg> Instagram · @riccijandro</a></li>
-          <li><a href="https://github.com/RiccijandroUpec"><svg aria-hidden="true"><use href="#i-github"/></svg> GitHub · @RiccijandroUpec</a></li>
           <li><a href="https://linkedin.com/in/riccijandro"><svg aria-hidden="true"><use href="#i-linkedin"/></svg> LinkedIn · @riccijandro</a></li>
           <li><a href="https://x.com/riccijandro"><svg aria-hidden="true"><use href="#i-x"/></svg> X · @riccijandro</a></li>
         </ul>
@@ -527,10 +503,18 @@ ant -f build_working.xml instalador   <span class="c"># arma el instalador de Wi
 
 <footer>
   <div class="contenedor">
-    <span>© 2026 Quinde POS · Software libre bajo la <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL v3</a></span>
-    <span>Hecho en Ecuador · Tipografía <a href="https://fonts.google.com/specimen/Outfit">Outfit</a> (OFL)</span>
+    <span>© 2026 Quinde POS · Windows: software libre bajo la <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL v3</a> · Android: licencia de uso por RUC</span>
+    <span>Hecho en Ecuador · <a href="https://github.com/RiccijandroUpec/QuindePOS">GitHub</a> · Tipografía <a href="https://fonts.google.com/specimen/Outfit">Outfit</a> (OFL)</span>
   </div>
 </footer>
 
+<script>
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.aparece').forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('.aparece').forEach(el => el.classList.add('visible'));
+  }
+</script>
 </body>
 </html>
