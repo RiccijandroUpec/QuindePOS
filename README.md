@@ -321,6 +321,20 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
 
+### Fase X — Página rediseñada para el dueño del negocio (2026-11-11)
+- **Tema claro único** (antes cambiaba solo a oscuro según el sistema): fondo neutro cálido, verde selva solo en
+  botones y enlaces (contraste 7.6:1) y coral solo para promociones. Las guías usan el mismo tema.
+- **Titular legible** (Outfit sin el espaciado apretado) y portada con la **captura grande de Windows y el celular**.
+- **"Elige tu versión"**: Windows *gratis para siempre* (software libre) y Android *prueba gratis + licencia por
+  RUC*, con "Consulta el precio" por WhatsApp. Así ya no choca "gratuito" con la licencia de Android.
+- **WhatsApp** en el menú (en lugar de GitHub), en la portada ("Pide tu demo") y en una banda final "¿Te ayudo a
+  empezar?". GitHub pasa al bloque "Libre, para siempre" y al pie.
+- Íconos SVG en lugar de emojis; accesibilidad: foco visible, "Saltar al contenido", animaciones que respetan
+  "reducir movimiento".
+- Se quitaron de la portada los comandos de compilación, "Tecnologías" e "Identidad visual" (están en este README).
+- **App de Android 1.0.1** servida desde GitHub Releases (`android-v1.0.1`) y las APK salieron de `docs/descargas`.
+- Sin cambios en direcciones, títulos, descripciones ni datos estructurados, para no perder el posicionamiento.
+
 ### Fase W — Página con guías de facturación electrónica (2026-11-10)
 - **7 guías** en [quindepos.cyrshop.app/guias](https://quindepos.cyrshop.app/guias/): facturar gratis, requisitos del
   SRI, Facturador del SRI o punto de venta, firma electrónica, RIMPE, RIDE y anulación de facturas. Todas citan las
@@ -501,10 +515,10 @@ Pages desde la rama `main` (dominio en `docs/CNAME`). Cada push a `main` la actu
 
 | Archivo | Para qué sirve |
 |---|---|
-| `docs/index.html` | Inicio: funciones, facturación SRI, capturas, cómo empezar, Android, guías y preguntas frecuentes |
+| `docs/index.html` | Inicio: versiones (Windows / Android), funciones, facturación SRI, capturas, tipos de negocio, cómo empezar, guías, preguntas frecuentes y contacto por WhatsApp |
 | `docs/guias/index.html` | Lista de guías |
 | `docs/guias/<guía>/index.html` | Cada guía (una carpeta por guía, para tener direcciones limpias) |
-| `docs/assets/estilo.css` | Diseño del sitio (paleta Selva, Outfit, modo claro y oscuro según el sistema) |
+| `docs/assets/estilo.css` | Diseño del sitio, tema claro único (paleta Selva, Outfit); también lo usan las guías |
 | `docs/assets/guias.css`, `docs/assets/guias.js` | Diseño de las guías y la barra de progreso, más el índice que marca la sección actual |
 | `docs/sitemap.xml`, `docs/robots.txt` | Para los buscadores; el sitio está verificado en Google Search Console y en Bing Webmaster Tools (importado desde Search Console, con el sitemap enviado) |
 
@@ -535,6 +549,20 @@ firma electrónica, facturación para RIMPE, qué es el RIDE y cómo anular una 
 5. Si cambias `guias.css` o `guias.js`, sube el número `?v=` en todas las páginas que los cargan.
 6. Después del push, pide la indexación de la guía nueva en Search Console (Inspección de URLs). Bing la toma del
    sitemap; para acelerar, envía la dirección en Bing Webmaster Tools → Envío de URL.
+
+**Descargas:**
+
+- **Windows:** el botón apunta a `releases/latest`, que debe ser siempre el instalador de Windows.
+- **Android:** la APK se publica en una release aparte, `android-vX.Y.Z`, creada con `--latest=false` para no
+  tapar al instalador de Windows. Lleva dos archivos con nombre fijo: `QuindePOS-Android.apk` (64 bits) y
+  `QuindePOS-Android-32bits.apk`. Al publicar una versión nueva, cambia la etiqueta en los enlaces de
+  `docs/index.html` (sección "Elige tu versión"). Las APK no se guardan en `docs/`: pesan 30 MB y quedarían
+  para siempre en la historia de git.
+
+```bash
+gh release create android-v1.0.2 QuindePOS-Android.apk QuindePOS-Android-32bits.apk \
+  --title "Quinde POS para Android 1.0.2" --notes-file notas.md --latest=false
+```
 
 ## 📋 Pendientes / Hoja de ruta
 
@@ -614,10 +642,12 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
 - ✅ Página del proyecto (GitHub Pages, carpeta `docs/`)
 - ✅ 7 guías de facturación electrónica en la página, con índice, resumen y fuentes oficiales del SRI; verificada en Google Search Console y Bing Webmaster Tools
+- ✅ Página rediseñada en tema claro, con "Elige tu versión" y WhatsApp (noviembre 2026)
+- 🟡 Publicar el rediseño: el 11/11/2026 GitHub Pages falló al desplegar ("startup_failure" en todos los repos); reintentar con `gh api -X POST repos/RiccijandroUpec/QuindePOS/pages/builds`
 - ⬜ Dar a conocer la página: directorios de software (SourceForge, AlternativeTo, Uptodown), redes y un video en YouTube
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS
 - ⬜ Actualizaciones automáticas
-- ⬜ Versión para tablet / Android
+- ✅ Versión para tablet / Android: app aparte con licencia por RUC (repositorio privado), APK 1.0.1 en GitHub Releases
 - ⬜ Tienda en línea integrada
 
 ## 🔗 Enlaces importantes
