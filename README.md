@@ -179,7 +179,7 @@ flowchart LR
 | `facturacion-sri/` | Módulo de facturación electrónica SRI (Maven, Java 11): factura, nota de crédito, firma, RIDE y correo — ver su [README](facturacion-sri/README.md) y la [guía de instalación](facturacion-sri/INSTALAR.md) |
 | `branding/` | Logo (SVG, PNG, ICO), paleta, tipografía y los generadores de las imágenes de la marca |
 | `herramientas/` | Scripts que generan las plantillas del ticket, del cierre de caja y el estilo de los reportes; el instalador de Windows (`herramientas/instalador/`) |
-| `docs/` | Página del proyecto (GitHub Pages: `docs/index.html`) y las capturas de este README |
+| `docs/` | Página del proyecto (GitHub Pages: `docs/index.html`), las [guías de facturación electrónica](https://quindepos.cyrshop.app/guias/) (`docs/guias/`) y las capturas de este README — ver [La página del proyecto](#-la-página-del-proyecto) |
 | `lib/` | Dependencias de terceros (`.jar`) incluidas en el repo |
 | `locales/` | Traducciones de la interfaz |
 | `reports/` | Plantillas JasperReports |
@@ -320,6 +320,16 @@ Renómbralos según tu negocio — **no los elimines**, otros registros pueden d
 ## 🆕 Mejoras recientes
 
 Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes / Hoja de ruta**, más abajo.
+
+### Fase W — Página con guías de facturación electrónica (2026-11-10)
+- **7 guías** en [quindepos.cyrshop.app/guias](https://quindepos.cyrshop.app/guias/): facturar gratis, requisitos del
+  SRI, Facturador del SRI o punto de venta, firma electrónica, RIMPE, RIDE y anulación de facturas. Todas citan las
+  resoluciones y páginas oficiales del SRI y no prometen funciones que Quinde POS no tiene.
+- **Diseño para leer cómodo**: resumen al inicio, índice que sigue la lectura, pasos numerados, listas de verificación,
+  letra de lectura a 18 px, barra de progreso y llamada a descargar al costado y al final.
+- **Para Google**: datos estructurados `Article` y `BreadcrumbList`, sitemap con las 9 páginas y sitio verificado en
+  Search Console, con la indexación pedida para cada guía.
+- Detalles en [La página del proyecto](#-la-página-del-proyecto).
 
 ### Fase V — Instalador para Windows (2026-10-01)
 Un solo `QuindePOS-Setup-1.0.0.exe` (~90 MB) deja Quinde POS funcionando en una computadora sin nada instalado.
@@ -483,6 +493,47 @@ Antes la facturación se abría en ventanas aparte ("EcoPos SRI Connector - …"
 - El conector SRI corre dentro de EcoPos (ya no hace falta un servicio de Windows aparte).
 - Corregidos tres fallos que impedían que funcionara dentro de EcoPos: conexión a la base de datos al arrancar, librería de firma (JAXB) y cliente SOAP (conflicto de librerías viejas).
 
+## 🌐 La página del proyecto
+
+La página [quindepos.cyrshop.app](https://quindepos.cyrshop.app/) es HTML estático en `docs/`, publicado con GitHub
+Pages desde la rama `main` (dominio en `docs/CNAME`). Cada push a `main` la actualiza en uno o dos minutos.
+
+| Archivo | Para qué sirve |
+|---|---|
+| `docs/index.html` | Inicio: funciones, facturación SRI, capturas, cómo empezar, Android, guías y preguntas frecuentes |
+| `docs/guias/index.html` | Lista de guías |
+| `docs/guias/<guía>/index.html` | Cada guía (una carpeta por guía, para tener direcciones limpias) |
+| `docs/assets/estilo.css` | Diseño del sitio (paleta Selva, Outfit, modo claro y oscuro según el sistema) |
+| `docs/assets/guias.css`, `docs/assets/guias.js` | Diseño de las guías y la barra de progreso, más el índice que marca la sección actual |
+| `docs/sitemap.xml`, `docs/robots.txt` | Para Google; el sitio está verificado en Search Console |
+
+**Guías publicadas** (todas en [quindepos.cyrshop.app/guias](https://quindepos.cyrshop.app/guias/)):
+cómo emitir facturas electrónicas gratis, requisitos del SRI, Facturador del SRI o punto de venta, cómo obtener la
+firma electrónica, facturación para RIMPE, qué es el RIDE y cómo anular una factura.
+
+**Cómo está armada cada guía**, pensada para leer en el celular:
+
+- Cabecera con migas, título, un **resumen** en recuadro (lo importante primero) y etiquetas de tiempo de lectura,
+  fecha de revisión y "Basada en fuentes oficiales del SRI".
+- **Índice "En esta guía"**: fijo al costado en computadora y desplegable en el celular. Cada `<h2>` lleva un `id`.
+- Texto con letra del sistema a 18 px e interlineado 1.75; Outfit solo en los títulos.
+- Clases para los bloques: `lista-pasos` (pasos numerados), `lista-check` (lista de verificación), `lista-chips`
+  (listas cortas en cuadrícula), `tabla-envoltura` (tablas con desplazamiento), `fuentes` (fuentes oficiales) y `nota`.
+- Al final: llamada a descargar (`cta`) y "Otras guías" (`relacionadas`).
+- Datos estructurados `Article` y `BreadcrumbList`, `canonical` y `og:url`.
+
+**Para agregar una guía:**
+
+1. Copia la carpeta de una guía existente en `docs/guias/<direccion-de-la-guia>/` y cambia título, descripción,
+   `canonical`, `og:url`, datos estructurados y contenido.
+2. Pon un `id` a cada `<h2>` y la misma lista en el índice "En esta guía".
+3. Usa solo datos de fuentes oficiales (sri.gob.ec, resoluciones, entidades de certificación) y enlázalas en
+   "Fuentes oficiales". No prometas lo que Quinde POS no hace.
+4. Agrégala en `docs/guias/index.html`, en la sección de guías de `docs/index.html`, en "Otras guías" de las demás
+   y en `docs/sitemap.xml` con la fecha del día.
+5. Si cambias `guias.css` o `guias.js`, sube el número `?v=` en todas las páginas que los cargan.
+6. Después del push, pide la indexación de la guía nueva en Search Console (Inspección de URLs).
+
 ## 📋 Pendientes / Hoja de ruta
 
 Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Square, Loyverse, Odoo, Shopify, Contífico, Alegra).
@@ -498,6 +549,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ⬜ Guía de remisión, nota de débito, liquidación de compra
 - 🟡 Nota de crédito parcial por productos/cantidades ✅; falta una emisión real de prueba contra el SRI
 - ⬜ Prueba real de punta a punta con el SRI (ambiente de pruebas) desde la pantalla de cobro nueva
+- ⬜ Leyenda RIMPE en la factura y la nota de crédito: el RIDE ya la imprime si viene en el XML, pero `ComprobanteXmlMapper` y `NotaCreditoXmlMapper` no llenan `contribuyenteRimpe`; falta el ajuste "Contribuyente RIMPE" en los datos del emisor (el XSD 2.1.0 solo acepta `CONTRIBUYENTE RÉGIMEN RIMPE`)
 
 **Cobro y caja**
 - ✅ Pantalla de pago moderna (efectivo rápido en dólares, Exacto, cambio en grande)
@@ -559,6 +611,8 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ⬜ Ticket en formato A4 todavía con textos de la plantilla original
 - ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
 - ✅ Página del proyecto (GitHub Pages, carpeta `docs/`)
+- ✅ 7 guías de facturación electrónica en la página, con índice, resumen y fuentes oficiales del SRI; verificada en Google Search Console
+- ⬜ Dar a conocer la página: directorios de software (SourceForge, AlternativeTo, Uptodown), redes y un video en YouTube
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS
 - ⬜ Actualizaciones automáticas
 - ⬜ Versión para tablet / Android
@@ -566,7 +620,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 
 ## 🔗 Enlaces importantes
 
-- 🌐 Página del proyecto: [quindepos.cyrshop.app](https://quindepos.cyrshop.app/)
+- 🌐 Página del proyecto: [quindepos.cyrshop.app](https://quindepos.cyrshop.app/) · [guías de facturación electrónica](https://quindepos.cyrshop.app/guias/)
 - 📦 Repositorio: [github.com/RiccijandroUpec/QuindePOS](https://github.com/RiccijandroUpec/QuindePOS)
 - 🧾 Facturación electrónica: [README del módulo](facturacion-sri/README.md) · [guía de instalación](facturacion-sri/INSTALAR.md)
 - 🏛️ SRI en línea (firma, comprobantes): [srienlinea.sri.gob.ec](https://srienlinea.sri.gob.ec/)
