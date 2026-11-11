@@ -327,8 +327,9 @@ Cada fase se documenta aquí al terminarla. Lo que falta está en **Pendientes /
   resoluciones y páginas oficiales del SRI y no prometen funciones que Quinde POS no tiene.
 - **Diseño para leer cómodo**: resumen al inicio, índice que sigue la lectura, pasos numerados, listas de verificación,
   letra de lectura a 18 px, barra de progreso y llamada a descargar al costado y al final.
-- **Para Google**: datos estructurados `Article` y `BreadcrumbList`, sitemap con las 9 páginas y sitio verificado en
-  Search Console, con la indexación pedida para cada guía.
+- **Para los buscadores**: datos estructurados `Article` y `BreadcrumbList`, sitemap con las 9 páginas, sitio
+  verificado en Google Search Console (con la indexación pedida para cada guía) y en Bing Webmaster Tools, que
+  también alimenta a DuckDuckGo y a las búsquedas de ChatGPT.
 - Detalles en [La página del proyecto](#-la-página-del-proyecto).
 
 ### Fase V — Instalador para Windows (2026-10-01)
@@ -505,7 +506,7 @@ Pages desde la rama `main` (dominio en `docs/CNAME`). Cada push a `main` la actu
 | `docs/guias/<guía>/index.html` | Cada guía (una carpeta por guía, para tener direcciones limpias) |
 | `docs/assets/estilo.css` | Diseño del sitio (paleta Selva, Outfit, modo claro y oscuro según el sistema) |
 | `docs/assets/guias.css`, `docs/assets/guias.js` | Diseño de las guías y la barra de progreso, más el índice que marca la sección actual |
-| `docs/sitemap.xml`, `docs/robots.txt` | Para Google; el sitio está verificado en Search Console |
+| `docs/sitemap.xml`, `docs/robots.txt` | Para los buscadores; el sitio está verificado en Google Search Console y en Bing Webmaster Tools (importado desde Search Console, con el sitemap enviado) |
 
 **Guías publicadas** (todas en [quindepos.cyrshop.app/guias](https://quindepos.cyrshop.app/guias/)):
 cómo emitir facturas electrónicas gratis, requisitos del SRI, Facturador del SRI o punto de venta, cómo obtener la
@@ -532,7 +533,8 @@ firma electrónica, facturación para RIMPE, qué es el RIDE y cómo anular una 
 4. Agrégala en `docs/guias/index.html`, en la sección de guías de `docs/index.html`, en "Otras guías" de las demás
    y en `docs/sitemap.xml` con la fecha del día.
 5. Si cambias `guias.css` o `guias.js`, sube el número `?v=` en todas las páginas que los cargan.
-6. Después del push, pide la indexación de la guía nueva en Search Console (Inspección de URLs).
+6. Después del push, pide la indexación de la guía nueva en Search Console (Inspección de URLs). Bing la toma del
+   sitemap; para acelerar, envía la dirección en Bing Webmaster Tools → Envío de URL.
 
 ## 📋 Pendientes / Hoja de ruta
 
@@ -611,7 +613,7 @@ Estado: ✅ hecho · 🟡 parcial · ⬜ pendiente. Comparado con otros POS (Squ
 - ⬜ Ticket en formato A4 todavía con textos de la plantilla original
 - ✅ Quinde POS y la facturación electrónica en un solo repositorio, con control de versión entre los dos
 - ✅ Página del proyecto (GitHub Pages, carpeta `docs/`)
-- ✅ 7 guías de facturación electrónica en la página, con índice, resumen y fuentes oficiales del SRI; verificada en Google Search Console
+- ✅ 7 guías de facturación electrónica en la página, con índice, resumen y fuentes oficiales del SRI; verificada en Google Search Console y Bing Webmaster Tools
 - ⬜ Dar a conocer la página: directorios de software (SourceForge, AlternativeTo, Uptodown), redes y un video en YouTube
 - ⬜ Renombrar el repositorio de GitHub a Quinde POS
 - ⬜ Actualizaciones automáticas
